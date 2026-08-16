@@ -1,0 +1,2874 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://www.youtube.com https://www.gstatic.com https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://firestore.googleapis.com https://*.goatcounter.com; form-action https://formspree.io; base-uri 'self'; object-src 'none'" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<title>unbranded_branden &mdash; Sheet Music &amp; Arrangements</title>
+<meta name="description" content="Personal portfolio of original sheet music arrangements and transcriptions, with videos, store links, and community voting for the next arrangement." />
+<meta property="og:title" content="unbranded_branden &mdash; Sheet Music &amp; Arrangements" />
+<meta property="og:description" content="Original arrangements and transcriptions — browse the catalog, listen, and vote for what gets arranged next." />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="theme-color" content="#fafafa" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter','ui-sans-serif','system-ui','sans-serif'],
+        display: ['Fraunces','Georgia','serif']
+      },
+      colors: {
+        base: 'rgb(var(--c-bg) / <alpha-value>)',
+        surface: 'rgb(var(--c-surface) / <alpha-value>)',
+        sunken: 'rgb(var(--c-sunken) / <alpha-value>)',
+        line: 'rgb(var(--c-line) / <alpha-value>)',
+        ink: 'rgb(var(--c-ink) / <alpha-value>)',
+        mute: 'rgb(var(--c-mute) / <alpha-value>)',
+        faint: 'rgb(var(--c-faint) / <alpha-value>)',
+        accent: 'rgb(var(--c-accent) / <alpha-value>)',
+        'accent-hi': 'rgb(var(--c-accent-hi) / <alpha-value>)',
+        oninv: 'rgb(var(--c-on-accent) / <alpha-value>)',
+        admin: 'rgb(var(--c-admin) / <alpha-value>)',
+        'admin-hi': 'rgb(var(--c-admin-hi) / <alpha-value>)',
+        danger: 'rgb(var(--c-danger) / <alpha-value>)',
+        'danger-hi': 'rgb(var(--c-danger-hi) / <alpha-value>)'
+      },
+      boxShadow: { glow: '0 6px 28px -8px rgb(var(--c-accent) / .35)' }
+    }
+  }
+};
+</script>
+<style>
+:root {
+  color-scheme: light;
+  --c-bg: 250 250 250;
+  --c-surface: 250 250 250;
+  --c-sunken: 228 229 241;
+  --c-line: 210 211 219;
+  --c-ink: 0 0 0;
+  --c-mute: 72 75 106;
+  --c-faint: 147 148 165;
+  --c-accent: 72 75 106;
+  --c-accent-hi: 0 0 0;
+  --c-on-accent: 250 250 250;
+  --c-admin: 173 120 42;
+  --c-admin-hi: 141 96 32;
+  --c-danger: 197 59 59;
+  --c-danger-hi: 164 46 46;
+  --shadow-card: 7px 7px 0 rgb(var(--c-accent) / .16);
+}
+html { font-family:'Inter',ui-sans-serif,system-ui,sans-serif; }
+::selection { background: rgb(var(--c-accent) / .22); }
+.card-hover { transition: transform calc(.18s/var(--speed,1)) ease, border-color calc(.18s/var(--speed,1)) ease, box-shadow calc(.18s/var(--speed,1)) ease; }
+.card-hover:hover { transform: translate(-3px,-3px); border-color: rgb(var(--c-accent) / .55); box-shadow: var(--shadow-card); }
+.row-hover { transition: border-color calc(.15s/var(--speed,1)) ease, background-color calc(.15s/var(--speed,1)) ease; }
+.row-hover:hover { border-color: rgb(var(--c-accent) / .5); background: rgb(var(--c-accent) / .05); }
+.pill { transition: all .15s ease; }
+.pill[aria-pressed="true"] { background: rgb(var(--c-accent)); color: rgb(var(--c-on-accent)); border-color: rgb(var(--c-accent)); font-weight:600; }
+.chip { transition: all .15s ease; }
+.chip[aria-pressed="true"] { background: rgb(var(--c-accent)); color: rgb(var(--c-on-accent)); border-color: rgb(var(--c-accent)); font-weight:600; }
+.seg-btn { transition: all .15s ease; }
+.seg-btn[aria-pressed="true"] { background: rgb(var(--c-accent)); color: rgb(var(--c-on-accent)); }
+.vote-btn { transition: all .12s ease; }
+.vote-btn:not(:disabled):hover { transform: scale(1.15); }
+.vote-btn:disabled { opacity:.3; cursor:not-allowed; }
+.fade-in { animation: fadeIn calc(.3s/var(--speed,1)) ease both; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px);} to { opacity:1; transform:none;} }
+.tab-btn { transition: all .15s ease; }
+.tab-btn[aria-selected="true"] { background: rgb(var(--c-admin)); color: rgb(var(--c-on-accent)); font-weight:700; }
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,.card-hover,.row-hover,.vote-btn,.pill,.chip,.tab-btn,.seg-btn { animation:none!important; transition:none!important; }
+}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible { outline:2px solid rgb(var(--c-accent)); outline-offset:2px; }
+button, a, summary, [role="button"] { touch-action:manipulation; }
+@media (max-width:640px) { input, select, textarea { font-size:16px; } }
+dialog::backdrop { background: rgb(0 0 0 / .45); backdrop-filter: blur(3px); }
+summary::-webkit-details-marker { display:none; }
+.io { opacity:0; transform:translateY(14px); transition:opacity calc(.55s/var(--speed,1)) ease, transform calc(.55s/var(--speed,1)) ease; }
+.io-in { opacity:1 !important; transform:none !important; }
+@keyframes floaty { from { transform:translateY(0) rotate(0deg); } to { transform:translateY(14px) rotate(2deg); } }
+.floaty { animation: floaty calc(11s/var(--speed,1)) ease-in-out infinite alternate; }
+@keyframes dialogIn { from { opacity:0; transform:scale(.96) translateY(8px); } }
+dialog[open] { animation: dialogIn calc(.22s/var(--speed,1)) ease; }
+@keyframes backdropIn { from { opacity:0; } }
+dialog[open]::backdrop { animation: backdropIn calc(.25s/var(--speed,1)) ease; }
+@keyframes toastIn { from { opacity:0; transform:translate(-50%,10px); } }
+#toast:not(.hidden) { animation: toastIn calc(.28s/var(--speed,1)) ease; }
+button:not(:disabled):active { transform: scale(.97); }
+.nvl { position:relative; }
+.nvl::after { content:""; position:absolute; left:0; bottom:-4px; height:2px; width:100%; border-radius:2px; background:rgb(var(--c-accent)); transform:scaleX(0); transform-origin:left; transition:transform calc(.25s/var(--speed,1)) ease; }
+.nvl:hover::after { transform:scaleX(1); }
+.sect { position:relative; border-top:none!important; }
+.sect::before { content:""; position:absolute; top:0; left:1rem; right:1rem; height:13px; background:repeating-linear-gradient(to bottom, rgb(var(--c-ink)/.16) 0 1px, transparent 1px 4px); pointer-events:none; }
+.sect::after { content:"\266A"; position:absolute; top:-7px; left:50%; transform:translateX(-50%); padding:0 .6rem; background:rgb(var(--c-bg)); color:rgb(var(--c-ink)/.45); font-family:'Fraunces',Georgia,serif; font-size:.95rem; line-height:1; pointer-events:none; }
+.bg-accent:where(button,a):hover { box-shadow:4px 4px 0 rgb(var(--c-ink)/.85); transform:translate(-2px,-2px); }
+.bg-admin:where(button):hover { box-shadow:4px 4px 0 rgb(var(--c-ink)/.85); transform:translate(-2px,-2px); }
+.bg-accent:where(button,a), .bg-admin:where(button) { transition:transform .12s ease, box-shadow .12s ease, background-color .15s ease; }
+.hero-staff { position:absolute; left:0; right:0; top:6.5rem; height:64px; background:repeating-linear-gradient(to bottom, rgb(var(--c-ink)/.07) 0 1px, transparent 1px 16px); pointer-events:none; }
+#faq-list details.expanded .faq-inner > p { animation: fadeIn calc(.3s/var(--speed,1)) ease; }
+.faq-body { display:grid; grid-template-rows:0fr; transition:grid-template-rows calc(.3s/var(--speed,1)) ease; }
+details.expanded .faq-body { grid-template-rows:1fr; }
+.faq-inner { overflow:hidden; }
+.faq-arrow { transition: transform calc(.25s/var(--speed,1)) ease; }
+details.expanded .faq-arrow { transform:rotate(180deg); }
+html { scrollbar-width: thin; scrollbar-color: rgb(var(--c-line)) transparent; }
+::-webkit-scrollbar { width:10px; height:10px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:rgb(var(--c-line)); border-radius:999px; border:2px solid rgb(var(--c-bg)); }
+::-webkit-scrollbar-thumb:hover { background:rgb(var(--c-accent)/.6); }
+#back-to-top { opacity:0; pointer-events:none; transform:translateY(8px); transition:opacity calc(.25s/var(--speed,1)) ease, transform calc(.25s/var(--speed,1)) ease, color .15s, border-color .15s; }
+#back-to-top.show { opacity:1; pointer-events:auto; transform:none; }
+html[data-text="s"] { font-size:93.75%; }
+html[data-text="l"] { font-size:112.5%; }
+html[data-contrast="1"] { --c-line:147 148 165; --c-mute:0 0 0; --c-faint:72 75 106; --c-ink:0 0 0; }
+html[data-lite="1"] .backdrop-blur { backdrop-filter:none!important; -webkit-backdrop-filter:none!important; }
+html[data-lite="1"] .floaty { animation:none!important; }
+html[data-lite="1"] .shadow-glow, html[data-lite="1"] .shadow-2xl, html[data-lite="1"] .shadow-lg { box-shadow:none!important; }
+@keyframes bob { from { transform:translateY(0); } to { transform:translateY(-6px); } }
+@keyframes spinPulse { 0%,100% { transform:rotate(-6deg) scale(1); } 50% { transform:rotate(6deg) scale(1.12); } }
+html[data-motion="extra"] .card-hover { animation: bob calc(2.6s/var(--speed,1)) ease-in-out infinite alternate; }
+html[data-motion="extra"] .card-hover:nth-child(2n) { animation-delay:.4s; }
+html[data-motion="extra"] .card-hover:nth-child(3n) { animation-delay:.9s; }
+html[data-motion="extra"] [data-edit="logo"] { animation: spinPulse calc(3s/var(--speed,1)) ease-in-out infinite; display:inline-grid; }
+html[data-motion="extra"] .floaty { animation: floaty calc(3.5s/var(--speed,1)) ease-in-out infinite alternate; }
+html[data-motion="extra"] #stats-strip { animation: bob calc(2s/var(--speed,1)) ease-in-out infinite alternate; }
+html[data-motion="extra"] .nvl:hover::after { animation: hueSpin calc(3s/var(--speed,1)) linear infinite; }
+@keyframes glitchJitter { 0%,100% { transform:translate(0,0) skewX(0); } 20% { transform:translate(-4px,2px) skewX(-1.5deg); } 40% { transform:translate(3px,-3px) skewX(1deg); } 60% { transform:translate(-2px,3px) skewX(2deg); } 80% { transform:translate(4px,-2px) skewX(-1deg); } }
+@keyframes rgbSplit { 0%,100% { text-shadow:-3px 0 rgba(255,0,60,.8), 3px 0 rgba(0,220,255,.8); } 50% { text-shadow:3px 0 rgba(255,0,60,.8), -3px 0 rgba(0,220,255,.8); } }
+@keyframes hueSpin { to { filter:hue-rotate(360deg); } }
+@keyframes glitchHue { to { filter:hue-rotate(360deg) saturate(2.2); } }
+@keyframes flicker { 0%,100% { opacity:.14; } 50% { opacity:.24; } }
+@keyframes popIn { from { transform:scale(.6) rotate(var(--tilt,0deg)); opacity:0; } to { transform:scale(1) rotate(var(--tilt,0deg)); opacity:1; } }
+@keyframes bounceX { from { left:2vw; } to { left:calc(98vw - 190px); } }
+@keyframes bounceY { from { top:6vh; } to { top:calc(88vh - 90px); } }
+@keyframes infect { from { width:0%; } to { width:99%; } }
+body.dancing { overflow:hidden; }
+body.dancing main, body.dancing header, body.dancing footer { animation: glitchJitter calc(.35s/var(--speed,1)) steps(5) infinite, glitchHue calc(2.5s/var(--speed,1)) linear infinite; }
+body.dancing h1, body.dancing h2, body.dancing h3 { animation: rgbSplit calc(.4s/var(--speed,1)) steps(2) infinite; }
+#virus-scanlines { position:absolute; inset:0; background:repeating-linear-gradient(to bottom, rgb(0 0 0/.55) 0 2px, transparent 2px 5px); animation: flicker calc(.35s/var(--speed,1)) steps(2) infinite; }
+.virus-pop { position:absolute; min-width:230px; max-width:300px; background:rgb(var(--c-surface)); border:2px solid rgb(var(--c-ink)); box-shadow:6px 6px 0 rgb(var(--c-ink)/.85); border-radius:.5rem; overflow:hidden; animation: popIn calc(.25s/var(--speed,1)) ease both; }
+.virus-pop .vp-bar { display:flex; align-items:center; justify-content:space-between; background:rgb(var(--c-ink)); color:rgb(var(--c-on-accent)); font-size:11px; font-weight:800; padding:4px 10px; letter-spacing:.08em; }
+.virus-pop .vp-body { padding:12px 14px; font-size:13px; color:rgb(var(--c-ink)); }
+#virus-bouncer { position:absolute; display:flex; flex-direction:column; align-items:center; gap:2px; background:rgb(var(--c-danger)); color:rgb(var(--c-on-accent)); font-weight:800; font-size:13px; padding:10px 18px; border:2px solid rgb(var(--c-ink)); box-shadow:5px 5px 0 rgb(var(--c-ink)/.85); border-radius:.5rem; animation: bounceX calc(3.1s/var(--speed,1)) linear infinite alternate, bounceY calc(2.3s/var(--speed,1)) linear infinite alternate; }
+#virus-bouncer .vb-face { font-size:20px; }
+#virus-bar-wrap { position:absolute; left:50%; top:10vh; transform:translateX(-50%); width:min(70vw,420px); height:26px; background:rgb(var(--c-surface)); border:2px solid rgb(var(--c-ink)); border-radius:.4rem; overflow:hidden; }
+#virus-bar { height:100%; background:repeating-linear-gradient(45deg, rgb(var(--c-danger)) 0 12px, rgb(var(--c-admin)) 12px 24px); animation: infect 14s ease-out forwards; }
+#virus-bar-label { position:absolute; inset:0; display:grid; place-items:center; font-size:11px; font-weight:800; letter-spacing:.2em; color:rgb(var(--c-ink)); mix-blend-mode:multiply; }
+@media (prefers-reduced-motion: reduce) {
+  .floaty,.nvl::after,dialog[open],dialog[open]::backdrop,#toast:not(.hidden),#faq-list details.expanded .faq-inner > p,.faq-body,.faq-arrow,#back-to-top,body.dancing main,body.dancing header,body.dancing footer,body.dancing h1,body.dancing h2,body.dancing h3,#virus-scanlines,.virus-pop,#virus-bouncer,#virus-bar { animation:none!important; transition:none!important; }
+  .io { opacity:1!important; transform:none!important; transition:none!important; }
+  button:not(:disabled):active { transform:none!important; }
+}
+html[data-motion="reduced"] .fade-in, html[data-motion="reduced"] .card-hover, html[data-motion="reduced"] .row-hover, html[data-motion="reduced"] .vote-btn, html[data-motion="reduced"] .pill, html[data-motion="reduced"] .chip, html[data-motion="reduced"] .tab-btn, html[data-motion="reduced"] .seg-btn, html[data-motion="reduced"] .floaty, html[data-motion="reduced"] .nvl::after, html[data-motion="reduced"] dialog[open], html[data-motion="reduced"] dialog[open]::backdrop, html[data-motion="reduced"] #toast:not(.hidden), html[data-motion="reduced"] .faq-body, html[data-motion="reduced"] .faq-arrow, html[data-motion="reduced"] #back-to-top, html[data-motion="reduced"] #faq-list details.expanded .faq-inner > p { animation:none!important; transition:none!important; }
+html[data-motion="reduced"] .io { opacity:1!important; transform:none!important; transition:none!important; }
+html[data-motion="reduced"] button:not(:disabled):active { transform:none!important; }
+html[data-motion="extra"] .io { opacity:1; transform:none; }
+</style>
+</head>
+
+<body class="bg-base text-ink antialiased min-h-screen flex flex-col">
+<a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[80] focus:rounded-xl focus:bg-ink focus:text-oninv focus:px-4 focus:py-2 focus:text-sm focus:font-bold">Skip to content</a>
+
+<header class="sticky top-0 z-50 border-b border-line/70 bg-base/90 backdrop-blur">
+  <nav class="mx-auto max-w-6xl px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+    <button onclick="showView('home')" class="flex items-center gap-2.5 group" aria-label="Go to home">
+      <span data-edit="logo" class="grid place-items-center w-9 h-9 rounded-xl bg-ink text-oninv text-lg font-bold group-hover:bg-accent transition-colors">&#9835;</span>
+    </button>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+      <a href="#view-home" onclick="showView('home');return false;" class="nvl text-mute hover:text-accent transition-colors">Home</a>
+      <a href="#view-scores" onclick="showView('scores');return false;" class="nvl text-mute hover:text-accent transition-colors">Published Scores</a>
+      <a href="#view-vote" onclick="showView('vote');return false;" class="nvl text-mute hover:text-accent transition-colors">Vote</a>
+      <a href="#view-access" onclick="goToFriends();return false;" class="nvl whitespace-nowrap text-mute hover:text-accent transition-colors">Friends<span id="nav-friends-dot" class="hidden ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-accent align-middle"></span></a>
+    </div>
+    <div class="flex items-center gap-2">
+      <a id="icon-youtube" href="#" target="_blank" rel="noopener" aria-label="YouTube channel" title="YouTube" class="w-8 h-8 grid place-items-center rounded-full border border-line text-mute hover:text-accent hover:border-accent transition-colors">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2c-.3-1.2-1.2-2.1-2.4-2.4C18.5 4.2 12 4.2 12 4.2s-6.5 0-8.6.6C2.2 5.1 1.3 6 1 7.2.4 9.4.4 12 .4 12s0 2.6.6 4.8c.3 1.2 1.2 2.1 2.4 2.4 2.1.6 8.6.6 8.6.6s6.5 0 8.6-.6c1.2-.3 2.1-1.2 2.4-2.4.6-2.2.6-4.8.6-4.8s0-2.6-.6-4.8zM9.8 15.5v-7l6 3.5-6 3.5z"/></svg>
+      </a>
+      <a id="icon-instagram" href="#" target="_blank" rel="noopener" aria-label="Instagram profile" title="Instagram" class="w-8 h-8 grid place-items-center rounded-full border border-line text-mute hover:text-accent hover:border-accent transition-colors">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <button onclick="openSettings()" aria-label="Site settings" title="Settings" class="w-8 h-8 grid place-items-center rounded-full border border-line text-mute hover:text-accent hover:border-accent transition-colors text-sm">&#9881;</button>
+      <button onclick="openHelp()" aria-label="Help — what can I do here?" title="What can I do here?" class="w-8 h-8 grid place-items-center rounded-full border border-line text-mute hover:text-accent hover:border-accent transition-colors text-sm font-bold">?</button>
+      <button class="md:hidden text-mute text-2xl leading-none px-2" onclick="toggleMobileMenu()" aria-label="Toggle menu" aria-expanded="false" id="mobile-menu-btn">&#9776;</button>
+    </div>
+  </nav>
+  <div id="mobile-menu" class="hidden md:hidden border-t border-line/70 bg-base px-4 py-3 flex flex-col gap-3 text-sm font-medium">
+    <a href="#view-home" onclick="showView('home');return false;" class="text-mute hover:text-accent">Home</a>
+    <a href="#view-scores" onclick="showView('scores');return false;" class="text-mute hover:text-accent">Published Scores</a>
+    <a href="#view-vote" onclick="showView('vote');return false;" class="text-mute hover:text-accent">Vote</a>
+    <a href="#view-access" onclick="goToFriends();return false;" class="text-mute hover:text-accent">Friends<span id="nav-friends-dot-m" class="hidden ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-accent align-middle"></span></a>
+  </div>
+</header>
+
+<main id="main-content" class="flex-1">
+
+<div id="view-home">
+
+  <section class="relative overflow-hidden">
+    <span aria-hidden="true" class="floaty pointer-events-none select-none absolute -right-10 -top-24 font-display text-[22rem] leading-none text-ink/[.045]">&#9835;</span>
+    <span aria-hidden="true" class="hero-staff"></span>
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 pt-24 pb-12 relative">
+      <p data-edit="heroEyebrow" class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-6">&mdash; Arranger &middot; Transcriber &middot; Musician</p>
+      <h1 data-edit="heroHeading" class="font-display text-5xl sm:text-7xl font-bold tracking-tight text-ink leading-[1.02] max-w-4xl">Sheet Music &amp; Arrangements</h1>
+      <p data-edit="heroSub" class="mt-6 text-lg text-mute max-w-2xl">Personal portfolio for original arrangements, transcriptions, and custom sheet music.</p>
+      <p id="stats-strip" class="mt-8 text-xs font-semibold tracking-[0.2em] uppercase text-faint"></p>
+      <div id="now-arranging" class="hidden mt-6 inline-flex items-center gap-3 rounded-xl border border-accent/50 bg-sunken px-4 py-2.5 text-sm">
+        <span class="w-2 h-2 rounded-full bg-accent animate-pulse" aria-hidden="true"></span>
+        <span id="now-arranging-text" class="text-mute"></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 sm:px-6 pb-4">
+    <div id="hint-home" class="max-w-3xl mx-auto"></div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 sm:px-6 pb-16 pt-6">
+    <div class="grid sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
+      <button onclick="showView('scores')" class="group text-left bg-surface border border-line rounded-2xl p-7 card-hover">
+        <p class="font-display text-faint text-2xl mb-3">01</p>
+        <h2 data-edit="exploreScoresTitle" class="font-display text-2xl font-bold text-ink">Published Sheet Music</h2>
+        <p data-edit="exploreScoresSub" class="text-sm text-mute mt-2">Browse every finished arrangement with videos and store links.</p>
+        <span class="inline-block mt-5 text-sm font-semibold text-accent group-hover:translate-x-1 transition-transform">Open the catalog &rarr;</span>
+      </button>
+      <button onclick="showView('vote')" class="group text-left bg-surface border border-line rounded-2xl p-7 card-hover">
+        <p class="font-display text-faint text-2xl mb-3">02</p>
+        <h2 data-edit="exploreVoteTitle" class="font-display text-2xl font-bold text-ink">Vote for the Next Arrangement</h2>
+        <p data-edit="exploreVoteSub" class="text-sm text-mute mt-2">Pick what gets arranged next, or request your own song.</p>
+        <span class="inline-block mt-5 text-sm font-semibold text-accent group-hover:translate-x-1 transition-transform">Go vote &rarr;</span>
+      </button>
+    </div>
+  </section>
+
+  <section id="featured-section" class="hidden mx-auto max-w-6xl px-4 sm:px-6 py-16 sect">
+    <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Highlight</p>
+    <h2 data-edit="featuredTitle" class="font-display text-3xl font-bold text-ink mb-8">Featured Arrangement</h2>
+    <div id="featured-card"></div>
+  </section>
+
+  <section id="faq-section" class="hidden mx-auto max-w-6xl px-4 sm:px-6 py-16 sect">
+    <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Questions</p>
+    <h2 data-edit="faqTitle" class="font-display text-3xl font-bold text-ink">FAQ</h2>
+    <p data-edit="faqSub" class="text-mute text-sm mt-2 mb-8">Quick answers about requests, scores, and usage.</p>
+    <div id="faq-list" class="max-w-3xl space-y-3"></div>
+  </section>
+
+  <section id="contact" class="mx-auto max-w-6xl px-4 sm:px-6 py-16 sect">
+    <div class="max-w-3xl">
+      <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Contact</p>
+      <h2 data-edit="contactTitle" class="font-display text-3xl font-bold text-ink">Get in Touch</h2>
+      <p data-edit="contactSub" class="text-mute text-sm mt-2 mb-8">Collaborations or questions about a score.</p>
+      <form action="https://formspree.io/f/your-form-id" method="POST" class="bg-surface border border-line rounded-2xl p-6 sm:p-8 space-y-5">
+        <div class="grid sm:grid-cols-2 gap-5">
+          <label class="block">
+            <span class="block text-xs font-semibold text-mute mb-1.5">Name</span>
+            <input id="ct-name" name="name" type="text" required class="w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink focus:border-accent" />
+          </label>
+          <label class="block">
+            <span class="block text-xs font-semibold text-mute mb-1.5">Email</span>
+            <input id="ct-email" name="email" type="email" required class="w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink focus:border-accent" />
+          </label>
+        </div>
+        <label class="block">
+          <span class="block text-xs font-semibold text-mute mb-1.5">Message</span>
+          <textarea id="ct-message" name="message" rows="4" required class="w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink focus:border-accent"></textarea>
+        </label>
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+        <button type="submit" class="rounded-xl bg-accent px-6 py-2.5 font-bold text-oninv hover:bg-accent-hi transition-colors">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <span id="vault-anchor" class="block scroll-mt-20"></span>
+  <section id="friends-vault" class="hidden mx-auto max-w-6xl px-4 sm:px-6 py-16 sect">
+    <div class="rounded-2xl border border-accent/25 bg-accent/[.05] px-6 sm:px-8 py-6 mb-10 flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <p class="font-display text-2xl font-bold text-ink"><span data-edit="vaultWelcome">Welcome back</span> <span class="text-accent">&#10022;</span></p>
+        <p id="vault-count-line" class="text-sm text-mute mt-1"></p>
+      </div>
+      <button onclick="logoutAll()" class="rounded-xl border border-line bg-surface px-4 py-2 text-sm text-mute hover:text-ink hover:border-mute transition-colors">Log out</button>
+    </div>
+    <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+      <div>
+        <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Members Only</p>
+        <h2 data-edit="vaultTitle" class="font-display text-3xl font-bold text-ink">Exclusive Friends Vault</h2>
+        <p data-edit="vaultSub" class="text-mute text-sm mt-2">Private drafts and works in progress, shared with friends only.</p>
+      </div>
+      <div class="flex items-center rounded-xl border border-line bg-surface overflow-hidden" role="group" aria-label="Vault layout">
+        <button class="seg-btn px-3 py-1.5 text-sm text-mute" data-layout-btn="vault-grid" aria-pressed="true" onclick="setLayout('vault','grid')" title="Grid view" aria-label="Grid layout">&#9638;</button>
+        <button class="seg-btn px-3 py-1.5 text-sm text-mute" data-layout-btn="vault-list" aria-pressed="false" onclick="setLayout('vault','list')" title="List view — has audio preview" aria-label="List layout">&#9776;</button>
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+      <input id="vault-search" type="search" placeholder="Search vault scores&hellip;" oninput="setSearch('vault', this.value)" class="w-full sm:max-w-xs rounded-xl bg-surface border border-line px-3.5 py-2 text-sm text-ink placeholder-faint focus:border-accent" />
+    </div>
+    <div id="vault-filter-chips" class="flex flex-wrap gap-2 mb-2" role="group" aria-label="Filter vault by tag"></div>
+    <div id="vault-diff-chips" class="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter vault by difficulty"></div>
+    <div id="vault-grid"></div>
+  </section>
+
+  <section id="admin-center" class="hidden mx-auto max-w-6xl px-4 sm:px-6 py-16 sect scroll-mt-20">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+      <div>
+        <p class="text-admin text-xs font-bold tracking-[0.35em] uppercase mb-2">Admin</p>
+        <h2 class="font-display text-3xl font-bold text-ink">Admin Panel</h2>
+      </div>
+      <button onclick="logoutAdmin()" class="rounded-xl border border-admin/50 px-4 py-2 text-sm font-semibold text-admin hover:bg-admin/10 transition-colors">Log out of admin</button>
+    </div>
+
+    <div class="bg-surface border border-admin/30 rounded-2xl overflow-hidden lg:grid lg:grid-cols-[230px_1fr]">
+      <div id="admin-tabs" class="flex lg:flex-col gap-1 p-2 lg:p-3 border-b lg:border-b-0 lg:border-r border-line/70 bg-sunken/60 overflow-x-auto" role="tablist">
+        <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="true" data-tab="dash" onclick="setAdminTab('dash')">&#8962; Dashboard</button>
+        <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="catalog" onclick="setAdminTab('catalog')">&#9834; Published <span data-count="catalog" class="opacity-70"></span></button>
+        <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="vault" onclick="setAdminTab('vault')">&#9673; Friends Vault <span data-count="vault" class="opacity-70"></span></button>
+        <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="voting" onclick="setAdminTab('voting')">&#9650; Voting Board <span data-count="voting" class="opacity-70"></span></button>
+        <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="inbox" onclick="setAdminTab('inbox')">&#9993; Inbox <span data-count="inbox" class="opacity-70"></span></button>
+        <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="genres" onclick="setAdminTab('genres')">&#9839; Genres <span data-count="genres" class="opacity-70"></span></button>
+        <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="faq" onclick="setAdminTab('faq')">&#63; FAQ <span data-count="faq" class="opacity-70"></span></button>
+        <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="social" onclick="setAdminTab('social')">&#128279; YouTube / Instagram</button>
+        <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="text" onclick="setAdminTab('text')">&#9998; Site Text</button>
+        <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="data" onclick="setAdminTab('data')">&#128190; Backup &amp; Data</button>
+      </div>
+
+      <div class="p-6">
+
+        <div data-tabpanel="dash">
+          <p class="text-sm text-mute mb-5">Everything you change saves to this browser instantly. Use <strong>Backup &amp; Data</strong> to move your content anywhere else.</p>
+          <div id="dash-tiles" class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6"></div>
+          <div class="flex flex-wrap gap-2 mb-8">
+            <button onclick="setAdminTab('catalog')" class="rounded-xl bg-admin px-4 py-2 text-sm font-bold text-oninv hover:bg-admin-hi">+ Add a score</button>
+            <button onclick="setAdminTab('voting')" class="rounded-xl border border-admin/50 px-4 py-2 text-sm font-semibold text-admin hover:bg-admin/10">+ Add a voting song</button>
+            <button onclick="exportData()" class="rounded-xl border border-line px-4 py-2 text-sm font-semibold text-mute hover:text-ink">Export backup</button>
+          </div>
+          <div id="dash-checklist"></div>
+        </div>
+
+        <div data-tabpanel="catalog" class="hidden">
+          <p class="text-sm text-mute mb-5">Public arrangements everyone can see. Click any score on the site to preview exactly what visitors get.</p>
+          <div class="grid lg:grid-cols-2 gap-8">
+            <div>
+              <h3 id="catalog-form-title" class="font-semibold text-admin mb-4">Add Published Arrangement</h3>
+              <div class="space-y-3">
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Title *</span>
+                  <input id="c-title" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <div class="grid grid-cols-2 gap-2">
+                  <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Creator / Artist</span>
+                    <input id="c-artist" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                  <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Arrangement</span>
+                    <input id="c-arrangement" type="text" placeholder="e.g. Concert Band" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></label>
+                </div>
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Difficulty</span>
+                  <select id="c-difficulty" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm text-mute focus:border-admin">
+                    <option value="">Not set</option><option>Beginner</option><option>Intermediate</option><option>Inter-Advanced</option><option>Advanced</option><option>Professional</option><option>Impossible</option>
+                  </select></label>
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Description</span>
+                  <input id="c-desc" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">YouTube video (URL or 11-character ID)</span>
+                  <input id="c-video" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Sheet preview image <span class="font-normal text-faint">(file in your repo, e.g. previews/canon.png)</span></span>
+                  <input id="c-preview" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <div>
+                  <p class="text-xs font-semibold text-mute mb-1.5">Tags <span class="font-normal text-faint">(tap to toggle)</span></p>
+                  <div id="c-tag-picker" class="flex flex-wrap gap-1.5"></div>
+                </div>
+                <div>
+                  <p class="text-xs font-semibold text-mute mb-1.5">Genres <span class="font-normal text-faint">(tap to toggle)</span></p>
+                  <div id="c-genre-picker" class="flex flex-wrap gap-1.5"></div>
+                </div>
+                <div>
+                  <p class="text-xs font-semibold text-mute mb-1.5">Sheet music store links <span class="font-normal text-faint">(up to 3)</span></p>
+                  <div class="space-y-2">
+                    <div class="grid grid-cols-[1fr_2fr] gap-2"><input id="c-link1-label" type="text" placeholder="Label" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /><input id="c-link1-url" type="text" placeholder="https://&hellip;" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></div>
+                    <div class="grid grid-cols-[1fr_2fr] gap-2"><input id="c-link2-label" type="text" placeholder="Label" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /><input id="c-link2-url" type="text" placeholder="https://&hellip;" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></div>
+                    <div class="grid grid-cols-[1fr_2fr] gap-2"><input id="c-link3-label" type="text" placeholder="Label" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /><input id="c-link3-url" type="text" placeholder="https://&hellip;" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></div>
+                  </div>
+                </div>
+                <div class="flex gap-2 pt-1">
+                  <button id="catalog-save-btn" onclick="saveScore('catalog')" class="rounded-xl bg-admin px-5 py-2 text-sm font-bold text-oninv hover:bg-admin-hi">+ Add Arrangement</button>
+                  <button id="catalog-cancel-btn" onclick="cancelEdit('catalog')" class="hidden rounded-xl border border-line px-4 py-2 text-sm text-mute hover:text-ink">Cancel</button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="font-semibold text-mute mb-1">Current Published Arrangements</h3>
+              <p class="text-xs text-faint mb-4">&#9733; features a score on the home page &middot; &#9650;&#9660; reorder</p>
+              <ul id="admin-catalog-list" class="space-y-2 text-sm"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div data-tabpanel="vault" class="hidden">
+          <p class="text-sm text-mute mb-5">Private scores only unlocked friends can see. Same fields as the public catalog.</p>
+          <div class="grid lg:grid-cols-2 gap-8">
+            <div>
+              <h3 id="vault-form-title" class="font-semibold text-admin mb-4">Add Vault Score</h3>
+              <div class="space-y-3">
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Title *</span>
+                  <input id="v-title" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <div class="grid grid-cols-2 gap-2">
+                  <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Creator / Artist</span>
+                    <input id="v-artist" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                  <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Arrangement</span>
+                    <input id="v-arrangement" type="text" placeholder="e.g. Orchestra" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></label>
+                </div>
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Difficulty</span>
+                  <select id="v-difficulty" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm text-mute focus:border-admin">
+                    <option value="">Not set</option><option>Beginner</option><option>Intermediate</option><option>Inter-Advanced</option><option>Advanced</option><option>Professional</option><option>Impossible</option>
+                  </select></label>
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Description</span>
+                  <input id="v-desc" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">YouTube video (URL or 11-character ID)</span>
+                  <input id="v-video" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Sheet preview image <span class="font-normal text-faint">(file in your repo, e.g. previews/canon.png)</span></span>
+                  <input id="v-preview" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <div>
+                  <p class="text-xs font-semibold text-mute mb-1.5">Tags <span class="font-normal text-faint">(tap to toggle)</span></p>
+                  <div id="v-tag-picker" class="flex flex-wrap gap-1.5"></div>
+                </div>
+                <div>
+                  <p class="text-xs font-semibold text-mute mb-1.5">Genres <span class="font-normal text-faint">(tap to toggle)</span></p>
+                  <div id="v-genre-picker" class="flex flex-wrap gap-1.5"></div>
+                </div>
+                <div>
+                  <p class="text-xs font-semibold text-mute mb-1.5">Sheet music store links <span class="font-normal text-faint">(up to 3)</span></p>
+                  <div class="space-y-2">
+                    <div class="grid grid-cols-[1fr_2fr] gap-2"><input id="v-link1-label" type="text" placeholder="Label" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /><input id="v-link1-url" type="text" placeholder="https://&hellip;" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></div>
+                    <div class="grid grid-cols-[1fr_2fr] gap-2"><input id="v-link2-label" type="text" placeholder="Label" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /><input id="v-link2-url" type="text" placeholder="https://&hellip;" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></div>
+                    <div class="grid grid-cols-[1fr_2fr] gap-2"><input id="v-link3-label" type="text" placeholder="Label" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /><input id="v-link3-url" type="text" placeholder="https://&hellip;" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></div>
+                  </div>
+                </div>
+                <div class="flex gap-2 pt-1">
+                  <button id="vault-save-btn" onclick="saveScore('vault')" class="rounded-xl bg-admin px-5 py-2 text-sm font-bold text-oninv hover:bg-admin-hi">+ Add Score</button>
+                  <button id="vault-cancel-btn" onclick="cancelEdit('vault')" class="hidden rounded-xl border border-line px-4 py-2 text-sm text-mute hover:text-ink">Cancel</button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="font-semibold text-mute mb-1">Current Vault Scores</h3>
+              <p class="text-xs text-faint mb-4">&#9650;&#9660; reorder &middot; Edit loads the score into the form</p>
+              <ul id="admin-vault-list" class="space-y-2 text-sm"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div data-tabpanel="voting" class="hidden">
+          <p class="text-sm text-mute mb-2">Songs visitors can vote on. Mark one <em>Arranged</em> and link its published score to close the loop.</p>
+          <p id="vote-sync-status" class="text-xs text-faint mb-4"></p>
+          <div class="grid sm:grid-cols-2 gap-2 mb-2">
+            <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Song title *</span>
+              <input id="vote-new-title" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+            <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Artist</span>
+              <input id="vote-new-artist" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+            <label class="block"><span class="block text-xs font-semibold text-mute mb-1">YouTube link for the &#9654; audio preview</span>
+              <input id="vote-new-music" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+            <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Status</span>
+              <select id="vote-new-status" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm text-mute focus:border-admin">
+                <option value="open">Open</option>
+                <option value="considering">Considering</option>
+                <option value="in-progress">In Progress</option>
+                <option value="arranged">Arranged &#10003;</option>
+              </select></label>
+            <label class="block sm:col-span-2"><span class="block text-xs font-semibold text-mute mb-1">Link to published score <span class="font-normal text-faint">(shows "View score" when Arranged)</span></span>
+              <select id="vote-new-score" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm text-mute focus:border-admin">
+                <option value="">None</option>
+              </select></label>
+          </div>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <button id="vote-save-btn" onclick="saveVoteItem()" class="rounded-xl bg-admin px-5 py-2 text-sm font-bold text-oninv hover:bg-admin-hi">+ Add Song</button>
+            <button id="vote-cancel-btn" onclick="cancelVoteEdit()" class="hidden rounded-xl border border-line px-4 py-2 text-sm text-mute hover:text-ink">Cancel</button>
+            <button onclick="adminResetVotes()" class="rounded-xl border border-danger/50 px-5 py-2 text-sm font-semibold text-danger hover:bg-danger/10">Reset All Votes</button>
+          </div>
+          <ul id="admin-vote-list" class="space-y-2 text-sm"></ul>
+        </div>
+
+        <div data-tabpanel="inbox" class="hidden">
+          <p class="text-sm text-mute mb-2">Song suggestions from visitors land here when Firebase is connected.</p>
+          <p id="inbox-status" class="text-xs text-faint mb-4"></p>
+          <ul id="admin-inbox-list" class="space-y-2 text-sm max-w-2xl"></ul>
+        </div>
+
+        <div data-tabpanel="genres" class="hidden">
+          <p class="text-sm text-mute mb-5">Genres appear as pickers on the score forms and in the public suggestion form. Add as many as you like.</p>
+          <div class="flex gap-2 mb-5 max-w-md">
+            <input id="genre-input" type="text" placeholder="New genre, e.g. City Pop" class="flex-1 rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" />
+            <button onclick="adminAddGenre()" class="rounded-xl bg-admin px-4 py-2 text-sm font-bold text-oninv hover:bg-admin-hi">Add</button>
+          </div>
+          <div id="admin-genre-list" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <div data-tabpanel="faq" class="hidden">
+          <p class="text-sm text-mute mb-5">Shown as dropdowns on the home page. Delete them all to hide the section.</p>
+          <div class="max-w-2xl space-y-3 mb-5">
+            <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Question *</span>
+              <input id="faq-q" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+            <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Answer *</span>
+              <textarea id="faq-a" rows="3" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin"></textarea></label>
+            <div class="flex gap-2">
+              <button id="faq-save-btn" onclick="saveFaq()" class="rounded-xl bg-admin px-5 py-2 text-sm font-bold text-oninv hover:bg-admin-hi">+ Add FAQ</button>
+              <button id="faq-cancel-btn" onclick="cancelFaqEdit()" class="hidden rounded-xl border border-line px-4 py-2 text-sm text-mute hover:text-ink">Cancel</button>
+            </div>
+          </div>
+          <ul id="admin-faq-list" class="space-y-2 text-sm max-w-2xl"></ul>
+        </div>
+
+        <div data-tabpanel="social" class="hidden">
+          <p class="text-sm text-mute mb-5">These links power the YouTube and Instagram buttons in the navigation and footer.</p>
+          <div class="max-w-md space-y-4">
+            <label class="block"><span class="block text-xs font-semibold text-mute mb-1">YouTube URL</span>
+              <input id="soc-youtube" type="url" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+            <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Instagram URL</span>
+              <input id="soc-instagram" type="url" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+            <button onclick="adminSaveSocial()" class="rounded-xl bg-admin px-5 py-2 text-sm font-bold text-oninv hover:bg-admin-hi">Save Links</button>
+          </div>
+        </div>
+
+        <div data-tabpanel="text" class="hidden">
+          <p class="text-sm text-mute mb-5">Every heading, subtitle, and the logo. You can also use the &#9998; Edit buttons directly on the page.</p>
+          <ul id="admin-text-list" class="space-y-2 text-sm max-w-2xl"></ul>
+        </div>
+
+        <div data-tabpanel="data" class="hidden">
+          <p class="text-sm text-mute mb-2 max-w-2xl">Your edits here are a <strong>local draft</strong> only you can see. To publish for everyone: <strong>Export</strong>, rename the file to <code class="text-xs bg-sunken border border-line rounded px-1.5 py-0.5">data.json</code>, and upload it to your GitHub repository next to index.html.</p>
+          <p id="draft-status" class="text-xs mb-5"></p>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <button onclick="exportData()" class="rounded-xl bg-admin px-5 py-2 text-sm font-bold text-oninv hover:bg-admin-hi">Export Backup (.json)</button>
+            <label class="cursor-pointer rounded-xl border border-admin/60 px-5 py-2 text-sm font-semibold text-admin hover:bg-admin/10">Import Backup<input id="import-file" type="file" accept="application/json,.json" class="hidden" onchange="importData(this)" /></label>
+            <button onclick="discardDraft()" class="rounded-xl border border-line px-5 py-2 text-sm font-semibold text-mute hover:text-ink">Discard Local Draft</button>
+            <button onclick="resetAllData()" class="rounded-xl border border-danger/50 px-5 py-2 text-sm font-semibold text-danger hover:bg-danger/10">Reset Everything</button>
+          </div>
+          <p id="data-feedback" class="text-sm text-faint min-h-[1.25rem]" aria-live="polite"></p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="view-scores" class="hidden">
+  <section class="mx-auto max-w-6xl px-4 sm:px-6 pt-12 pb-20">
+    <button onclick="showView('home')" class="inline-flex items-center gap-2 text-sm font-medium text-mute hover:text-accent transition-colors mb-10">&larr; Back to Main Page</button>
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Public Catalog</p>
+        <h2 data-edit="catalogTitle" class="font-display text-4xl sm:text-5xl font-bold text-ink mb-3">Published Sheet Music</h2>
+        <p data-edit="catalogSub" class="text-mute mb-6 max-w-2xl">Every published arrangement, with performance video, tags, and store links.</p>
+      </div>
+      <div class="flex items-center rounded-xl border border-line bg-surface overflow-hidden mb-6" role="group" aria-label="Catalog layout">
+        <button class="seg-btn px-3 py-1.5 text-sm text-mute" data-layout-btn="catalog-grid" aria-pressed="true" onclick="setLayout('catalog','grid')" title="Grid view" aria-label="Grid layout">&#9638;</button>
+        <button class="seg-btn px-3 py-1.5 text-sm text-mute" data-layout-btn="catalog-list" aria-pressed="false" onclick="setLayout('catalog','list')" title="List view — has audio preview" aria-label="List layout">&#9776;</button>
+      </div>
+    </div>
+    <div id="hint-scores" class="mb-4"></div>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+      <input id="catalog-search" type="search" placeholder="Search published scores&hellip;" oninput="setSearch('catalog', this.value)" class="w-full sm:max-w-xs rounded-xl bg-surface border border-line px-3.5 py-2 text-sm text-ink placeholder-faint focus:border-accent" />
+    </div>
+    <div id="catalog-filter-chips" class="flex flex-wrap gap-2 mb-2" role="group" aria-label="Filter catalog by tag"></div>
+    <div id="catalog-diff-chips" class="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter catalog by difficulty"></div>
+    <div id="catalog-grid"></div>
+  </section>
+</div>
+
+<div id="view-vote" class="hidden">
+  <section class="mx-auto max-w-6xl px-4 sm:px-6 pt-12 pb-20">
+    <button onclick="showView('home')" class="inline-flex items-center gap-2 text-sm font-medium text-mute hover:text-accent transition-colors mb-10">&larr; Back to Main Page</button>
+    <div class="max-w-3xl">
+      <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Community</p>
+      <h2 data-edit="votingTitle" class="font-display text-4xl sm:text-5xl font-bold text-ink">Vote for the Next Arrangement</h2>
+      <p data-edit="votingSub" class="text-mute text-sm mt-3 mb-6">One vote per song, per visitor. The board re-sorts live as votes come in.</p>
+      <div id="hint-vote" class="mb-6"></div>
+      <ul id="voting-board" class="space-y-3"></ul>
+
+      <div class="mt-16 pt-12 border-t border-line/60">
+        <h3 data-edit="suggestTitle" class="font-display text-3xl font-bold text-ink">Suggest a Song</h3>
+        <p data-edit="suggestSub" class="text-mute text-sm mt-2 mb-8">Not on the board? Request it here.</p>
+        <form id="suggestion-form" action="https://formspree.io/f/your-form-id" method="POST" class="bg-surface border border-line rounded-2xl p-6 sm:p-8 space-y-6">
+          <div class="grid sm:grid-cols-2 gap-5">
+            <label class="block">
+              <span class="block text-xs font-semibold text-mute mb-1.5">Song Name <span class="text-accent">*</span></span>
+              <input id="sg-name" name="song_name" type="text" required placeholder="e.g. Idol" class="w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink placeholder-faint focus:border-accent" />
+            </label>
+            <label class="block">
+              <span class="block text-xs font-semibold text-mute mb-1.5">Created By / Artist <span class="text-accent">*</span></span>
+              <input id="sg-artist" name="artist" type="text" required placeholder="e.g. YOASOBI" class="w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink placeholder-faint focus:border-accent" />
+            </label>
+          </div>
+          <label class="block">
+            <span class="block text-xs font-semibold text-mute mb-1.5">YouTube Link <span class="text-faint font-normal">(optional)</span></span>
+            <input id="sg-youtube" name="youtube_link" type="text" placeholder="https://youtube.com/watch?v=&hellip;" class="w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink placeholder-faint focus:border-accent" />
+          </label>
+          <div class="relative">
+            <div class="flex items-baseline justify-between mb-2">
+              <span class="block text-xs font-semibold text-mute">Genre <span class="text-faint font-normal">(up to 3)</span></span>
+              <span id="genre-count" class="text-xs text-faint">0 / 3 selected</span>
+            </div>
+            <button type="button" id="genre-toggle" onclick="toggleGenreMenu(event)" class="w-full sm:max-w-md flex items-center justify-between rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-sm text-mute hover:border-accent">
+              <span id="genre-summary" class="truncate">Select genres&hellip;</span>
+              <span class="text-faint ml-2">&#9662;</span>
+            </button>
+            <div id="genre-menu" class="hidden absolute z-20 mt-2 w-full sm:max-w-md max-h-64 overflow-y-auto rounded-xl bg-surface border border-line shadow-2xl p-3">
+              <div id="genre-grid" class="flex flex-wrap gap-2"></div>
+            </div>
+            <input type="hidden" id="sg-genres" name="genres" value="" />
+          </div>
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+          <button type="submit" class="rounded-xl bg-accent px-6 py-2.5 font-bold text-oninv hover:bg-accent-hi transition-colors">Send Suggestion</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="view-access" class="hidden">
+  <section class="mx-auto max-w-6xl px-4 sm:px-6 pt-12 pb-20">
+    <button onclick="showView('home')" class="inline-flex items-center gap-2 text-sm font-medium text-mute hover:text-accent transition-colors mb-10">&larr; Back to Main Page</button>
+    <div class="bg-surface border border-line rounded-2xl p-6 sm:p-8 max-w-2xl mx-auto relative overflow-hidden">
+      <span aria-hidden="true" class="floaty pointer-events-none select-none absolute -right-6 -bottom-14 font-display text-[10rem] leading-none text-ink/[.05]">&#10022;</span>
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-1 relative">
+        <h2 data-edit="portalTitle" class="font-display text-3xl font-bold text-ink">Friends Access</h2>
+        <span id="portal-status-badge" class="hidden text-xs font-bold tracking-wider px-3 py-1.5 rounded-full border"></span>
+      </div>
+      <p data-edit="portalSub" class="text-mute text-sm mb-6 relative">Enter the friends passcode to unlock the private sheet music vault.</p>
+      <div class="flex flex-col sm:flex-row gap-3 relative">
+        <input id="passcode-input" type="text" autocomplete="off" spellcheck="false" placeholder="Friends passcode&hellip;" class="flex-1 rounded-xl bg-sunken border border-line px-4 py-2.5 font-mono text-accent placeholder-faint focus:border-accent" />
+        <button onclick="unlockAccess()" class="rounded-xl bg-accent px-6 py-2.5 font-bold text-oninv hover:bg-accent-hi transition-colors">Unlock</button>
+        <button id="logout-btn" onclick="logoutAll()" class="hidden rounded-xl border border-line px-4 py-2.5 text-sm text-mute hover:text-ink hover:border-mute transition-colors">Log out</button>
+      </div>
+      <p id="passcode-feedback" class="text-sm mt-3 min-h-[1.25rem] relative" aria-live="polite"></p>
+      <div id="admin-login" class="hidden relative mt-5 pt-5 border-t border-line/70 space-y-3">
+        <input id="al-email" type="email" autocomplete="username" placeholder="Email" class="w-full rounded-xl bg-sunken border border-line px-4 py-2.5 text-ink placeholder-faint focus:border-accent" />
+        <input id="al-pass" type="password" autocomplete="current-password" placeholder="Password" class="w-full rounded-xl bg-sunken border border-line px-4 py-2.5 text-ink placeholder-faint focus:border-accent" />
+        <button onclick="adminLogin()" class="rounded-xl bg-ink px-6 py-2.5 font-bold text-oninv hover:bg-accent transition-colors">Continue</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<footer class="sect bg-sunken/60 mt-auto">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <p class="text-sm text-faint"><span data-edit="footerNote">&copy; unbranded_branden &middot; every note placed by hand.</span> <a href="404.html" class="text-faint/50 hover:text-accent transition-colors ml-2 text-xs" title="404">404</a></p>
+    <div class="flex items-center gap-5 text-sm font-medium">
+      <a id="foot-youtube" href="#" target="_blank" rel="noopener" class="text-mute hover:text-accent transition-colors">YouTube</a>
+      <a id="foot-instagram" href="#" target="_blank" rel="noopener" class="text-mute hover:text-accent transition-colors">Instagram</a>
+    </div>
+  </div>
+</footer>
+
+<dialog id="edit-modal" class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(92vw,28rem)]">
+  <div class="p-6">
+    <h3 id="edit-modal-title" class="font-bold text-ink mb-4">Edit Text</h3>
+    <textarea id="edit-modal-input" rows="3" class="w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink focus:border-admin"></textarea>
+    <div class="mt-5 flex justify-end gap-2">
+      <button onclick="closeEditModal()" class="rounded-xl border border-line px-4 py-2 text-sm text-mute hover:text-ink">Cancel</button>
+      <button onclick="saveEditModal()" class="rounded-xl bg-admin px-5 py-2 text-sm font-bold text-oninv hover:bg-admin-hi">Save</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="confirm-modal" class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(92vw,26rem)]">
+  <div class="p-6">
+    <p id="confirm-modal-msg" class="text-sm text-mute"></p>
+    <label id="confirm-skip-row" class="mt-4 flex items-center gap-2 text-xs text-faint cursor-pointer select-none">
+      <input id="confirm-skip" type="checkbox" class="rounded border-line" /> Don't ask again for 15 minutes
+    </label>
+    <div class="mt-5 flex justify-end gap-2">
+      <button onclick="closeConfirmModal(false)" class="rounded-xl border border-line px-4 py-2 text-sm text-mute hover:text-ink">Cancel</button>
+      <button onclick="closeConfirmModal(true)" class="rounded-xl bg-accent px-5 py-2 text-sm font-bold text-oninv hover:bg-accent-hi">Confirm</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="score-modal" class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(94vw,44rem)]">
+  <div id="score-modal-body" class="max-h-[85vh] overflow-y-auto"></div>
+</dialog>
+
+<dialog id="intro-modal" class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(92vw,30rem)]">
+  <div class="p-7">
+    <p id="intro-eyebrow" class="text-accent text-xs font-bold tracking-[0.3em] uppercase mb-2"></p>
+    <h3 id="intro-title" class="font-display text-2xl font-bold text-ink mb-3"></h3>
+    <div id="intro-body" class="text-sm text-mute space-y-2"></div>
+    <div class="mt-6 flex justify-end">
+      <button id="intro-btn" onclick="closeIntro()" class="rounded-xl bg-accent px-5 py-2 text-sm font-bold text-oninv hover:bg-accent-hi"></button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="help-modal" class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(92vw,30rem)]">
+  <div class="p-7">
+    <div class="flex items-start justify-between gap-3">
+      <h3 id="help-title" class="font-display text-2xl font-bold text-ink mb-3"></h3>
+      <button onclick="$('help-modal').close()" class="text-mute hover:text-ink text-2xl leading-none" aria-label="Close">&times;</button>
+    </div>
+    <div id="help-body" class="text-sm text-mute space-y-2.5"></div>
+  </div>
+</dialog>
+
+<dialog id="settings-modal" class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(92vw,26rem)]">
+  <div class="p-6">
+    <div class="flex items-start justify-between gap-3 mb-4">
+      <h3 class="font-display text-2xl font-bold text-ink">Settings</h3>
+      <button onclick="$('settings-modal').close()" class="text-mute hover:text-ink text-2xl leading-none" aria-label="Close">&times;</button>
+    </div>
+    <div class="space-y-4 text-sm">
+      <label class="flex items-center justify-between gap-3">
+        <span class="text-mute">Motion</span>
+        <select id="set-motion" onchange="setSetting('motion', this.value)" class="rounded-xl bg-sunken border border-line px-3 py-1.5 text-ink focus:border-accent">
+          <option value="system">Follow device</option>
+          <option value="reduced">Reduced</option>
+          <option value="extra">Extra (intrusive)</option>
+        </select>
+      </label>
+      <label class="flex items-center justify-between gap-3">
+        <span class="text-mute">Animation speed</span>
+        <select id="set-speed" onchange="setSetting('speed', this.value)" class="rounded-xl bg-sunken border border-line px-3 py-1.5 text-ink focus:border-accent">
+          <option value="0.1">Sloth (0.1&times;)</option>
+          <option value="0.5">0.5&times;</option>
+          <option value="1">1&times;</option>
+          <option value="1.5">1.5&times;</option>
+          <option value="2">2&times;</option>
+          <option value="4">4&times;</option>
+          <option value="100">Hyperspeed (100&times;)</option>
+        </select>
+      </label>
+      <label class="flex items-center justify-between gap-3">
+        <span class="text-mute">Text size</span>
+        <select id="set-text" onchange="setSetting('text', this.value)" class="rounded-xl bg-sunken border border-line px-3 py-1.5 text-ink focus:border-accent">
+          <option value="s">Small</option>
+          <option value="m">Normal</option>
+          <option value="l">Large</option>
+        </select>
+      </label>
+      <label class="flex items-center justify-between gap-3 cursor-pointer">
+        <span class="text-mute">Data saver <span class="text-faint">(videos load on tap)</span></span>
+        <input id="set-lite" type="checkbox" onchange="setSetting('lite', this.checked)" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-accent))]" />
+      </label>
+      <label class="flex items-center justify-between gap-3 cursor-pointer">
+        <span class="text-mute">High contrast</span>
+        <input id="set-contrast" type="checkbox" onchange="setSetting('contrast', this.checked)" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-accent))]" />
+      </label>
+      <div class="flex flex-wrap gap-2 pt-2 border-t border-line/60">
+        <button onclick="startDance()" class="rounded-xl bg-accent px-4 py-2 text-sm font-bold text-oninv hover:bg-accent-hi">&#9763; Dance mode (virus)</button>
+        <button onclick="resetTips()" class="rounded-xl border border-line px-4 py-2 text-sm text-mute hover:text-ink">Reset one-time tips</button>
+      </div>
+      <p class="text-xs text-faint">Settings save to this browser only.</p>
+    </div>
+  </div>
+</dialog>
+
+<div id="dance-overlay" class="hidden fixed inset-0 z-[60] pointer-events-none">
+  <div id="virus-scanlines" aria-hidden="true"></div>
+  <div id="virus-popups" aria-hidden="true"></div>
+  <div id="virus-bouncer" aria-hidden="true"><span>virus.exe</span><span class="vb-face">(&#172;&#8255;&#172;)</span></div>
+  <div id="virus-bar-wrap" aria-hidden="true"><div id="virus-bar"></div><span id="virus-bar-label">INFECTING&hellip;</span></div>
+  <button onclick="endDance()" class="pointer-events-auto fixed bottom-6 left-1/2 -translate-x-1/2 z-[65] rounded-xl bg-ink px-6 py-2.5 text-sm font-bold text-oninv shadow-2xl hover:bg-danger">&#9888; REMOVE VIRUS</button>
+</div>
+
+<button id="back-to-top" onclick="scrollTopSmooth()" aria-label="Back to top" class="fixed bottom-20 right-4 sm:bottom-6 sm:right-5 z-40 w-10 h-10 grid place-items-center rounded-full border border-line bg-surface/90 backdrop-blur text-mute hover:text-accent hover:border-accent shadow-lg">&#8593;</button>
+
+<div class="fixed -left-[9999px] bottom-0" aria-hidden="true"><div id="yt-audio-player"></div></div>
+
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] hidden rounded-xl px-5 py-3 text-sm shadow-2xl border"></div>
+
+<script>
+'use strict';
+
+const LS = {
+  catalog: 'smp_published',
+  vault: 'smp_vault',
+  voting: 'smp_voting',
+  userVotes: 'smp_userVotes',
+  social: 'smp_social',
+  texts: 'smp_texts',
+  layout: 'smp_layout',
+  featured: 'smp_featured',
+  faq: 'smp_faq',
+  genres: 'smp_genres',
+  seen: 'smp_seen',
+  settings: 'smp_settings',
+  access: 'smp_access',
+  friend: 'smp_friend',
+  theme: 'smp_theme',
+  skip: 'smp_skipConfirmUntil'
+};
+
+const FIREBASE_CONFIG = {
+  apiKey: 'PASTE_API_KEY',
+  authDomain: 'PASTE_PROJECT_ID.firebaseapp.com',
+  projectId: 'PASTE_PROJECT_ID',
+  appId: 'PASTE_APP_ID'
+};
+const FB_READY = FIREBASE_CONFIG.projectId && !FIREBASE_CONFIG.projectId.startsWith('PASTE');
+let fbdb = null;
+let fbTools = null;
+let fbAuth = null;
+let fbAuthTools = null;
+let fbUser = null;
+let fbContent = null;
+let fbActive = false;
+let stateLoaded = false;
+let voteCounts = {};
+const DRAFT_KEY = 'smp_localDraft';
+const ANALYTICS_CODE = '';
+let viewCounts = {};
+let inboxItems = [];
+let inboxUnsub = null;
+let vaultDiff = '';
+let catalogDiff = '';
+let PUBLISHED = null;
+
+const HASH_FRIENDS = '92fe1e84e35ee22f96a491b8249fd21628203a09965d31c3bf7d1769913c3e8f';
+const HASH_ADMIN = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
+
+const FAVOURITE_GENRE = 'J-Pop';
+const TAGS = ['Concert Band','Orchestra','Marching Band','Piano','Other'];
+const DIFFS = ['Beginner','Intermediate','Inter-Advanced','Advanced','Professional','Impossible'];
+const DEFAULT_GENRES = ['J-Pop','Pop','K-Pop','Classical','Anime','Video Game','Film/OST','Rock','Jazz','EDM / Electronic','Lo-Fi','Other'];
+
+const TEXT_LABELS = {
+  logo: 'Logo symbol',
+  heroEyebrow: 'Hero eyebrow line',
+  heroHeading: 'Hero heading',
+  heroSub: 'Hero subheading',
+  exploreScoresTitle: 'Home: catalog card title',
+  exploreScoresSub: 'Home: catalog card subtitle',
+  exploreVoteTitle: 'Home: vote card title',
+  exploreVoteSub: 'Home: vote card subtitle',
+  featuredTitle: 'Featured section title',
+  faqTitle: 'FAQ title',
+  faqSub: 'FAQ subtitle',
+  votingTitle: 'Voting page title',
+  votingSub: 'Voting page subtitle',
+  suggestTitle: 'Suggestion form title',
+  suggestSub: 'Suggestion form subtitle',
+  contactTitle: 'Contact section title',
+  contactSub: 'Contact section subtitle',
+  portalTitle: 'Friends page title',
+  portalSub: 'Friends page subtitle',
+  vaultWelcome: 'Vault welcome greeting',
+  vaultTitle: 'Friends Vault title',
+  vaultSub: 'Friends Vault subtitle',
+  catalogTitle: 'Published catalog title',
+  catalogSub: 'Published catalog subtitle',
+  footerNote: 'Footer note'
+};
+const DEFAULT_TEXTS = {};
+
+const DEFAULTS = {
+  catalog: [
+    { id:'pub-1', title:'Canon in D', artist:'Johann Pachelbel', arrangement:'Solo Piano', desc:'A flowing contemporary re-harmonisation of Pachelbel\u2019s Canon for intermediate pianists.', video:'', tags:['Piano'], links:[] },
+    { id:'pub-2', title:'Greensleeves', artist:'Traditional', arrangement:'Flute & Guitar Duet', desc:'Traditional English melody set as a gentle chamber duet with optional ornamentation.', video:'', tags:['Flute','Guitar'], links:[] }
+  ],
+  vault: [
+    { id:'vault-1', title:'\u00c9tude No. 1 in E minor', artist:'Original', arrangement:'Solo Piano', desc:'A private practice \u00e9tude focused on left-hand voicing and pedal control. Friends-only draft.', video:'', tags:['Piano'], links:[] }
+  ],
+  voting: [
+    { id:'vote-1', title:'A Cruel Angel\u2019s Thesis', artist:'Hidetoshi Sato', votes:0 },
+    { id:'vote-2', title:'Monster', artist:'YOASOBI', votes:0 },
+    { id:'vote-3', title:'Gurenge', artist:'Kayoko Kusano', votes:0 }
+  ],
+  social: { youtube:'https://www.youtube.com/@unbranded_branden', instagram:'https://instagram.com/unbranded_branden' },
+  genres: DEFAULT_GENRES,
+  layout: { vault:'grid', catalog:'grid' },
+  faq: [
+    { id:'faq-1', q:'Can I request a song?', a:'Yes — use the suggestion form on the Vote page, or upvote it if it is already on the board.' },
+    { id:'faq-2', q:'Where do I get the sheet music?', a:'Every published score links to the store pages where it can be purchased or downloaded.' },
+    { id:'faq-3', q:'Can I use an arrangement in my own video or performance?', a:'Usually yes with credit, but licensing depends on the original song. Send a message through the contact form and I will confirm.' }
+  ]
+};
+const VOTE_STATUS = { open:'', considering:'Considering', 'in-progress':'In Progress', arranged:'Arranged' };
+
+const DEFAULT_SETTINGS = { speed:1, motion:'system', lite:false, text:'m', contrast:false };
+let state = { catalog:[], vault:[], voting:[], userVotes:{}, social:{}, genres:[], texts:{}, layout:{ vault:'grid', catalog:'grid' }, featured:'', faq:[], seen:{}, settings:{ ...DEFAULT_SETTINGS }, access:'none' };
+let selectedGenres = [];
+let vaultFilter = '';
+let catalogFilter = '';
+let vaultSearch = '';
+let catalogSearch = '';
+let editing = { vault:null, catalog:null };
+let pickerSel = { vault:new Set(), catalog:new Set() };
+let pickerGen = { vault:new Set(), catalog:new Set() };
+let editModalKey = null;
+let confirmCb = null;
+let confirmForce = false;
+let voteEditing = null;
+let faqEditing = null;
+
+const $ = id => document.getElementById(id);
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now() + '-' + Math.random().toString(16).slice(2));
+const clone = v => JSON.parse(JSON.stringify(v));
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function attr(s) { return esc(s).replace(/`/g,'&#96;'); }
+function safeUrl(u) {
+  const t = String(u || '').trim();
+  if (!t) return '';
+  if (/^https?:\/\//i.test(t)) return t;
+  if (/^[\w-]+(\.[\w-]+)+([\/?#].*)?$/.test(t)) return 'https://' + t;
+  return '';
+}
+
+function isDraft() {
+  try { return localStorage.getItem(DRAFT_KEY) === '1'; } catch { return false; }
+}
+function markDraft() {
+  try { localStorage.setItem(DRAFT_KEY, '1'); } catch {}
+  renderDraftStatus();
+}
+function rawLoad(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw === null ? null : JSON.parse(raw);
+  } catch { return null; }
+}
+function loadContent(key, pubField, fallback) {
+  let base = PUBLISHED && PUBLISHED[pubField] !== undefined ? clone(PUBLISHED[pubField]) : clone(fallback);
+  if (isDraft()) {
+    const local = rawLoad(key);
+    if (local !== null) base = local;
+  }
+  return base;
+}
+function loadKey(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw === null ? clone(fallback) : JSON.parse(raw);
+  } catch { return clone(fallback); }
+}
+function saveKey(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); }
+  catch (e) { console.warn('localStorage save failed:', e); }
+}
+function friendPersisted() {
+  try { return localStorage.getItem(LS.friend) === '1'; } catch { return false; }
+}
+function loadAccess() {
+  if (fbUser) return 'admin';
+  try { if (!FB_READY && JSON.parse(sessionStorage.getItem(LS.access) || 'null') === 'admin') return 'admin'; } catch {}
+  return friendPersisted() ? 'friends' : 'none';
+}
+function persistFriend(on) {
+  try { on ? localStorage.setItem(LS.friend, '1') : localStorage.removeItem(LS.friend); } catch {}
+}
+function persistAdmin(on) {
+  try { on ? sessionStorage.setItem(LS.access, JSON.stringify('admin')) : sessionStorage.removeItem(LS.access); } catch {}
+}
+function migrateScores(list) {
+  let changed = false;
+  list.forEach(x => {
+    if (!x.tags && x.instruments) { x.tags = x.instruments; delete x.instruments; changed = true; }
+    if (!Array.isArray(x.tags)) { x.tags = []; changed = true; }
+    if ('videoFile' in x) { delete x.videoFile; changed = true; }
+    if (typeof x.artist !== 'string') { x.artist = ''; changed = true; }
+    if (typeof x.arrangement !== 'string') { x.arrangement = ''; changed = true; }
+    if (typeof x.difficulty !== 'string') { x.difficulty = ''; changed = true; }
+    if (typeof x.dateAdded !== 'string') { x.dateAdded = ''; changed = true; }
+    if (!Array.isArray(x.genres)) { x.genres = []; changed = true; }
+    if (typeof x.previewImg !== 'string') { x.previewImg = ''; changed = true; }
+    if (!Array.isArray(x.links)) {
+      x.links = [];
+      const legacy = safeUrl(x.pdf);
+      if (legacy) x.links.push({ label:'Sheet Music', url:legacy });
+      changed = true;
+    }
+    if ('pdf' in x) { delete x.pdf; changed = true; }
+    x.links = x.links.filter(l => l && safeUrl(l.url)).slice(0, 3).map(l => ({ label: String(l.label || ''), url: safeUrl(l.url) }));
+  });
+  return changed;
+}
+function loadState() {
+  state.catalog = loadContent(LS.catalog, 'catalog', DEFAULTS.catalog);
+  state.vault = loadContent(LS.vault, 'vault', DEFAULTS.vault);
+  if (migrateScores(state.catalog)) saveKey(LS.catalog, state.catalog);
+  if (migrateScores(state.vault)) saveKey(LS.vault, state.vault);
+  state.voting = loadContent(LS.voting, 'voting', DEFAULTS.voting);
+  let vChanged = false;
+  state.voting.forEach(v => {
+    if (typeof v.music !== 'string') { v.music = ''; vChanged = true; }
+    if (typeof v.votes !== 'number') { v.votes = 0; vChanged = true; }
+    if (!(v.status in VOTE_STATUS)) { v.status = 'open'; vChanged = true; }
+    if (typeof v.scoreId !== 'string') { v.scoreId = ''; vChanged = true; }
+  });
+  if (vChanged) saveKey(LS.voting, state.voting);
+  state.userVotes = loadKey(LS.userVotes, {});
+  state.social = loadContent(LS.social, 'social', DEFAULTS.social);
+  if (!state.social || typeof state.social !== 'object') state.social = clone(DEFAULTS.social);
+  state.genres = loadContent(LS.genres, 'genres', DEFAULTS.genres);
+  if (!Array.isArray(state.genres)) state.genres = clone(DEFAULTS.genres);
+  state.genres = state.genres.filter(g => typeof g === 'string' && g.trim()).map(g => g.trim());
+  state.texts = loadContent(LS.texts, 'texts', {});
+  if (!state.texts || typeof state.texts !== 'object' || Array.isArray(state.texts)) state.texts = {};
+  state.layout = Object.assign({ vault:'grid', catalog:'grid' }, loadKey(LS.layout, DEFAULTS.layout));
+  state.featured = loadContent(LS.featured, 'featured', '');
+  if (typeof state.featured !== 'string') state.featured = '';
+  state.faq = loadContent(LS.faq, 'faq', DEFAULTS.faq);
+  if (!Array.isArray(state.faq)) state.faq = [];
+  state.faq = state.faq.filter(f => f && typeof f.q === 'string' && typeof f.a === 'string').map(f => ({ id: f.id || uid(), q: f.q, a: f.a }));
+  state.seen = loadKey(LS.seen, {});
+  if (typeof state.seen !== 'object' || state.seen === null || Array.isArray(state.seen)) state.seen = {};
+  const st = loadKey(LS.settings, DEFAULT_SETTINGS);
+  state.settings = { ...DEFAULT_SETTINGS, ...(st && typeof st === 'object' && !Array.isArray(st) ? st : {}) };
+  if (![0.1,0.5,1,1.5,2,4,100].includes(Number(state.settings.speed))) state.settings.speed = 1;
+  state.settings.speed = Number(state.settings.speed);
+  if (!['system','reduced','extra'].includes(state.settings.motion)) state.settings.motion = 'system';
+  if (!['s','m','l'].includes(state.settings.text)) state.settings.text = 'm';
+  state.settings.lite = Boolean(state.settings.lite);
+  state.settings.contrast = Boolean(state.settings.contrast);
+  state.access = loadAccess();
+}
+
+function ytId(input) {
+  if (!input) return null;
+  const s = String(input).trim();
+  if (/^[\w-]{11}$/.test(s)) return s;
+  const m = s.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/);
+  return m ? m[1] : null;
+}
+function validPreviewPath(p) {
+  const t = String(p || '').trim();
+  if (!t) return '';
+  if (/^https?:/i.test(t)) {
+    return t.startsWith(location.origin + '/') ? t : null;
+  }
+  return /^[\w][\w./ %-]*\.(png|jpe?g|webp|gif)$/i.test(t) ? t : null;
+}
+function iframeHTML(id, title) {
+  return `<iframe class="w-full h-full" src="https://www.youtube-nocookie.com/embed/${id}" title="${attr(title)}" loading="lazy" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
+}
+function embedBlock(item) {
+  const id = ytId(item.video);
+  if (id && state.settings.lite) {
+    return `<div class="embed-slot relative aspect-video bg-sunken">
+      <img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy" class="absolute inset-0 w-full h-full object-cover opacity-80" />
+      <button onclick="event.stopPropagation();loadEmbed(this,'${id}','${attr(item.title)}')" class="absolute inset-0 grid place-items-center" aria-label="Load video: ${attr(item.title)}">
+        <span class="rounded-xl bg-surface/90 border border-line px-4 py-2 text-sm font-bold text-ink">&#9654; Load video</span>
+      </button>
+    </div>`;
+  }
+  if (id) return `<div class="embed-slot aspect-video bg-sunken">${iframeHTML(id, item.title)}</div>`;
+  if (item.previewImg) return `<div class="aspect-video bg-sunken overflow-hidden"><img src="${attr(item.previewImg)}" alt="Sheet preview: ${attr(item.title)}" loading="lazy" class="w-full h-full object-contain" /></div>`;
+  return `<div class="aspect-video bg-gradient-to-br from-surface to-sunken flex flex-col items-center justify-center gap-1 text-faint"><span class="font-display text-4xl" aria-hidden="true">&#9835;</span><span class="text-xs">No video linked yet</span></div>`;
+}
+function loadEmbed(btn, id, title) {
+  const slot = btn.closest('.embed-slot');
+  if (slot) slot.innerHTML = iframeHTML(id, title);
+}
+
+let toastTimer = null;
+function toast(msg, ok = true) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] rounded-xl px-5 py-3 text-sm shadow-2xl border ' +
+    (ok ? 'bg-surface border-accent/40 text-accent' : 'bg-surface border-danger/40 text-danger');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
+}
+
+function skipActive() {
+  try { return Date.now() < Number(sessionStorage.getItem(LS.skip) || 0); } catch { return false; }
+}
+function setSkip() {
+  try { sessionStorage.setItem(LS.skip, String(Date.now() + 15 * 60 * 1000)); } catch {}
+}
+function confirmAction(msg, cb, force = false) {
+  if (!force && skipActive()) { cb(); return; }
+  $('confirm-modal-msg').textContent = msg;
+  $('confirm-skip').checked = false;
+  $('confirm-skip-row').classList.toggle('hidden', force);
+  confirmCb = cb;
+  confirmForce = force;
+  $('confirm-modal').showModal();
+}
+function closeConfirmModal(yes) {
+  const cb = confirmCb;
+  const force = confirmForce;
+  confirmCb = null;
+  if (yes && !force && $('confirm-skip').checked) setSkip();
+  $('confirm-modal').close();
+  if (yes && cb) cb();
+}
+
+function motionReduced() {
+  const m = document.documentElement.dataset.motion;
+  if (m === 'reduced') return true;
+  if (m === 'extra') return false;
+  return window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+function applySettings() {
+  const el = document.documentElement;
+  const s = state.settings;
+  el.style.setProperty('--speed', String(s.speed));
+  if (s.motion === 'system') el.removeAttribute('data-motion'); else el.dataset.motion = s.motion;
+  if (s.lite) el.dataset.lite = '1'; else el.removeAttribute('data-lite');
+  el.dataset.text = s.text;
+  if (s.contrast) el.dataset.contrast = '1'; else el.removeAttribute('data-contrast');
+  $('set-motion').value = s.motion;
+  $('set-speed').value = String(s.speed);
+  $('set-text').value = s.text;
+  $('set-lite').checked = s.lite;
+  $('set-contrast').checked = s.contrast;
+}
+function setSetting(key, val) {
+  if (key === 'speed') val = Number(val);
+  const wasLite = state.settings.lite;
+  state.settings[key] = val;
+  saveKey(LS.settings, state.settings);
+  applySettings();
+  if (key === 'lite' && wasLite !== val) {
+    renderVault();
+    renderCatalog();
+    renderFeatured();
+  }
+  toast('Setting applied.');
+}
+function openSettings() {
+  applySettings();
+  $('settings-modal').showModal();
+}
+function resetTips() {
+  const exported = Boolean(state.seen.exported);
+  state.seen = exported ? { exported: true } : {};
+  saveKey(LS.seen, state.seen);
+  renderHints();
+  toast('Tips will show again.');
+}
+let danceTimer = null;
+let popTimer = null;
+const VIRUS_POPS = [
+  ['ALERT.EXE','Downloading more RAM… 3%'],
+  ['TRASH.EXE','Deleting sheet_music_FINAL_v2.pdf… just kidding.'],
+  ['OOPS.EXE','Your PC ran into a groove and needs to vibe.'],
+  ['CART.EXE','Added 999 trombones to your cart.'],
+  ['SPY.EXE','Requesting your location… DENIED. Rude.'],
+  ['MATH.EXE','Transposing everything up a tritone. You’re welcome.'],
+  ['HELP.EXE','Have you tried turning the metronome off and on again?'],
+  ['WORM.MID','Replacing all fonts with Comic Sans… blocked by good taste.']
+];
+function spawnPopup(i) {
+  const wrap = $('virus-popups');
+  const [title, body] = VIRUS_POPS[i % VIRUS_POPS.length];
+  const el = document.createElement('div');
+  el.className = 'virus-pop';
+  el.style.setProperty('--tilt', (Math.random() * 10 - 5).toFixed(1) + 'deg');
+  el.style.left = (6 + Math.random() * 62) + 'vw';
+  el.style.top = (16 + Math.random() * 58) + 'vh';
+  const bar = document.createElement('div');
+  bar.className = 'vp-bar';
+  bar.textContent = title;
+  const x = document.createElement('span');
+  x.textContent = '×';
+  bar.appendChild(x);
+  const bd = document.createElement('div');
+  bd.className = 'vp-body';
+  bd.textContent = body;
+  el.appendChild(bar);
+  el.appendChild(bd);
+  wrap.appendChild(el);
+}
+function startDance() {
+  if (document.body.classList.contains('dancing')) return;
+  stopAudio();
+  if ($('settings-modal').open) $('settings-modal').close();
+  document.body.classList.add('dancing');
+  $('dance-overlay').classList.remove('hidden');
+  $('dance-overlay').classList.add('show');
+  let i = 0;
+  spawnPopup(i++);
+  popTimer = setInterval(() => {
+    spawnPopup(i++);
+    if (i >= VIRUS_POPS.length) clearInterval(popTimer);
+  }, 1600);
+  danceTimer = setTimeout(endDance, 15000);
+}
+function endDance() {
+  clearTimeout(danceTimer);
+  clearInterval(popTimer);
+  danceTimer = null;
+  popTimer = null;
+  document.body.classList.remove('dancing');
+  $('dance-overlay').classList.add('hidden');
+  $('dance-overlay').classList.remove('show');
+  $('virus-popups').innerHTML = '';
+}
+function scrollTopSmooth() {
+  window.scrollTo({ top: 0, behavior: motionReduced() ? 'auto' : 'smooth' });
+}
+function markSeen(flag) {
+  if (state.seen[flag]) return;
+  state.seen[flag] = true;
+  saveKey(LS.seen, state.seen);
+}
+function dismissHint(flag) {
+  markSeen(flag);
+  renderHints();
+}
+function hintHTML(flag, text) {
+  if (state.seen[flag]) return '';
+  return `<div class="fade-in flex items-start gap-3 rounded-xl border border-accent/30 bg-accent/[.06] px-4 py-3 text-sm text-mute">
+    <span class="text-accent" aria-hidden="true">&#10022;</span>
+    <p class="flex-1">${text}</p>
+    <button onclick="dismissHint('${flag}')" class="text-faint hover:text-ink font-bold px-1" aria-label="Dismiss tip">&times;</button>
+  </div>`;
+}
+function renderHints() {
+  $('hint-home').innerHTML = hintHTML('welcome', 'New here? Browse the <strong>catalog</strong>, tap any score to expand it, and <strong>vote</strong> for what gets arranged next. The <strong>?</strong> button up top explains any page.');
+  $('hint-scores').innerHTML = hintHTML('tipScores', 'Tap any score to expand it. Switch to <strong>list view</strong> (&#9776;) for compact rows with a &#9654; audio preview, and use search or the tag chips to narrow things down.');
+  $('hint-vote').innerHTML = hintHTML('tipVote', 'One vote per song &mdash; &#9650; up or &#9660; down. Tap &#9654; to hear a song before deciding, and suggest anything missing below.');
+}
+function showIntro(kind) {
+  const cfg = kind === 'admin'
+    ? {
+        eyebrow: 'Admin unlocked',
+        title: 'Your site, fully editable',
+        body: '<p>The <strong>Admin Panel</strong> now lives at the bottom of your Home page. Start on its <strong>Dashboard</strong> — it has quick actions and a short setup checklist.</p><p>Amber <strong>&#9998; Edit</strong> buttons appear next to every heading on the page, and every change asks to confirm before saving.</p><p>Admin access ends when you close this tab.</p>',
+        btn: 'Open the Admin Panel',
+        action: () => { showView('home'); requestAnimationFrame(() => $('admin-center').scrollIntoView({ behavior:'smooth' })); }
+      }
+    : {
+        eyebrow: 'Friends unlocked',
+        title: 'Welcome to the vault',
+        body: '<p>A private <strong>Friends Vault</strong> section has been added to your Home page &mdash; drafts and works in progress nobody else can see.</p><p>You will <strong>stay signed in</strong> on this browser. Log out any time from the vault or the Friends page.</p>',
+        btn: 'Take me to the vault',
+        action: () => { showView('home'); requestAnimationFrame(() => $('friends-vault').scrollIntoView({ behavior:'smooth' })); }
+      };
+  $('intro-eyebrow').textContent = cfg.eyebrow;
+  $('intro-title').textContent = cfg.title;
+  $('intro-body').innerHTML = cfg.body;
+  $('intro-btn').textContent = cfg.btn;
+  introAction = cfg.action;
+  $('intro-modal').showModal();
+}
+let introAction = null;
+function closeIntro() {
+  $('intro-modal').close();
+  const a = introAction;
+  introAction = null;
+  if (a) a();
+}
+function openHelp() {
+  const v = currentView;
+  const lvl = state.access === 'admin' ? 'friends' : state.access;
+  let title = 'How this page works';
+  const items = [];
+  if (v === 'home') {
+    title = 'Home';
+    items.push('The two big cards open the <strong>catalog</strong> and the <strong>voting board</strong>.');
+    items.push('Tap the featured arrangement or any score anywhere to expand it with video and store links.');
+    items.push('The <strong>Friends</strong> link in the menu unlocks a private vault with a passcode.');
+  } else if (v === 'scores') {
+    title = 'Published Scores';
+    items.push('Tap a score to expand it &mdash; video, description, and links to buy the sheet music.');
+    items.push('Toggle <strong>grid / list</strong> at the top right; list rows include a &#9654; audio preview.');
+    items.push('Narrow down with the search box or the tag chips.');
+    items.push('Inside a score, <strong>Copy link</strong> gives you a direct URL to share it.');
+  } else if (v === 'vote') {
+    title = 'Vote';
+    items.push('Everyone gets <strong>one vote per song</strong> &mdash; the board re-sorts live.');
+    items.push('&#9654; plays an audio preview of the song.');
+    items.push('Songs marked <strong>Arranged &#10003;</strong> are done &mdash; tap "View score" to see the result.');
+    items.push('Missing something? Use the <strong>suggestion form</strong> below the board.');
+  } else {
+    title = 'Friends Access';
+    items.push('This unlocks a private vault of drafts and works in progress.');
+    items.push('Friends stay signed in on their browser until they log out.');
+  }
+  if (lvl === 'friends' || lvl === 'admin') items.push('You are unlocked: the <strong>Friends Vault</strong> is on the Home page.');
+  $('help-title').textContent = title;
+  $('help-body').innerHTML = items.map(t => `<p>&bull; ${t}</p>`).join('');
+  $('help-modal').showModal();
+}
+
+const VIEWS = ['home','scores','vote','access'];
+const ROUTES = { home:'', scores:'#/scores', vote:'#/vote', access:'#/friends' };
+let currentView = 'home';
+let suppressRoute = false;
+function renderView(view) {
+  currentView = view;
+  stopAudio();
+  VIEWS.forEach(v => $('view-' + v).classList.toggle('hidden', v !== view));
+  if (!$('mobile-menu').classList.contains('hidden')) toggleMobileMenu();
+  closeGenreMenu();
+  renderHints();
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+function setHash(h) {
+  if ((location.hash || '') === h) return;
+  if (h === '') { history.pushState('', document.title, location.pathname + location.search); return; }
+  suppressRoute = true;
+  location.hash = h;
+}
+function showView(view) {
+  renderView(view);
+  setHash(ROUTES[view]);
+  if (window.goatcounter && window.goatcounter.count) {
+    try { window.goatcounter.count({ path: '/' + (view === 'home' ? '' : view) }); } catch {}
+  }
+}
+function openScoreById(id) {
+  const inCatalog = state.catalog.some(x => x.id === id);
+  const inVault = state.vault.some(x => x.id === id);
+  if (inCatalog) { renderView('scores'); openScore('catalog', id, false); }
+  else if (inVault) {
+    if (state.access === 'none') { renderView('access'); toast('That score is friends-only. Unlock to view it.', false); }
+    else { renderView('home'); openScore('vault', id, false); }
+  } else { renderView('home'); }
+}
+function applyRoute() {
+  const h = location.hash.replace(/^#\/?/, '');
+  const modal = $('score-modal');
+  if (h.startsWith('s/')) { openScoreById(h.slice(2)); return; }
+  if (modal.open) modal.close();
+  if (h === 'scores') renderView('scores');
+  else if (h === 'vote') renderView('vote');
+  else if (h === 'friends') renderView('access');
+  else renderView('home');
+}
+window.addEventListener('hashchange', () => {
+  if (suppressRoute) { suppressRoute = false; return; }
+  applyRoute();
+});
+function gotoScore(id) {
+  openScoreById(id);
+  setHash('#/s/' + id);
+}
+function goToFriends() {
+  if (state.access === 'none') { showView('access'); return; }
+  showView('home');
+  requestAnimationFrame(() => $('friends-vault').scrollIntoView({ behavior: 'smooth' }));
+}
+function toggleMobileMenu() {
+  const m = $('mobile-menu'), b = $('mobile-menu-btn');
+  const closed = m.classList.toggle('hidden');
+  b.setAttribute('aria-expanded', String(!closed));
+}
+
+function captureDefaultTexts() {
+  document.querySelectorAll('[data-edit]').forEach(el => {
+    if (!(el.dataset.edit in DEFAULT_TEXTS)) DEFAULT_TEXTS[el.dataset.edit] = el.textContent;
+  });
+}
+function defaultText(key) { return DEFAULT_TEXTS[key] || ''; }
+function applyTexts() {
+  document.querySelectorAll('[data-edit]').forEach(el => {
+    const key = el.dataset.edit;
+    el.textContent = state.texts[key] || defaultText(key);
+  });
+}
+function resetText(key) {
+  delete state.texts[key];
+  saveKey(LS.texts, state.texts);
+  afterContentChange();
+  applyTexts();
+  renderEditButtons();
+  renderAdminTextList();
+  renderDashboard();
+  toast('Changes saved.');
+}
+function openEditModal(key) {
+  editModalKey = key;
+  $('edit-modal-title').textContent = 'Edit: ' + (TEXT_LABELS[key] || key);
+  $('edit-modal-input').value = state.texts[key] || defaultText(key);
+  $('edit-modal').showModal();
+  $('edit-modal-input').focus();
+}
+function closeEditModal() {
+  editModalKey = null;
+  $('edit-modal').close();
+}
+function saveEditModal() {
+  const key = editModalKey;
+  const val = $('edit-modal-input').value.trim();
+  if (!key || !val) { closeEditModal(); return; }
+  closeEditModal();
+  confirmAction('Save this text change?', () => {
+    state.texts[key] = val;
+    saveKey(LS.texts, state.texts);
+    afterContentChange();
+    applyTexts();
+    renderEditButtons();
+    renderAdminTextList();
+    renderDashboard();
+    toast('Changes saved.');
+  });
+}
+function renderEditButtons() {
+  document.querySelectorAll('.edit-text-btn').forEach(b => b.remove());
+  if (state.access !== 'admin') return;
+  document.querySelectorAll('[data-edit]').forEach(el => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'edit-text-btn ml-2 align-middle text-[11px] font-semibold rounded-lg border border-admin/60 text-admin px-2 py-0.5 hover:bg-admin/10 transition-colors';
+    btn.textContent = '\u270E Edit';
+    btn.addEventListener('click', e => { e.stopPropagation(); openEditModal(el.dataset.edit); });
+    el.insertAdjacentElement('afterend', btn);
+  });
+}
+function renderAdminTextList() {
+  if (state.access !== 'admin') return;
+  $('admin-text-list').innerHTML = Object.keys(TEXT_LABELS).map(key => {
+    const edited = Boolean(state.texts[key]);
+    const current = state.texts[key] || defaultText(key);
+    return `<li class="flex items-center justify-between gap-3 bg-sunken border border-line rounded-xl px-3 py-2.5">
+      <div class="min-w-0">
+        <p class="text-xs text-faint">${esc(TEXT_LABELS[key])}${edited ? ' <span class="text-admin">(edited)</span>' : ''}</p>
+        <p class="truncate text-ink">${esc(current)}</p>
+      </div>
+      <div class="flex gap-2 shrink-0">
+        <button onclick="openEditModal('${key}')" class="text-xs font-semibold rounded-lg border border-admin/60 text-admin px-3 py-1.5 hover:bg-admin/10">Edit</button>
+        ${edited ? `<button onclick="resetText('${key}')" class="text-xs font-semibold rounded-lg border border-line text-mute px-3 py-1.5 hover:text-ink">Reset</button>` : ''}
+      </div>
+    </li>`;
+  }).join('');
+}
+
+function applySocial() {
+  const yt = state.social.youtube || '#';
+  const ig = state.social.instagram || '#';
+  ['icon-youtube','foot-youtube'].forEach(id => { $(id).href = yt; });
+  ['icon-instagram','foot-instagram'].forEach(id => { $(id).href = ig; });
+  $('soc-youtube').value = state.social.youtube || '';
+  $('soc-instagram').value = state.social.instagram || '';
+}
+function adminSaveSocial() {
+  const yt = $('soc-youtube').value.trim();
+  const ig = $('soc-instagram').value.trim();
+  const ytSafe = safeUrl(yt);
+  const igSafe = safeUrl(ig);
+  if ((yt && !ytSafe) || (ig && !igSafe)) { toast('Links must be normal web URLs (https://\u2026).', false); return; }
+  confirmAction('Save these social links?', () => {
+    state.social = { youtube: ytSafe, instagram: igSafe };
+    saveKey(LS.social, state.social);
+    afterContentChange();
+    applySocial();
+    renderDashboard();
+    toast('Changes saved.');
+  });
+}
+
+let ytApiLoaded = false;
+let ytApiRequested = false;
+const ytQueue = [];
+window.onYouTubeIframeAPIReady = () => {
+  ytApiLoaded = true;
+  ytQueue.splice(0).forEach(f => { try { f(); } catch (e) { console.warn(e); } });
+};
+function withYT(cb) {
+  if (ytApiLoaded) { cb(); return; }
+  ytQueue.push(cb);
+  if (!ytApiRequested) {
+    ytApiRequested = true;
+    const sc = document.createElement('script');
+    sc.src = 'https://www.youtube.com/iframe_api';
+    sc.onerror = () => toast('Could not load the audio player.', false);
+    document.head.appendChild(sc);
+  }
+}
+let ytPlayer = null;
+let ytPlayerReady = false;
+const ytPlayerQueue = [];
+let currentAudio = null;
+let audioState = 'paused';
+function withPlayer(cb) {
+  if (ytPlayer && ytPlayerReady) { cb(); return; }
+  ytPlayerQueue.push(cb);
+  if (!ytPlayer) {
+    ytPlayer = new YT.Player('yt-audio-player', {
+      height: '1',
+      width: '1',
+      playerVars: { playsinline: 1 },
+      events: {
+        onReady: () => { ytPlayerReady = true; ytPlayerQueue.splice(0).forEach(f => { try { f(); } catch (e) { console.warn(e); } }); },
+        onStateChange: onAudioStateChange,
+        onError: () => { toast('That song could not be played.', false); currentAudio = null; audioState = 'paused'; refreshAudioUI(); }
+      }
+    });
+  }
+}
+function onAudioStateChange(e) {
+  if (e.data === YT.PlayerState.PLAYING || e.data === YT.PlayerState.BUFFERING) audioState = 'playing';
+  else if (e.data === YT.PlayerState.ENDED) { audioState = 'paused'; currentAudio = null; }
+  else audioState = 'paused';
+  refreshAudioUI();
+}
+function refreshAudioUI() {
+  renderVoting();
+  renderVault();
+  renderCatalog();
+  renderFeatured();
+}
+function toggleAudioKey(key, vid) {
+  if (!vid) return;
+  if (currentAudio === key && ytPlayer && ytPlayerReady) {
+    if (audioState === 'playing') ytPlayer.pauseVideo();
+    else ytPlayer.playVideo();
+    return;
+  }
+  currentAudio = key;
+  audioState = 'playing';
+  refreshAudioUI();
+  withYT(() => withPlayer(() => ytPlayer.loadVideoById(vid)));
+}
+function toggleAudio(id) {
+  const item = state.voting.find(v => v.id === id);
+  toggleAudioKey('vote:' + id, item ? ytId(item.music) : null);
+}
+function playScoreAudio(kind, id) {
+  const item = listOf(kind).find(x => x.id === id);
+  toggleAudioKey('score:' + kind + ':' + id, item ? ytId(item.video) : null);
+}
+function stopAudio() {
+  if (ytPlayer && ytPlayerReady && audioState === 'playing') ytPlayer.pauseVideo();
+}
+
+function validPublished(d) {
+  if (!d || d.format !== 'sheet-music-portfolio-backup' || !Array.isArray(d.catalog) || !Array.isArray(d.vault) || !Array.isArray(d.voting)) return null;
+  return d;
+}
+async function initFirebase() {
+  if (!FB_READY) { renderVoteSyncStatus(); return; }
+  try {
+    const appMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+    const fsMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    const authMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
+    const app = appMod.initializeApp(FIREBASE_CONFIG);
+    fbdb = fsMod.getFirestore(app);
+    fbTools = fsMod;
+    fbAuth = authMod.getAuth(app);
+    fbAuthTools = authMod;
+    authMod.onAuthStateChanged(fbAuth, u => {
+      fbUser = u;
+      if (!stateLoaded) return;
+      if (u) {
+        const first = !state.seen.adminIntro;
+        state.access = 'admin';
+        applyAccess();
+        renderDraftStatus();
+        startInbox();
+        if (first) { markSeen('adminIntro'); showIntro('admin'); }
+      } else if (state.access === 'admin') {
+        stopInbox();
+        state.access = friendPersisted() ? 'friends' : 'none';
+        applyAccess();
+        renderDraftStatus();
+      }
+    });
+    try {
+      const snap = await fsMod.getDoc(fsMod.doc(fbdb, 'site', 'content'));
+      if (snap.exists()) fbContent = validPublished(snap.data());
+    } catch (e) { console.warn('content read failed:', e); }
+    fsMod.onSnapshot(fsMod.collection(fbdb, 'votes'), snap => {
+      const next = {};
+      snap.forEach(d => {
+        const c = d.data() && d.data().count;
+        next[d.id] = typeof c === 'number' ? c : 0;
+      });
+      voteCounts = next;
+      fbActive = true;
+      renderVoteSyncStatus();
+      renderVoting();
+      renderAdminVoteList();
+    }, () => {
+      fbActive = false;
+      renderVoteSyncStatus();
+    });
+    fsMod.onSnapshot(fsMod.collection(fbdb, 'views'), snap => {
+      const nv = {};
+      snap.forEach(d => {
+        const c = d.data() && d.data().count;
+        nv[d.id] = typeof c === 'number' ? c : 0;
+      });
+      viewCounts = nv;
+    }, () => {
+      fbActive = false;
+      renderVoteSyncStatus();
+    });
+  } catch (e) {
+    console.warn('Firebase unavailable:', e);
+    fbActive = false;
+    renderVoteSyncStatus();
+  }
+}
+function startInbox() {
+  if (inboxUnsub || !fbdb || !fbTools) return;
+  inboxUnsub = fbTools.onSnapshot(fbTools.collection(fbdb, 'suggestions'), snap => {
+    inboxItems = [];
+    snap.forEach(d => inboxItems.push({ id: d.id, ...d.data() }));
+    inboxItems.sort((a,b) => (b.ts || 0) - (a.ts || 0));
+    renderAdminInbox();
+    renderAdminCounts();
+  }, () => {
+    $('inbox-status').textContent = 'Could not load the inbox — check your connection.';
+  });
+}
+function stopInbox() {
+  if (inboxUnsub) { inboxUnsub(); inboxUnsub = null; }
+  inboxItems = [];
+}
+function renderAdminInbox() {
+  if (state.access !== 'admin') return;
+  $('inbox-status').textContent = fbActive
+    ? (inboxItems.length ? inboxItems.length + ' waiting.' : 'No suggestions waiting.')
+    : 'Connect Firebase to receive suggestions here. Until then, the public form emails you via Formspree.';
+  $('admin-inbox-list').innerHTML = inboxItems.map(it => {
+    const when = it.ts ? new Date(it.ts).toLocaleDateString() : '';
+    const yt = ytId(it.youtube);
+    return `<li class="bg-sunken border border-line rounded-xl px-3 py-2.5">
+      <div class="flex items-center justify-between gap-3">
+        <p class="min-w-0 truncate text-ink font-semibold">${esc(it.name || 'Untitled')} <span class="font-normal text-mute">&mdash; ${esc(it.artist || 'Unknown')}</span></p>
+        <span class="text-xs text-faint shrink-0">${esc(when)}</span>
+      </div>
+      <p class="text-xs text-faint mt-0.5">${(it.genres || []).map(esc).join(', ') || 'No genres'}${yt ? ' &middot; audio linked' : ''}</p>
+      <div class="flex gap-2 mt-2">
+        <button onclick="inboxToBoard('${it.id}')" class="text-xs font-bold rounded-lg bg-admin px-3 py-1.5 text-oninv hover:bg-admin-hi">&rarr; Add to board</button>
+        <button onclick="inboxDismiss('${it.id}')" class="text-xs font-semibold rounded-lg border border-line px-3 py-1.5 text-mute hover:text-danger hover:border-danger/50">Dismiss</button>
+      </div>
+    </li>`;
+  }).join('');
+}
+function inboxToBoard(id) {
+  const it = inboxItems.find(x => x.id === id);
+  if (!it) return;
+  confirmAction('Add this suggestion to the public voting board?', () => {
+    state.voting.push({ id: uid(), title: String(it.name || '').slice(0, 120), artist: String(it.artist || '').slice(0, 120), music: ytId(it.youtube) ? it.youtube : '', status: 'open', scoreId: '', votes: 0 });
+    saveKey(LS.voting, state.voting);
+    afterContentChange();
+    renderVoting();
+    renderStats();
+    renderAdminVoteList();
+    renderDashboard();
+    fbTools.deleteDoc(fbTools.doc(fbdb, 'suggestions', id)).catch(() => {});
+    toast('Added to the board.');
+  });
+}
+function inboxDismiss(id) {
+  confirmAction('Dismiss this suggestion? It will be deleted.', () => {
+    fbTools.deleteDoc(fbTools.doc(fbdb, 'suggestions', id))
+      .then(() => toast('Dismissed.'))
+      .catch(() => toast('Could not delete — try again.', false));
+  });
+}
+function contentPayload() {
+  return {
+    format: 'sheet-music-portfolio-backup',
+    version: 3,
+    catalog: state.catalog,
+    vault: state.vault,
+    voting: state.voting,
+    social: state.social,
+    texts: state.texts,
+    featured: state.featured,
+    faq: state.faq,
+    genres: state.genres
+  };
+}
+function publishContent(payload) {
+  if (!fbUser || !fbdb || !fbTools) return;
+  fbTools.setDoc(fbTools.doc(fbdb, 'site', 'content'), payload || contentPayload())
+    .then(() => renderDraftStatus())
+    .catch(() => toast('Publishing failed — change saved on this device only.', false));
+}
+function afterContentChange() {
+  if (fbUser) publishContent();
+  else afterContentChange();
+}
+async function adminLogin() {
+  if (!fbAuth || !fbAuthTools) { toast('Sign-in is not available yet.', false); return; }
+  const email = $('al-email').value.trim();
+  const pass = $('al-pass').value;
+  if (!email || !pass) { toast('Enter your email and password.', false); return; }
+  try {
+    await fbAuthTools.signInWithEmailAndPassword(fbAuth, email, pass);
+    $('al-pass').value = '';
+    $('admin-login').classList.add('hidden');
+    showView('home');
+  } catch {
+    toast('Sign-in failed. Check the details and try again.', false);
+  }
+}
+function voteCount(item) {
+  return fbActive ? (voteCounts[item.id] ?? 0) : item.votes;
+}
+function renderNowArranging() {
+  const active = state.voting.filter(v => v.status === 'in-progress').sort((a,b) => voteCount(b) - voteCount(a));
+  const box = $('now-arranging');
+  if (!active.length) { box.classList.add('hidden'); return; }
+  const top = active[0];
+  const extra = active.length > 1 ? ` &middot; +${active.length - 1} more in progress` : '';
+  $('now-arranging-text').innerHTML = `Now arranging: <strong class="text-ink">${esc(top.title)}</strong> &mdash; ${esc(top.artist)} (${voteCount(top)} votes)${extra}`;
+  box.classList.remove('hidden');
+}
+function renderVoteSyncStatus() {
+  const el = $('vote-sync-status');
+  if (!el) return;
+  el.textContent = fbActive
+    ? 'Global voting: connected — counts are shared with every visitor live.'
+    : FB_READY
+      ? 'Global voting: connecting… counts shown may be local until Firebase responds.'
+      : 'Global voting: off — votes only count per browser. Paste your Firebase config in index.html to enable it.';
+  el.className = 'text-xs mb-4 ' + (fbActive ? 'text-accent' : 'text-faint');
+}
+function renderVoting() {
+  const sorted = [...state.voting].sort((a,b) => (a.status === 'arranged') - (b.status === 'arranged') || voteCount(b) - voteCount(a) || a.title.localeCompare(b.title));
+  const max = Math.max(1, ...sorted.map(v => Math.abs(voteCount(v))));
+  $('voting-board').innerHTML = sorted.length ? sorted.map((item,i) => {
+    const voted = Object.prototype.hasOwnProperty.call(state.userVotes, item.id);
+    const my = state.userVotes[item.id];
+    const n = voteCount(item);
+    const pct = Math.round(Math.abs(n) / max * 100);
+    const barColor = n >= 0 ? 'bg-accent/60' : 'bg-danger/50';
+    const vid = ytId(item.music);
+    const aKey = 'vote:' + item.id;
+    const isCurrent = currentAudio === aKey;
+    const isPlaying = isCurrent && audioState === 'playing';
+    const arranged = item.status === 'arranged';
+    const linkedScore = arranged && item.scoreId && state.catalog.some(x => x.id === item.scoreId);
+    const statusBadge = item.status && item.status !== 'open'
+      ? `<span class="text-[11px] font-semibold rounded-full px-2 py-0.5 border ${arranged ? 'border-accent/60 text-accent bg-accent/10' : item.status === 'in-progress' ? 'border-admin/60 text-admin' : 'border-line text-faint'}">${arranged ? '&#10003; ' : ''}${VOTE_STATUS[item.status]}</span>`
+      : '';
+    const scoreLink = linkedScore
+      ? `<button onclick="gotoScore('${item.scoreId}')" class="text-xs font-semibold text-accent hover:text-accent-hi shrink-0">View score &rarr;</button>`
+      : '';
+    const playBtn = vid
+      ? `<button class="shrink-0 w-9 h-9 grid place-items-center rounded-full border text-sm ${isCurrent ? 'border-accent text-accent bg-accent/10' : 'border-line text-mute hover:text-accent hover:border-accent'} transition-colors" onclick="toggleAudio('${item.id}')" aria-label="${isPlaying ? 'Pause' : 'Play'} ${attr(item.title)}">${isPlaying ? '&#10074;&#10074;' : '&#9654;'}</button>`
+      : '';
+    return `<li class="fade-in relative overflow-hidden flex items-center gap-4 bg-surface border border-line rounded-xl px-4 sm:px-5 py-4 card-hover">
+      <span class="absolute left-0 bottom-0 h-0.5 ${barColor}" style="width:${n === 0 ? 0 : pct}%"></span>
+      <span class="text-faint font-mono text-sm w-6 text-right shrink-0">${i+1}</span>
+      ${playBtn}
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-ink truncate">${esc(item.title)} ${statusBadge}</p>
+        <p class="text-sm text-faint truncate">${esc(item.artist)}</p>
+      </div>
+      ${scoreLink}
+      <span class="font-mono font-bold text-lg w-12 text-center shrink-0 ${n>0?'text-accent':n<0?'text-danger':'text-faint'}">${n}</span>
+      ${arranged ? '' : `<div class="flex flex-col gap-1 shrink-0">
+        <button class="vote-btn text-lg leading-none px-2.5 py-1 rounded-lg ${my===1?'text-accent':'text-faint hover:text-accent'}" ${voted?'disabled':''} onclick="castVote('${item.id}',1)" aria-label="Upvote ${attr(item.title)}">&#9650;</button>
+        <button class="vote-btn text-lg leading-none px-2.5 py-1 rounded-lg ${my===-1?'text-danger':'text-faint hover:text-danger'}" ${voted?'disabled':''} onclick="castVote('${item.id}',-1)" aria-label="Downvote ${attr(item.title)}">&#9660;</button>
+      </div>`}
+    </li>`;
+  }).join('') : '<li class="text-faint text-sm">Nothing on the board yet — check back soon.</li>';
+  renderNowArranging();
+}
+function castVote(id, delta) {
+  if (Object.prototype.hasOwnProperty.call(state.userVotes, id)) { toast('You have already voted on this song.', false); return; }
+  const item = state.voting.find(v => v.id === id);
+  if (!item) return;
+  state.userVotes[id] = delta;
+  saveKey(LS.userVotes, state.userVotes);
+  if (fbActive && fbdb && fbTools) {
+    voteCounts[id] = (voteCounts[id] ?? 0) + delta;
+    renderVoting();
+    fbTools.setDoc(fbTools.doc(fbdb, 'votes', id), { count: fbTools.increment(delta) }, { merge: true })
+      .then(() => toast(delta === 1 ? 'Upvoted!' : 'Downvoted.'))
+      .catch(() => {
+        voteCounts[id] = (voteCounts[id] ?? 0) - delta;
+        delete state.userVotes[id];
+        saveKey(LS.userVotes, state.userVotes);
+        renderVoting();
+        toast('Vote failed to send — check your connection and try again.', false);
+      });
+    return;
+  }
+  item.votes += delta;
+  saveKey(LS.voting, state.voting);
+  renderVoting();
+  renderAdminVoteList();
+  toast(delta === 1 ? 'Upvoted!' : 'Downvoted.');
+}
+function saveVoteItem() {
+  const title = $('vote-new-title').value.trim();
+  const artist = $('vote-new-artist').value.trim();
+  const music = $('vote-new-music').value.trim();
+  const status = $('vote-new-status').value;
+  const scoreId = $('vote-new-score').value;
+  if (!title) { toast('Song title is required.', false); return; }
+  if (music && !ytId(music)) { toast('That YouTube link could not be read. Paste a full video URL or its 11-character ID.', false); return; }
+  const isEdit = Boolean(voteEditing);
+  confirmAction(isEdit ? 'Save changes to this song?' : 'Add this song to the voting board?', () => {
+    if (voteEditing) {
+      const item = state.voting.find(v => v.id === voteEditing);
+      if (item) { item.title = title; item.artist = artist; item.music = music; item.status = status; item.scoreId = scoreId; }
+    } else {
+      state.voting.push({ id: uid(), title, artist, music, status, scoreId, votes: 0 });
+    }
+    cancelVoteEdit();
+    saveKey(LS.voting, state.voting);
+    afterContentChange();
+    renderVoting();
+    renderStats();
+    renderAdminVoteList();
+    renderDashboard();
+    toast('Changes saved.');
+  });
+}
+function startVoteEdit(id) {
+  const item = state.voting.find(v => v.id === id);
+  if (!item) return;
+  voteEditing = id;
+  $('vote-new-title').value = item.title;
+  $('vote-new-artist').value = item.artist || '';
+  $('vote-new-music').value = item.music || '';
+  $('vote-new-status').value = item.status || 'open';
+  renderVoteScoreOptions();
+  $('vote-new-score').value = state.catalog.some(x => x.id === item.scoreId) ? item.scoreId : '';
+  $('vote-save-btn').textContent = 'Save Changes';
+  $('vote-cancel-btn').classList.remove('hidden');
+}
+function cancelVoteEdit() {
+  voteEditing = null;
+  $('vote-new-title').value = '';
+  $('vote-new-artist').value = '';
+  $('vote-new-music').value = '';
+  $('vote-new-status').value = 'open';
+  $('vote-new-score').value = '';
+  $('vote-save-btn').textContent = '+ Add Song';
+  $('vote-cancel-btn').classList.add('hidden');
+}
+function adminDeleteVoteItem(id) {
+  confirmAction('Remove this song from the voting board?', () => {
+    if (currentAudio === 'vote:' + id) { stopAudio(); currentAudio = null; audioState = 'paused'; }
+    if (voteEditing === id) cancelVoteEdit();
+    state.voting = state.voting.filter(v => v.id !== id);
+    afterContentChange();
+    delete state.userVotes[id];
+    saveKey(LS.voting, state.voting);
+    saveKey(LS.userVotes, state.userVotes);
+    renderVoting();
+    renderStats();
+    renderAdminVoteList();
+    renderDashboard();
+    toast('Changes saved.');
+  });
+}
+function adminResetVotes() {
+  if (fbActive) {
+    toast('Global votes live in Firebase. Delete the "votes" collection in the Firebase console to reset them.', false);
+    return;
+  }
+  confirmAction('Reset every vote count to 0? Visitors on this browser will be able to vote again.', () => {
+    state.voting.forEach(v => { v.votes = 0; });
+    state.userVotes = {};
+    saveKey(LS.voting, state.voting);
+    saveKey(LS.userVotes, state.userVotes);
+    renderVoting();
+    renderAdminVoteList();
+    toast('Changes saved.');
+  });
+}
+function renderVoteScoreOptions() {
+  const sel = $('vote-new-score');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">None</option>' +
+    state.catalog.map(x => `<option value="${attr(x.id)}">${esc(x.title)}</option>`).join('');
+  sel.value = state.catalog.some(x => x.id === cur) ? cur : '';
+}
+function renderAdminVoteList() {
+  if (state.access !== 'admin') return;
+  renderVoteScoreOptions();
+  $('admin-vote-list').innerHTML = state.voting.length ? state.voting.map(v =>
+    `<li class="flex items-center justify-between gap-3 bg-sunken border border-line rounded-xl px-3 py-2">
+      <div class="min-w-0">
+        <p class="truncate text-mute">${esc(v.title)} — ${esc(v.artist)} <span class="text-faint">(${voteCount(v)} votes)</span></p>
+        <p class="text-xs text-faint">${ytId(v.music) ? 'Audio linked' : 'No audio'}${v.status && v.status !== 'open' ? ' &middot; ' + VOTE_STATUS[v.status] : ''}</p>
+      </div>
+      <div class="flex gap-2 shrink-0">
+        <button onclick="startVoteEdit('${v.id}')" class="text-admin hover:text-admin-hi text-xs font-semibold">Edit</button>
+        <button onclick="adminDeleteVoteItem('${v.id}')" class="text-danger hover:text-danger-hi text-xs font-semibold">Delete</button>
+      </div>
+    </li>`).join('') : '<li class="text-faint">No songs on the board yet.</li>';
+}
+
+function genreLabel(g) { return g === FAVOURITE_GENRE ? g + ' \u2605' : g; }
+function renderGenres() {
+  $('genre-grid').innerHTML = state.genres.map((g,i) => {
+    const fav = g === FAVOURITE_GENRE;
+    const favCls = fav ? ' ring-1 ring-accent text-accent font-semibold' : '';
+    return `<button type="button" class="pill text-xs sm:text-sm rounded-full border border-line px-3 py-1.5 text-mute hover:border-accent${favCls}" aria-pressed="${selectedGenres.includes(g)}" onclick="event.stopPropagation();toggleGenre(${i})">${esc(genreLabel(g))}</button>`;
+  }).join('');
+  $('genre-count').textContent = `${selectedGenres.length} / 3 selected`;
+  $('genre-summary').textContent = selectedGenres.length ? selectedGenres.join(', ') : 'Select genres\u2026';
+  $('sg-genres').value = selectedGenres.join(', ');
+}
+function toggleGenre(i) {
+  const g = state.genres[i];
+  const idx = selectedGenres.indexOf(g);
+  if (idx >= 0) selectedGenres.splice(idx, 1);
+  else if (selectedGenres.length < 3) selectedGenres.push(g);
+  else { toast('You can pick at most 3 genres.', false); return; }
+  renderGenres();
+}
+function toggleGenreMenu(e) {
+  e.stopPropagation();
+  $('genre-menu').classList.toggle('hidden');
+}
+function closeGenreMenu() {
+  $('genre-menu').classList.add('hidden');
+}
+
+function listOf(kind) { return kind === 'vault' ? state.vault : state.catalog; }
+function lsOf(kind) { return kind === 'vault' ? LS.vault : LS.catalog; }
+function prefixOf(kind) { return kind === 'vault' ? 'v' : 'c'; }
+
+function isNew(item) {
+  if (!item.dateAdded) return false;
+  const t = Date.parse(item.dateAdded);
+  return Number.isFinite(t) && (Date.now() - t) < 30 * 24 * 60 * 60 * 1000;
+}
+function badgeRow(item) {
+  const parts = [];
+  if (isNew(item)) parts.push('<span class="text-[11px] font-bold rounded-full px-2 py-0.5 bg-accent/10 border border-accent/60 text-accent">New</span>');
+  if (item.difficulty) parts.push(`<span class="text-[11px] font-semibold rounded-full px-2 py-0.5 bg-sunken border border-line text-mute">${esc(item.difficulty)}</span>`);
+  return parts.join(' ');
+}
+function metaLine(item) {
+  return [item.artist, item.arrangement].filter(Boolean).map(esc).join(' &middot; ');
+}
+function linkButtons(item, size = 'sm') {
+  const pad = size === 'lg' ? 'px-5 py-2.5' : 'px-4 py-2';
+  return (item.links || []).map((l, i) =>
+    `<a href="${attr(l.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 rounded-xl ${i === 0 ? 'bg-accent text-oninv hover:bg-accent-hi' : 'border border-accent/60 text-accent hover:bg-accent/10'} ${pad} text-sm font-bold transition-colors">${esc(l.label || 'Sheet Music')}</a>`
+  ).join('');
+}
+function adminItemButtons(kind, id) {
+  if (state.access !== 'admin') return '';
+  return `<div class="flex gap-1.5 ml-auto">
+    <button onclick="event.stopPropagation();startEdit('${kind}','${id}')" class="text-xs font-semibold text-admin hover:text-admin-hi border border-admin/40 rounded-xl px-3 py-2 hover:bg-admin/10">Edit</button>
+    <button onclick="event.stopPropagation();deleteScore('${kind}','${id}')" class="text-xs font-semibold text-danger hover:text-danger-hi border border-danger/40 rounded-xl px-3 py-2 hover:bg-danger/10">Delete</button>
+  </div>`;
+}
+function scoreCard(item, kind) {
+  const chips = (item.tags || []).map(t =>
+    `<span class="text-[11px] font-medium rounded-full bg-sunken border border-line px-2 py-0.5 text-mute">${esc(t)}</span>`).join(' ');
+  const meta = metaLine(item);
+  return `<article onclick="openScore('${kind}','${item.id}')" class="fade-in cursor-pointer bg-surface border border-line rounded-2xl overflow-hidden card-hover flex flex-col" role="button" tabindex="0" onkeydown="if(event.key==='Enter'&&event.target===this){openScore('${kind}','${item.id}')}">
+    ${embedBlock(item)}
+    <div class="p-5 flex flex-col gap-3 flex-1">
+      <div>
+        <div class="flex items-start justify-between gap-2">
+          <h3 class="font-display font-bold text-lg text-ink leading-snug">${esc(item.title)}</h3>
+          <span class="flex gap-1 shrink-0">${badgeRow(item)}</span>
+        </div>
+        ${meta ? `<p class="text-sm text-faint mt-0.5">${meta}</p>` : ''}
+      </div>
+      ${item.desc ? `<p class="text-sm text-mute">${esc(item.desc)}</p>` : ''}
+      ${chips ? `<div class="flex flex-wrap gap-1.5">${chips}</div>` : ''}
+      <div class="mt-auto pt-2 flex items-center gap-2 flex-wrap">${linkButtons(item)}${adminItemButtons(kind, item.id)}</div>
+    </div>
+  </article>`;
+}
+function scoreRow(item, kind) {
+  const meta = metaLine(item);
+  const vid = ytId(item.video);
+  const aKey = 'score:' + kind + ':' + item.id;
+  const isCurrent = currentAudio === aKey;
+  const isPlaying = isCurrent && audioState === 'playing';
+  const playBtn = vid
+    ? `<button class="shrink-0 w-8 h-8 grid place-items-center rounded-full border text-xs ${isCurrent ? 'border-accent text-accent bg-accent/10' : 'border-line text-mute hover:text-accent hover:border-accent'} transition-colors" onclick="event.stopPropagation();playScoreAudio('${kind}','${item.id}')" aria-label="${isPlaying ? 'Pause' : 'Play'} ${attr(item.title)}">${isPlaying ? '&#10074;&#10074;' : '&#9654;'}</button>`
+    : '';
+  return `<div onclick="openScore('${kind}','${item.id}')" class="fade-in cursor-pointer row-hover flex items-center gap-4 bg-surface border border-line rounded-xl px-4 py-3" role="button" tabindex="0" onkeydown="if(event.key==='Enter'&&event.target===this){openScore('${kind}','${item.id}')}">
+    ${playBtn}
+    <div class="flex-1 min-w-0">
+      <p class="font-semibold text-ink truncate">${esc(item.title)} ${badgeRow(item)}</p>
+      ${meta ? `<p class="text-sm text-faint truncate">${meta}</p>` : ''}
+    </div>
+    ${item.arrangement ? `<span class="hidden sm:inline text-xs font-medium rounded-full bg-sunken border border-line px-2.5 py-1 text-mute shrink-0">${esc(item.arrangement)}</span>` : ''}
+    ${adminItemButtons(kind, item.id)}
+    <span class="text-faint shrink-0" aria-hidden="true">&#8250;</span>
+  </div>`;
+}
+function openScore(kind, id, updateHash = true) {
+  const item = listOf(kind).find(x => x.id === id);
+  if (!item) return;
+  if (updateHash) setHash('#/s/' + id);
+  const meta = metaLine(item);
+  const chips = (item.tags || []).map(t =>
+    `<span class="text-xs font-medium rounded-full bg-sunken border border-line px-2.5 py-1 text-mute">${esc(t)}</span>`)
+    .concat((item.genres || []).map(g =>
+    `<span class="text-xs font-medium rounded-full bg-accent/10 border border-accent/40 px-2.5 py-1 text-accent">${esc(g)}</span>`)).join(' ');
+  $('score-modal-body').innerHTML = `
+    ${embedBlock(item)}
+    <div class="p-6 sm:p-7">
+      <div class="flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <h3 class="font-display text-2xl sm:text-3xl font-bold text-ink leading-snug">${esc(item.title)} ${badgeRow(item)}</h3>
+          ${meta ? `<p class="text-sm text-faint mt-1">${meta}</p>` : ''}
+        </div>
+        <button onclick="$('score-modal').close()" class="shrink-0 text-mute hover:text-ink text-2xl leading-none px-2" aria-label="Close">&times;</button>
+      </div>
+      ${item.desc ? `<p class="text-sm text-mute mt-4">${esc(item.desc)}</p>` : ''}
+      ${item.previewImg && ytId(item.video) ? `<img src="${attr(item.previewImg)}" alt="Sheet preview: ${attr(item.title)}" loading="lazy" class="mt-5 w-full rounded-xl border border-line bg-sunken" />` : ''}
+      ${chips ? `<div class="flex flex-wrap gap-1.5 mt-4">${chips}</div>` : ''}
+      ${(item.links || []).length ? `<div class="flex flex-wrap gap-2 mt-6">${linkButtons(item, 'lg')}</div>` : ''}
+      <div class="mt-6 flex items-center gap-3 flex-wrap">
+        <button onclick="copyScoreLink('${item.id}')" class="text-xs font-semibold text-mute hover:text-accent border border-line rounded-xl px-3 py-1.5 transition-colors">Copy link to this score</button>
+        ${fbActive ? `<span class="text-xs text-faint">Viewed ${(viewCounts[item.id] ?? 0) + ''} time${(viewCounts[item.id] ?? 0) === 1 ? '' : 's'}</span>` : ''}
+      </div>
+    </div>`;
+  $('score-modal').showModal();
+  recordView(id);
+}
+function recordView(id) {
+  if (!fbActive || !fbdb || !fbTools) return;
+  let seen = {};
+  try { seen = JSON.parse(sessionStorage.getItem('smp_viewed') || '{}'); } catch {}
+  if (seen[id]) return;
+  seen[id] = 1;
+  try { sessionStorage.setItem('smp_viewed', JSON.stringify(seen)); } catch {}
+  fbTools.setDoc(fbTools.doc(fbdb, 'views', id), { count: fbTools.increment(1) }, { merge: true }).catch(() => {});
+}
+function copyScoreLink(id) {
+  const url = location.origin + location.pathname + '#/s/' + id;
+  const done = () => toast('Link copied.');
+  const fail = () => toast('Could not copy — the link is: ' + url, false);
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, fail);
+  else fail();
+}
+
+function renderFilterChips(kind) {
+  const isVault = kind === 'vault';
+  let current = isVault ? vaultFilter : catalogFilter;
+  if (current && !TAGS.some(t => t.toLowerCase() === current)) {
+    current = '';
+    if (isVault) vaultFilter = ''; else catalogFilter = '';
+  }
+  const el = $(isVault ? 'vault-filter-chips' : 'catalog-filter-chips');
+  const allChip = `<button type="button" class="chip text-xs sm:text-sm rounded-full border border-line px-3.5 py-1.5 text-mute hover:border-accent" aria-pressed="${current === ''}" onclick="setFilter('${kind}',-1)">All tags</button>`;
+  const tagChips = TAGS.map((t,i) =>
+    `<button type="button" class="chip text-xs sm:text-sm rounded-full border border-line px-3.5 py-1.5 text-mute hover:border-accent" aria-pressed="${current === t.toLowerCase()}" onclick="setFilter('${kind}',${i})">${esc(t)}</button>`).join('');
+  el.innerHTML = allChip + tagChips;
+}
+function renderDiffChips(kind) {
+  const isVault = kind === 'vault';
+  const current = isVault ? vaultDiff : catalogDiff;
+  const el = $(isVault ? 'vault-diff-chips' : 'catalog-diff-chips');
+  const allChip = `<button type="button" class="chip text-xs sm:text-sm rounded-full border border-line px-3.5 py-1.5 text-mute hover:border-accent" aria-pressed="${current === ''}" onclick="setDiff('${kind}',-1)">All levels</button>`;
+  el.innerHTML = allChip + DIFFS.map((d,i) =>
+    `<button type="button" class="chip text-xs sm:text-sm rounded-full border border-line px-3.5 py-1.5 text-mute hover:border-accent" aria-pressed="${current === d}" onclick="setDiff('${kind}',${i})">${esc(d)}</button>`).join('');
+}
+function setDiff(kind, i) {
+  const val = i < 0 ? '' : DIFFS[i];
+  if (kind === 'vault') vaultDiff = val; else catalogDiff = val;
+  renderDiffChips(kind);
+  if (kind === 'vault') renderVault(); else renderCatalog();
+}
+function setFilter(kind, i) {
+  const val = i < 0 ? '' : TAGS[i].toLowerCase();
+  if (kind === 'vault') vaultFilter = val; else catalogFilter = val;
+  renderFilterChips(kind);
+  if (kind === 'vault') renderVault(); else renderCatalog();
+}
+function setSearch(kind, val) {
+  const q = String(val || '').trim().toLowerCase();
+  if (kind === 'vault') vaultSearch = q; else catalogSearch = q;
+  if (kind === 'vault') renderVault(); else renderCatalog();
+}
+function matchesQuery(item, q) {
+  if (!q) return true;
+  const hay = [item.title, item.artist, item.arrangement, item.difficulty, item.desc, ...(item.tags || []), ...(item.genres || [])].filter(Boolean).join(' ').toLowerCase();
+  return hay.includes(q);
+}
+function setLayout(kind, mode) {
+  state.layout[kind] = mode;
+  saveKey(LS.layout, state.layout);
+  applyLayoutButtons();
+  if (kind === 'vault') renderVault(); else renderCatalog();
+}
+function applyLayoutButtons() {
+  document.querySelectorAll('[data-layout-btn]').forEach(b => {
+    const [kind, mode] = b.dataset.layoutBtn.split('-');
+    b.setAttribute('aria-pressed', String(state.layout[kind] === mode));
+  });
+}
+function renderScores(kind) {
+  const isVault = kind === 'vault';
+  const el = $(isVault ? 'vault-grid' : 'catalog-grid');
+  const filter = isVault ? vaultFilter : catalogFilter;
+  const q = isVault ? vaultSearch : catalogSearch;
+  const source = listOf(kind);
+  const diff = isVault ? vaultDiff : catalogDiff;
+  const items = source
+    .filter(x => !filter || (x.tags || []).some(t => t.toLowerCase() === filter))
+    .filter(x => !diff || x.difficulty === diff)
+    .filter(x => matchesQuery(x, q));
+  const mode = state.layout[kind];
+  el.className = mode === 'list' ? 'flex flex-col gap-2' : 'grid gap-6 sm:grid-cols-2 lg:grid-cols-3';
+  if (!items.length) {
+    el.innerHTML = `<p class="text-faint text-sm ${mode === 'list' ? '' : 'col-span-full'}">${source.length ? 'No scores match your search or tag.' : (isVault ? 'The vault is empty for now — new drafts land here first.' : 'No published scores yet — check back soon.')}</p>`;
+  } else {
+    el.innerHTML = items.map(x => mode === 'list' ? scoreRow(x, kind) : scoreCard(x, kind)).join('');
+  }
+  if (isVault) {
+    const n = state.vault.length;
+    $('vault-count-line').textContent = n === 1 ? '1 private score is waiting for you.' : `${n} private scores are waiting for you.`;
+  }
+}
+function renderVault() { renderScores('vault'); }
+function renderCatalog() { renderScores('catalog'); }
+
+function renderTagPicker(kind) {
+  const el = $(prefixOf(kind) + '-tag-picker');
+  if (!el) return;
+  el.innerHTML = TAGS.map((t,i) =>
+    `<button type="button" class="chip text-xs rounded-full border border-line px-3 py-1 text-mute hover:border-admin" aria-pressed="${pickerSel[kind].has(t)}" onclick="togglePicker('${kind}',${i})">${esc(t)}</button>`).join('')
+    ;
+}
+function togglePicker(kind, i) {
+  const t = TAGS[i];
+  if (pickerSel[kind].has(t)) pickerSel[kind].delete(t);
+  else pickerSel[kind].add(t);
+  renderTagPicker(kind);
+}
+
+function readScoreForm(kind) {
+  const p = prefixOf(kind);
+  const title = $(p + '-title').value.trim();
+  if (!title) { toast('Title is required.', false); return null; }
+  const video = $(p + '-video').value.trim();
+  if (video && !ytId(video)) { toast('That YouTube link could not be read. Paste a full video URL or its 11-character ID.', false); return null; }
+  const previewImg = validPreviewPath($(p + '-preview').value);
+  if (previewImg === null) { toast('Preview must be an image file inside your repository (e.g. previews/score.png). External links are blocked.', false); return null; }
+  const links = [];
+  for (let i = 1; i <= 3; i++) {
+    const raw = $(p + '-link' + i + '-url').value.trim();
+    if (!raw) continue;
+    const url = safeUrl(raw);
+    if (!url) { toast('Store link ' + i + ' must be a normal web URL (https://\u2026).', false); return null; }
+    links.push({ label: $(p + '-link' + i + '-label').value.trim(), url });
+  }
+  return {
+    title,
+    artist: $(p + '-artist').value.trim(),
+    arrangement: $(p + '-arrangement').value.trim(),
+    difficulty: $(p + '-difficulty').value,
+    desc: $(p + '-desc').value.trim(),
+    video,
+    previewImg,
+    tags: [...pickerSel[kind]],
+    genres: [...pickerGen[kind]],
+    links
+  };
+}
+function clearScoreForm(kind) {
+  const p = prefixOf(kind);
+  ['title','artist','arrangement','desc','video','preview'].forEach(f => { $(p + '-' + f).value = ''; });
+  $(p + '-difficulty').value = '';
+  for (let i = 1; i <= 3; i++) {
+    $(p + '-link' + i + '-label').value = '';
+    $(p + '-link' + i + '-url').value = '';
+  }
+  pickerSel[kind] = new Set();
+  pickerGen[kind] = new Set();
+  renderTagPicker(kind);
+  renderGenrePicker(kind);
+}
+function setFormMode(kind, mode) {
+  const isEdit = mode === 'edit';
+  $(kind + '-form-title').textContent = isEdit
+    ? (kind === 'vault' ? 'Edit Vault Score' : 'Edit Published Arrangement')
+    : (kind === 'vault' ? 'Add Vault Score' : 'Add Published Arrangement');
+  $(kind + '-save-btn').textContent = isEdit ? 'Save Changes' : (kind === 'vault' ? '+ Add Score' : '+ Add Arrangement');
+  $(kind + '-cancel-btn').classList.toggle('hidden', !isEdit);
+}
+function startEdit(kind, id) {
+  const item = listOf(kind).find(x => x.id === id);
+  if (!item) return;
+  const modal = $('score-modal');
+  if (modal.open) modal.close();
+  editing[kind] = id;
+  const p = prefixOf(kind);
+  $(p + '-title').value = item.title;
+  $(p + '-artist').value = item.artist || '';
+  $(p + '-arrangement').value = item.arrangement || '';
+  $(p + '-difficulty').value = item.difficulty || '';
+  $(p + '-desc').value = item.desc || '';
+  $(p + '-video').value = item.video || '';
+  $(p + '-preview').value = item.previewImg || '';
+  for (let i = 1; i <= 3; i++) {
+    const l = (item.links || [])[i - 1];
+    $(p + '-link' + i + '-label').value = l ? (l.label || '') : '';
+    $(p + '-link' + i + '-url').value = l ? l.url : '';
+  }
+  pickerSel[kind] = new Set(item.tags || []);
+  pickerGen[kind] = new Set(item.genres || []);
+  renderTagPicker(kind);
+  renderGenrePicker(kind);
+  setFormMode(kind, 'edit');
+  setAdminTab(kind);
+  showView('home');
+  requestAnimationFrame(() => $('admin-center').scrollIntoView({ behavior: 'smooth' }));
+}
+function cancelEdit(kind) {
+  editing[kind] = null;
+  clearScoreForm(kind);
+  setFormMode(kind, 'add');
+}
+function saveScore(kind) {
+  const data = readScoreForm(kind);
+  if (!data) return;
+  const isEdit = Boolean(editing[kind]);
+  confirmAction(isEdit ? 'Save changes to this score?' : 'Add this score?', () => {
+    const list = listOf(kind);
+    if (editing[kind]) {
+      const item = list.find(x => x.id === editing[kind]);
+      if (item) Object.assign(item, data);
+    } else {
+      list.push({ id: uid(), dateAdded: new Date().toISOString(), ...data });
+    }
+    saveKey(lsOf(kind), list);
+    afterContentChange();
+    cancelEdit(kind);
+    renderVault();
+    renderCatalog();
+    renderFeatured();
+    renderStats();
+    renderVoting();
+    renderAdminScoreLists();
+    renderAdminVoteList();
+    renderDashboard();
+    toast('Changes saved.');
+  });
+}
+function deleteScore(kind, id) {
+  confirmAction('Delete this score? This cannot be undone.', () => {
+    if (currentAudio === 'score:' + kind + ':' + id) { stopAudio(); currentAudio = null; audioState = 'paused'; }
+    if (kind === 'catalog' && state.featured === id) { state.featured = ''; saveKey(LS.featured, state.featured); }
+    if (kind === 'vault') {
+      state.vault = state.vault.filter(x => x.id !== id);
+      saveKey(LS.vault, state.vault);
+    } else {
+      state.catalog = state.catalog.filter(x => x.id !== id);
+      saveKey(LS.catalog, state.catalog);
+    }
+    if (editing[kind] === id) cancelEdit(kind);
+    afterContentChange();
+    renderVault();
+    renderCatalog();
+    renderFeatured();
+    renderStats();
+    renderVoting();
+    renderAdminScoreLists();
+    renderAdminVoteList();
+    renderDashboard();
+    toast('Changes saved.');
+  });
+}
+function moveScore(kind, id, dir) {
+  const list = listOf(kind);
+  const i = list.findIndex(x => x.id === id);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= list.length) return;
+  [list[i], list[j]] = [list[j], list[i]];
+  saveKey(lsOf(kind), list);
+  afterContentChange();
+  renderVault();
+  renderCatalog();
+  renderAdminScoreLists();
+  toast('Changes saved.');
+}
+function renderAdminScoreLists() {
+  if (state.access !== 'admin') return;
+  const row = (item, kind) =>
+    `<li class="flex items-center justify-between gap-3 bg-sunken border border-line rounded-xl px-3 py-2">
+      <div class="min-w-0">
+        <p class="truncate text-ink">${esc(item.title)}</p>
+        <p class="truncate text-xs text-faint">${[item.artist, item.arrangement].filter(Boolean).map(esc).join(' &middot; ') || 'No creator info'} &middot; ${(item.links||[]).length} link${(item.links||[]).length === 1 ? '' : 's'} &middot; ${ytId(item.video) ? 'Video linked' : 'No video'}</p>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        ${kind === 'catalog' ? `<button onclick="toggleFeatured('${item.id}')" class="text-sm leading-none ${state.featured === item.id ? 'text-admin' : 'text-faint hover:text-admin'}" aria-label="${state.featured === item.id ? 'Unset featured' : 'Set as featured'}" title="Feature on home page">&#9733;</button>` : ''}
+        <button onclick="moveScore('${kind}','${item.id}',-1)" class="text-mute hover:text-ink text-sm leading-none" aria-label="Move up">&#9650;</button>
+        <button onclick="moveScore('${kind}','${item.id}',1)" class="text-mute hover:text-ink text-sm leading-none" aria-label="Move down">&#9660;</button>
+        <button onclick="startEdit('${kind}','${item.id}')" class="text-admin hover:text-admin-hi text-xs font-semibold">Edit</button>
+        <button onclick="deleteScore('${kind}','${item.id}')" class="text-danger hover:text-danger-hi text-xs font-semibold">Delete</button>
+      </div>
+    </li>`;
+  $('admin-vault-list').innerHTML = state.vault.length ? state.vault.map(x => row(x,'vault')).join('') : '<li class="text-faint">Vault is empty — add your first private score with the form.</li>';
+  $('admin-catalog-list').innerHTML = state.catalog.length ? state.catalog.map(x => row(x,'catalog')).join('') : '<li class="text-faint">Catalog is empty — add your first arrangement with the form.</li>';
+}
+
+function toggleFeatured(id) {
+  const on = state.featured !== id;
+  confirmAction(on ? 'Feature this arrangement on the home page?' : 'Remove this arrangement from the featured spot?', () => {
+    state.featured = on ? id : '';
+    saveKey(LS.featured, state.featured);
+    afterContentChange();
+    renderFeatured();
+    renderAdminScoreLists();
+    renderDashboard();
+    toast('Changes saved.');
+  });
+}
+function renderFeatured() {
+  const item = state.catalog.find(x => x.id === state.featured);
+  $('featured-section').classList.toggle('hidden', !item);
+  if (!item) { $('featured-card').innerHTML = ''; return; }
+  const meta = metaLine(item);
+  const chips = (item.tags || []).map(t =>
+    `<span class="text-xs font-medium rounded-full bg-sunken border border-line px-2.5 py-1 text-mute">${esc(t)}</span>`).join(' ');
+  $('featured-card').innerHTML = `
+    <div class="grid lg:grid-cols-2 gap-8 items-center bg-surface border border-line rounded-2xl overflow-hidden p-5 sm:p-7">
+      <div class="rounded-xl overflow-hidden border border-line">${embedBlock(item)}</div>
+      <div>
+        <div class="flex gap-1.5 mb-3">${badgeRow(item)}</div>
+        <h3 class="font-display text-3xl font-bold text-ink leading-tight">${esc(item.title)}</h3>
+        ${meta ? `<p class="text-sm text-faint mt-1.5">${meta}</p>` : ''}
+        ${item.desc ? `<p class="text-sm text-mute mt-4">${esc(item.desc)}</p>` : ''}
+        ${chips ? `<div class="flex flex-wrap gap-1.5 mt-4">${chips}</div>` : ''}
+        <div class="flex flex-wrap items-center gap-2 mt-6">
+          ${linkButtons(item, 'lg')}
+          <button onclick="openScore('catalog','${item.id}')" class="rounded-xl border border-line px-5 py-2.5 text-sm font-bold text-mute hover:text-ink hover:border-mute transition-colors">Details</button>
+          ${state.access === 'admin' ? `<button onclick="toggleFeatured('${item.id}')" class="rounded-xl border border-admin/50 px-4 py-2.5 text-sm font-semibold text-admin hover:bg-admin/10">&#9733; Unfeature</button>` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+function renderStats() {
+  const n = state.catalog.length;
+  const g = state.genres.length;
+  const v = state.voting.filter(x => x.status !== 'arranged').length;
+  $('stats-strip').innerHTML = `${n} arrangement${n === 1 ? '' : 's'} published <span class="text-line px-1">&#9670;</span> ${g} genre${g === 1 ? '' : 's'} <span class="text-line px-1">&#9670;</span> ${v} song${v === 1 ? '' : 's'} up for vote`;
+}
+
+function renderFaq() {
+  $('faq-section').classList.toggle('hidden', !state.faq.length);
+  $('faq-list').innerHTML = state.faq.map(f =>
+    `<details class="bg-surface border border-line rounded-xl px-5 py-4">
+      <summary class="cursor-pointer font-semibold text-ink list-none flex items-center justify-between gap-3">${esc(f.q)}<span class="faq-arrow text-faint" aria-hidden="true">&#9662;</span></summary>
+      <div class="faq-body"><div class="faq-inner"><p class="text-sm text-mute pt-3">${esc(f.a)}</p></div></div>
+    </details>`).join('');
+}
+function saveFaq() {
+  const q = $('faq-q').value.trim();
+  const a = $('faq-a').value.trim();
+  if (!q || !a) { toast('Both a question and an answer are required.', false); return; }
+  const isEdit = Boolean(faqEditing);
+  confirmAction(isEdit ? 'Save changes to this FAQ?' : 'Add this FAQ?', () => {
+    if (faqEditing) {
+      const f = state.faq.find(x => x.id === faqEditing);
+      if (f) { f.q = q; f.a = a; }
+    } else {
+      state.faq.push({ id: uid(), q, a });
+    }
+    cancelFaqEdit();
+    saveKey(LS.faq, state.faq);
+    afterContentChange();
+    renderFaq();
+    renderAdminFaqList();
+    renderDashboard();
+    toast('Changes saved.');
+  });
+}
+function startFaqEdit(id) {
+  const f = state.faq.find(x => x.id === id);
+  if (!f) return;
+  faqEditing = id;
+  $('faq-q').value = f.q;
+  $('faq-a').value = f.a;
+  $('faq-save-btn').textContent = 'Save Changes';
+  $('faq-cancel-btn').classList.remove('hidden');
+}
+function cancelFaqEdit() {
+  faqEditing = null;
+  $('faq-q').value = '';
+  $('faq-a').value = '';
+  $('faq-save-btn').textContent = '+ Add FAQ';
+  $('faq-cancel-btn').classList.add('hidden');
+}
+function deleteFaq(id) {
+  confirmAction('Delete this FAQ?', () => {
+    if (faqEditing === id) cancelFaqEdit();
+    state.faq = state.faq.filter(x => x.id !== id);
+    saveKey(LS.faq, state.faq);
+    afterContentChange();
+    renderFaq();
+    renderAdminFaqList();
+    renderDashboard();
+    toast('Changes saved.');
+  });
+}
+function renderAdminFaqList() {
+  if (state.access !== 'admin') return;
+  $('admin-faq-list').innerHTML = state.faq.length ? state.faq.map(f =>
+    `<li class="flex items-center justify-between gap-3 bg-sunken border border-line rounded-xl px-3 py-2">
+      <span class="truncate text-mute">${esc(f.q)}</span>
+      <div class="flex gap-2 shrink-0">
+        <button onclick="startFaqEdit('${f.id}')" class="text-admin hover:text-admin-hi text-xs font-semibold">Edit</button>
+        <button onclick="deleteFaq('${f.id}')" class="text-danger hover:text-danger-hi text-xs font-semibold">Delete</button>
+      </div>
+    </li>`).join('') : '<li class="text-faint">No FAQ entries yet.</li>';
+}
+
+function renderAdminCounts() {
+  if (state.access !== 'admin') return;
+  const counts = { catalog: state.catalog.length, vault: state.vault.length, voting: state.voting.length, genres: state.genres.length, faq: state.faq.length, inbox: inboxItems.length };
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const n = counts[el.dataset.count];
+    el.textContent = typeof n === 'number' ? `(${n})` : '';
+  });
+}
+function checklistItems() {
+  const defaultCatalogIds = ['pub-1','pub-2'];
+  return [
+    { label: 'Add your own arrangement', done: state.catalog.some(x => !defaultCatalogIds.includes(x.id)) || state.vault.some(x => x.id !== 'vault-1'), tab: 'catalog' },
+    { label: 'Personalize the site text', done: Object.keys(state.texts).length > 0, tab: 'text' },
+    { label: 'Feature an arrangement on the home page', done: Boolean(state.featured && state.catalog.some(x => x.id === state.featured)), tab: 'catalog' },
+    { label: 'Export your first backup', done: Boolean(state.seen.exported), tab: 'data' }
+  ];
+}
+function renderDashboard() {
+  if (state.access !== 'admin') return;
+  renderAdminCounts();
+  const ballots = Object.keys(state.userVotes).length;
+  $('dash-tiles').innerHTML = [
+    { n: state.catalog.length, l: 'Published scores' },
+    { n: state.vault.length, l: 'Vault scores' },
+    { n: state.voting.length, l: 'Songs on the board' },
+    { n: ballots, l: 'Votes cast (this browser)' }
+  ].map(t => `<div class="rounded-xl bg-sunken border border-line px-4 py-3"><p class="font-display text-2xl font-bold text-ink">${t.n}</p><p class="text-xs text-faint mt-0.5">${t.l}</p></div>`).join('');
+  const items = checklistItems();
+  const remaining = items.filter(i => !i.done).length;
+  $('dash-checklist').innerHTML = `
+    <div class="rounded-xl border border-admin/30 bg-admin/[.05] p-5">
+      <p class="font-semibold text-ink mb-1">Getting started ${remaining === 0 ? '&mdash; all done &#127881;' : ''}</p>
+      <p class="text-xs text-faint mb-4">${remaining === 0 ? 'Your site is fully set up.' : remaining + ' step' + (remaining === 1 ? '' : 's') + ' left to make this site fully yours.'}</p>
+      <ul class="space-y-2 text-sm">
+        ${items.map(i => `<li class="flex items-center gap-3">
+          <span class="${i.done ? 'text-accent' : 'text-faint'}" aria-hidden="true">${i.done ? '&#10003;' : '&#9675;'}</span>
+          <span class="flex-1 ${i.done ? 'text-faint line-through' : 'text-mute'}">${i.label}</span>
+          ${i.done ? '' : `<button onclick="setAdminTab('${i.tab}')" class="text-xs font-semibold text-admin hover:text-admin-hi">Go &rarr;</button>`}
+        </li>`).join('')}
+      </ul>
+    </div>`;
+}
+
+function adminAddGenre() {
+  const val = $('genre-input').value.trim();
+  if (!val) return;
+  if (state.genres.some(g => g.toLowerCase() === val.toLowerCase())) { toast('That genre already exists.', false); return; }
+  state.genres.push(val);
+  $('genre-input').value = '';
+  saveKey(LS.genres, state.genres);
+  afterContentChange();
+  refreshGenreDependents();
+  toast('Changes saved.');
+}
+function adminRemoveGenre(i) {
+  const g = state.genres[i];
+  confirmAction(`Remove the "${g}" genre? Scores keep it, but it disappears from the pickers and suggestion form.`, () => {
+    state.genres.splice(i, 1);
+    saveKey(LS.genres, state.genres);
+    afterContentChange();
+    pickerGen.vault.delete(g);
+    pickerGen.catalog.delete(g);
+    const gi = selectedGenres.indexOf(g);
+    if (gi >= 0) selectedGenres.splice(gi, 1);
+    refreshGenreDependents();
+    toast('Changes saved.');
+  });
+}
+function renderAdminGenreList() {
+  if (state.access !== 'admin') return;
+  $('admin-genre-list').innerHTML = state.genres.length ? state.genres.map((g,i) =>
+    `<span class="inline-flex items-center gap-1.5 text-xs rounded-full bg-sunken border border-line px-3 py-1.5 text-mute">${esc(genreLabel(g))} <button onclick="adminRemoveGenre(${i})" class="text-danger hover:text-danger-hi font-bold" aria-label="Remove genre ${attr(g)}">&times;</button></span>`).join('')
+    : '<span class="text-faint text-sm">No genres yet — add one above.</span>';
+}
+function refreshGenreDependents() {
+  renderStats();
+  renderGenres();
+  renderAdminGenreList();
+  renderAdminCounts();
+  renderGenrePicker('vault');
+  renderGenrePicker('catalog');
+}
+function renderGenrePicker(kind) {
+  const el = $(prefixOf(kind) + '-genre-picker');
+  if (!el) return;
+  el.innerHTML = state.genres.length ? state.genres.map((g,i) =>
+    `<button type="button" class="chip text-xs rounded-full border border-line px-3 py-1 text-mute hover:border-admin" aria-pressed="${pickerGen[kind].has(g)}" onclick="toggleGenrePick('${kind}',${i})">${esc(genreLabel(g))}</button>`).join('')
+    : '<span class="text-faint text-xs">Add genres in the Genres tab first.</span>';
+}
+function toggleGenrePick(kind, i) {
+  const g = state.genres[i];
+  if (pickerGen[kind].has(g)) pickerGen[kind].delete(g);
+  else pickerGen[kind].add(g);
+  renderGenrePicker(kind);
+}
+
+function renderDraftStatus() {
+  const el = $('draft-status');
+  if (!el) return;
+  if (fbUser) {
+    el.textContent = 'Live publishing is on — every save instantly updates the site for all visitors.';
+    el.className = 'text-xs mb-5 text-accent';
+    return;
+  }
+  if (isDraft()) {
+    el.textContent = PUBLISHED
+      ? 'Local draft active — you are previewing unpublished changes. Visitors see the published data.json.'
+      : 'Local draft active — visitors currently see the built-in defaults until you publish a data.json.';
+    el.className = 'text-xs mb-5 text-admin';
+  } else {
+    el.textContent = PUBLISHED
+      ? 'No local draft — you are viewing the published data.json, same as every visitor.'
+      : 'No local draft — you are viewing the built-in defaults, same as every visitor.';
+    el.className = 'text-xs mb-5 text-faint';
+  }
+}
+function discardDraft() {
+  if (!isDraft()) { toast('There is no local draft to discard.', false); return; }
+  confirmAction('Discard your local draft? Unexported changes are lost and this browser goes back to the published content.', () => {
+    [LS.catalog, LS.vault, LS.voting, LS.social, LS.genres, LS.texts, LS.featured, LS.faq].forEach(k => {
+      try { localStorage.removeItem(k); } catch {}
+    });
+    try { localStorage.removeItem(DRAFT_KEY); } catch {}
+    location.reload();
+  }, true);
+}
+function dataFeedback(msg, ok = true) {
+  const el = $('data-feedback');
+  el.textContent = msg;
+  el.className = 'text-sm min-h-[1.25rem] ' + (ok ? 'text-accent' : 'text-danger');
+}
+function exportData() {
+  const payload = {
+    format: 'sheet-music-portfolio-backup',
+    version: 3,
+    exportedAt: new Date().toISOString(),
+    catalog: state.catalog,
+    vault: state.vault,
+    voting: state.voting,
+    social: state.social,
+    texts: state.texts,
+    featured: state.featured,
+    faq: state.faq,
+    genres: state.genres
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'sheet-music-portfolio-backup.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  markSeen('exported');
+  renderDashboard();
+  dataFeedback('Backup exported.');
+}
+function importData(input) {
+  const f = input.files && input.files[0];
+  input.value = '';
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onerror = () => dataFeedback('Could not read that file.', false);
+  reader.onload = () => {
+    let d;
+    try { d = JSON.parse(reader.result); }
+    catch { dataFeedback('That file is not valid JSON.', false); return; }
+    if (!d || d.format !== 'sheet-music-portfolio-backup' || !Array.isArray(d.catalog) || !Array.isArray(d.vault) || !Array.isArray(d.voting)) {
+      dataFeedback('That file is not a portfolio backup.', false);
+      return;
+    }
+    confirmAction('Import this backup? It replaces all current scores, voting items, links, and text edits.', () => {
+      if (fbUser) {
+        publishContent(validPublished(d) || contentPayload());
+        dataFeedback('Backup imported and published live.');
+        setTimeout(() => location.reload(), 800);
+        return;
+      }
+      saveKey(LS.catalog, d.catalog);
+      saveKey(LS.vault, d.vault);
+      saveKey(LS.voting, d.voting);
+      saveKey(LS.social, (d.social && typeof d.social === 'object') ? d.social : {});
+      saveKey(LS.genres, Array.isArray(d.genres) ? d.genres : DEFAULT_GENRES);
+      saveKey(LS.texts, (d.texts && typeof d.texts === 'object') ? d.texts : {});
+      saveKey(LS.featured, typeof d.featured === 'string' ? d.featured : '');
+      saveKey(LS.faq, Array.isArray(d.faq) ? d.faq : []);
+      saveKey(LS.userVotes, {});
+      try { localStorage.setItem(DRAFT_KEY, '1'); } catch {}
+      location.reload();
+    }, true);
+  };
+  reader.readAsText(f);
+}
+function resetAllData() {
+  confirmAction('Reset the whole site to its default content? All scores, votes, tags, links, and text edits will be erased.', () => {
+    try { localStorage.removeItem(DRAFT_KEY); } catch {}
+    [LS.catalog, LS.vault, LS.voting, LS.userVotes, LS.social, LS.genres, LS.texts, LS.layout, LS.featured, LS.faq, LS.seen, LS.settings].forEach(k => {
+      try { localStorage.removeItem(k); } catch {}
+    });
+    location.reload();
+  }, true);
+}
+
+function setAdminTab(tab) {
+  document.querySelectorAll('#admin-tabs .tab-btn').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+  document.querySelectorAll('[data-tabpanel]').forEach(p => p.classList.toggle('hidden', p.dataset.tabpanel !== tab));
+}
+
+async function sha256Hex(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+}
+function pcThrottle() {
+  try { return JSON.parse(sessionStorage.getItem('smp_pcTries') || '{"n":0,"until":0}'); } catch { return { n:0, until:0 }; }
+}
+function pcSave(t) {
+  try { sessionStorage.setItem('smp_pcTries', JSON.stringify(t)); } catch {}
+}
+async function unlockAccess() {
+  const input = $('passcode-input');
+  const code = input.value.trim();
+  const fb = $('passcode-feedback');
+  const setFb = (msg, cls) => { fb.textContent = msg; fb.className = 'text-sm mt-3 min-h-[1.25rem] relative ' + cls; };
+  const t = pcThrottle();
+  if (Date.now() < t.until) { setFb('Too many attempts. Try again in ' + Math.ceil((t.until - Date.now()) / 1000) + 's.', 'text-danger'); return; }
+  if (!code) { setFb('Enter a passcode first.', 'text-danger'); return; }
+  if (!(window.crypto && crypto.subtle)) { setFb('Secure hashing is unavailable in this browser context. Open the site over HTTPS.', 'text-danger'); return; }
+  const hash = await sha256Hex(code);
+  let intro = null;
+  if (hash === HASH_ADMIN) {
+    if (FB_READY) {
+      input.value = '';
+      setFb('One more step.', 'text-mute');
+      $('admin-login').classList.remove('hidden');
+      $('al-email').focus();
+      return;
+    }
+    state.access = 'admin';
+    persistAdmin(true);
+    setFb('Unlocked.', 'text-accent');
+    if (!state.seen.adminIntro) { intro = 'admin'; markSeen('adminIntro'); }
+  } else if (hash === HASH_FRIENDS) {
+    state.access = 'friends';
+    persistAdmin(false);
+    persistFriend(true);
+    setFb('Welcome to the vault! You will stay logged in on this browser.', 'text-accent');
+    if (!state.seen.friendIntro) { intro = 'friend'; markSeen('friendIntro'); }
+  } else {
+    t.n += 1;
+    if (t.n >= 5) { t.until = Date.now() + 30000; t.n = 0; }
+    pcSave(t);
+    setFb(t.until > Date.now() ? 'Too many attempts. Locked for 30s.' : 'Incorrect passcode. Try again.', 'text-danger');
+    return;
+  }
+  pcSave({ n:0, until:0 });
+  input.value = '';
+  applyAccess();
+  if (intro) { showIntro(intro); return; }
+  showView('home');
+  requestAnimationFrame(() => $('friends-vault').scrollIntoView({ behavior: 'smooth' }));
+}
+function logoutAll() {
+  if (fbUser && fbAuth && fbAuthTools) fbAuthTools.signOut(fbAuth).catch(() => {});
+  persistAdmin(false);
+  persistFriend(false);
+  state.access = 'none';
+  cancelEdit('vault');
+  cancelEdit('catalog');
+  cancelVoteEdit();
+  cancelFaqEdit();
+  $('admin-login').classList.add('hidden');
+  const fb = $('passcode-feedback');
+  fb.textContent = 'Logged out.';
+  fb.className = 'text-sm mt-3 min-h-[1.25rem] relative text-mute';
+  applyAccess();
+  showView('access');
+  toast('Logged out.');
+}
+function logoutAdmin() {
+  if (fbUser && fbAuth && fbAuthTools) {
+    fbAuthTools.signOut(fbAuth).catch(() => {});
+    toast('Logged out.');
+    return;
+  }
+  persistAdmin(false);
+  state.access = friendPersisted() ? 'friends' : 'none';
+  cancelEdit('vault');
+  cancelEdit('catalog');
+  cancelVoteEdit();
+  cancelFaqEdit();
+  applyAccess();
+  if (state.access === 'none') showView('access');
+  toast(state.access === 'friends' ? 'Logged out of admin — friend access kept.' : 'Logged out.');
+}
+function applyAccess() {
+  const isFriends = state.access === 'friends' || state.access === 'admin';
+  const isAdmin = state.access === 'admin';
+  $('friends-vault').classList.toggle('hidden', !isFriends);
+  $('admin-center').classList.toggle('hidden', !isAdmin);
+  $('logout-btn').classList.toggle('hidden', !isFriends);
+  $('nav-friends-dot').classList.toggle('hidden', !isFriends);
+  $('nav-friends-dot-m').classList.toggle('hidden', !isFriends);
+  const badge = $('portal-status-badge');
+  if (isFriends) {
+    badge.classList.remove('hidden');
+    badge.textContent = 'FRIENDS ACCESS';
+    badge.className = 'text-xs font-bold tracking-wider px-3 py-1.5 rounded-full border border-accent/60 bg-accent/10 text-accent';
+  } else {
+    badge.classList.add('hidden');
+  }
+  renderVault();
+  renderCatalog();
+  renderFeatured();
+  renderEditButtons();
+  if (isAdmin) {
+    renderAdminScoreLists();
+    renderAdminVoteList();
+    renderAdminGenreList();
+    renderAdminInbox();
+    renderAdminTextList();
+    renderAdminFaqList();
+    renderDashboard();
+    renderTagPicker('vault');
+    renderTagPicker('catalog');
+    renderGenrePicker('vault');
+    renderGenrePicker('catalog');
+  }
+}
+
+$('faq-list').addEventListener('click', e => {
+  const sum = e.target.closest('summary');
+  if (!sum || !$('faq-list').contains(sum)) return;
+  e.preventDefault();
+  const d = sum.parentElement;
+  if (d.classList.contains('expanded')) {
+    d.classList.remove('expanded');
+    if (motionReduced()) { d.open = false; return; }
+    const body = d.querySelector('.faq-body');
+    const onEnd = ev => {
+      if (ev.propertyName !== 'grid-template-rows') return;
+      body.removeEventListener('transitionend', onEnd);
+      if (!d.classList.contains('expanded')) d.open = false;
+    };
+    body.addEventListener('transitionend', onEnd);
+  } else {
+    d.open = true;
+    if (motionReduced()) { d.classList.add('expanded'); return; }
+    requestAnimationFrame(() => requestAnimationFrame(() => d.classList.add('expanded')));
+  }
+});
+function submitSuggestionFB(form) {
+  const gotcha = form.querySelector('[name="_gotcha"]');
+  const done = () => {
+    form.reset();
+    selectedGenres = [];
+    renderGenres();
+    toast('Suggestion sent — thank you!');
+  };
+  if (gotcha && gotcha.value) { done(); return; }
+  const payload = {
+    name: $('sg-name').value.trim().slice(0, 120),
+    artist: $('sg-artist').value.trim().slice(0, 120),
+    youtube: $('sg-youtube').value.trim().slice(0, 200),
+    genres: selectedGenres.slice(0, 3),
+    ts: Date.now()
+  };
+  fbTools.addDoc(fbTools.collection(fbdb, 'suggestions'), payload).then(done).catch(() =>
+    toast('Could not send right now — please try again in a moment.', false));
+}
+$('suggestion-form').addEventListener('submit', e => {
+  $('sg-genres').value = selectedGenres.join(', ');
+  const link = $('sg-youtube').value.trim();
+  if (link && !ytId(link)) {
+    e.preventDefault();
+    toast('That YouTube link could not be read. Paste a full video URL.', false);
+    return;
+  }
+  if (fbdb && fbTools) {
+    e.preventDefault();
+    submitSuggestionFB(e.target);
+  }
+});
+$('passcode-input').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); unlockAccess(); } });
+$('genre-input').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); adminAddGenre(); } });
+$('edit-modal').addEventListener('close', () => { editModalKey = null; });
+$('confirm-modal').addEventListener('close', () => { confirmCb = null; });
+document.addEventListener('click', e => {
+  const menu = $('genre-menu');
+  if (!menu.classList.contains('hidden') && !menu.contains(e.target) && e.target !== $('genre-toggle')) closeGenreMenu();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeGenreMenu(); if (document.body.classList.contains('dancing')) endDance(); } });
+window.addEventListener('scroll', () => { $('back-to-top').classList.toggle('show', window.scrollY > 400); }, { passive: true });
+['edit-modal','confirm-modal','score-modal','intro-modal','help-modal','settings-modal'].forEach(id => {
+  $(id).addEventListener('click', e => { if (e.target === $(id)) $(id).close(); });
+});
+$('score-modal').addEventListener('close', () => {
+  if (location.hash.startsWith('#/s/')) setHash(ROUTES[currentView]);
+});
+
+async function fetchPublished() {
+  try {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 4000);
+    const res = await fetch('data.json', { cache: 'no-store', signal: ctl.signal });
+    clearTimeout(timer);
+    if (!res.ok) return null;
+    const d = await res.json();
+    if (!d || d.format !== 'sheet-music-portfolio-backup' || !Array.isArray(d.catalog) || !Array.isArray(d.vault) || !Array.isArray(d.voting) || !Array.isArray(d.tags)) return null;
+    return d;
+  } catch { return null; }
+}
+(async function init() {
+  try { localStorage.removeItem(LS.theme); } catch {}
+  if (FB_READY) await initFirebase();
+  PUBLISHED = fbContent || await fetchPublished();
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (en.isIntersecting) { en.target.classList.add('io-in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('main section').forEach(sec => { sec.classList.add('io'); io.observe(sec); });
+  }
+  captureDefaultTexts();
+  loadState();
+  applySettings();
+  applyTexts();
+  applySocial();
+  renderGenres();
+  renderVoting();
+  renderStats();
+  renderFeatured();
+  renderFaq();
+  renderFilterChips('vault');
+  renderFilterChips('catalog');
+  renderDiffChips('vault');
+  renderDiffChips('catalog');
+  applyLayoutButtons();
+  setAdminTab('dash');
+  renderVoteSyncStatus();
+  renderDraftStatus();
+  applyAccess();
+  stateLoaded = true;
+  if (fbUser) {
+    state.access = 'admin';
+    applyAccess();
+    renderDraftStatus();
+  }
+  applyRoute();
+  if (ANALYTICS_CODE) {
+    const ga = document.createElement('script');
+    ga.async = true;
+    ga.src = 'https://gc.zgo.at/count.js';
+    ga.dataset.goatcounter = 'https://' + ANALYTICS_CODE + '.goatcounter.com/count';
+    document.head.appendChild(ga);
+  }
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+})();
+</script>
+</body>
+</html>
