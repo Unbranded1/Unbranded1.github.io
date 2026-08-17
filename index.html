@@ -187,6 +187,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
       <a href="#view-home" onclick="showView('home');return false;" class="nvl text-mute hover:text-accent transition-colors">Home</a>
       <a href="#view-scores" onclick="showView('scores');return false;" class="nvl text-mute hover:text-accent transition-colors">Published Scores</a>
       <a href="#view-vote" onclick="showView('vote');return false;" class="nvl text-mute hover:text-accent transition-colors">Vote</a>
+      <a id="nav-downloads" href="#" target="_blank" rel="noopener" class="nvl hidden whitespace-nowrap text-mute hover:text-accent transition-colors">Downloads</a>
       <a href="#view-access" onclick="goToFriends();return false;" class="nvl whitespace-nowrap text-mute hover:text-accent transition-colors">Friends<span id="nav-friends-dot" class="hidden ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-accent align-middle"></span></a>
     </div>
     <div class="flex items-center gap-2">
@@ -205,6 +206,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
     <a href="#view-home" onclick="showView('home');return false;" class="text-mute hover:text-accent">Home</a>
     <a href="#view-scores" onclick="showView('scores');return false;" class="text-mute hover:text-accent">Published Scores</a>
     <a href="#view-vote" onclick="showView('vote');return false;" class="text-mute hover:text-accent">Vote</a>
+    <a id="nav-downloads-m" href="#" target="_blank" rel="noopener" class="hidden text-mute hover:text-accent">Downloads</a>
     <a href="#view-access" onclick="goToFriends();return false;" class="text-mute hover:text-accent">Friends<span id="nav-friends-dot-m" class="hidden ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-accent align-middle"></span></a>
   </div>
 </header>
@@ -310,8 +312,8 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
     </div>
     <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
       <input id="vault-search" type="search" placeholder="Search vault scores&hellip;" oninput="setSearch('vault', this.value)" class="w-full sm:max-w-xs rounded-xl bg-surface border border-line px-3.5 py-2 text-sm text-ink placeholder-faint focus:border-accent" />
+      <select id="vault-filter-select" onchange="setFilter('vault', this.value)" aria-label="Filter vault by instrument" class="rounded-xl bg-surface border border-line px-3 py-2 text-sm text-mute focus:border-accent"></select>
     </div>
-    <div id="vault-filter-chips" class="flex flex-wrap gap-2 mb-2" role="group" aria-label="Filter vault by tag"></div>
     <div id="vault-diff-chips" class="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter vault by difficulty"></div>
     <div id="vault-grid"></div>
   </section>
@@ -377,14 +379,6 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
                 <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Sheet preview image <span class="font-normal text-faint">(file in your repo, e.g. previews/canon.png)</span></span>
                   <input id="c-preview" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
                 <div>
-                  <p class="text-xs font-semibold text-mute mb-1.5">Tags <span class="font-normal text-faint">(tap to toggle)</span></p>
-                  <div id="c-tag-picker" class="flex flex-wrap gap-1.5"></div>
-                </div>
-                <div>
-                  <p class="text-xs font-semibold text-mute mb-1.5">Genres <span class="font-normal text-faint">(tap to toggle)</span></p>
-                  <div id="c-genre-picker" class="flex flex-wrap gap-1.5"></div>
-                </div>
-                <div>
                   <p class="text-xs font-semibold text-mute mb-1.5">Sheet music store links <span class="font-normal text-faint">(up to 3)</span></p>
                   <div class="space-y-2">
                     <div class="grid grid-cols-[1fr_2fr] gap-2"><input id="c-link1-label" type="text" placeholder="Label" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /><input id="c-link1-url" type="text" placeholder="https://&hellip;" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></div>
@@ -392,6 +386,15 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
                     <div class="grid grid-cols-[1fr_2fr] gap-2"><input id="c-link3-label" type="text" placeholder="Label" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /><input id="c-link3-url" type="text" placeholder="https://&hellip;" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></div>
                   </div>
                 </div>
+                <div>
+                  <p class="text-xs font-semibold text-mute mb-1.5">Tags <span class="font-normal text-faint">(tap to toggle)</span></p>
+                  <div id="c-tag-picker" class="flex flex-wrap gap-1.5"></div>
+                </div>
+                <div>
+                  <p class="text-xs font-semibold text-mute mb-1.5">Genres <span class="font-normal text-faint">(tap to toggle)</span></p>
+                  <div id="c-genre-picker" class="flex flex-wrap gap-1.5"></div>
+                </div>
+                
                 <div class="flex gap-2 pt-1">
                   <button id="catalog-save-btn" onclick="saveScore('catalog')" class="rounded-xl bg-admin px-5 py-2 text-sm font-bold text-oninv hover:bg-admin-hi">+ Add Arrangement</button>
                   <button id="catalog-cancel-btn" onclick="cancelEdit('catalog')" class="hidden rounded-xl border border-line px-4 py-2 text-sm text-mute hover:text-ink">Cancel</button>
@@ -426,10 +429,14 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
                   </select></label>
                 <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Description</span>
                   <input id="v-desc" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
-                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">YouTube video (URL or 11-character ID)</span>
-                  <input id="v-video" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
                 <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Sheet preview image <span class="font-normal text-faint">(file in your repo, e.g. previews/canon.png)</span></span>
                   <input id="v-preview" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Google Drive download link <span class="font-normal text-faint">(optional)</span></span>
+                  <input id="v-drive" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">MuseScore link <span class="font-normal text-faint">(optional)</span></span>
+                  <input id="v-musescore" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Audio file <span class="font-normal text-faint">(mp3 in your repo, e.g. audio/etude.mp3)</span></span>
+                  <input id="v-audio" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
                 <div>
                   <p class="text-xs font-semibold text-mute mb-1.5">Tags <span class="font-normal text-faint">(tap to toggle)</span></p>
                   <div id="v-tag-picker" class="flex flex-wrap gap-1.5"></div>
@@ -438,14 +445,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
                   <p class="text-xs font-semibold text-mute mb-1.5">Genres <span class="font-normal text-faint">(tap to toggle)</span></p>
                   <div id="v-genre-picker" class="flex flex-wrap gap-1.5"></div>
                 </div>
-                <div>
-                  <p class="text-xs font-semibold text-mute mb-1.5">Sheet music store links <span class="font-normal text-faint">(up to 3)</span></p>
-                  <div class="space-y-2">
-                    <div class="grid grid-cols-[1fr_2fr] gap-2"><input id="v-link1-label" type="text" placeholder="Label" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /><input id="v-link1-url" type="text" placeholder="https://&hellip;" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></div>
-                    <div class="grid grid-cols-[1fr_2fr] gap-2"><input id="v-link2-label" type="text" placeholder="Label" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /><input id="v-link2-url" type="text" placeholder="https://&hellip;" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></div>
-                    <div class="grid grid-cols-[1fr_2fr] gap-2"><input id="v-link3-label" type="text" placeholder="Label" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /><input id="v-link3-url" type="text" placeholder="https://&hellip;" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm placeholder-faint focus:border-admin" /></div>
-                  </div>
-                </div>
+                
                 <div class="flex gap-2 pt-1">
                   <button id="vault-save-btn" onclick="saveScore('vault')" class="rounded-xl bg-admin px-5 py-2 text-sm font-bold text-oninv hover:bg-admin-hi">+ Add Score</button>
                   <button id="vault-cancel-btn" onclick="cancelEdit('vault')" class="hidden rounded-xl border border-line px-4 py-2 text-sm text-mute hover:text-ink">Cancel</button>
@@ -521,12 +521,14 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
         </div>
 
         <div data-tabpanel="social" class="hidden">
-          <p class="text-sm text-mute mb-5">These links power the YouTube and Instagram buttons in the navigation and footer.</p>
+          <p class="text-sm text-mute mb-5">These power the YouTube and Instagram icons, and the Downloads button in the menu.</p>
           <div class="max-w-md space-y-4">
             <label class="block"><span class="block text-xs font-semibold text-mute mb-1">YouTube URL</span>
               <input id="soc-youtube" type="url" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
             <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Instagram URL</span>
               <input id="soc-instagram" type="url" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+            <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Downloads folder URL <span class="font-normal text-faint">(Google Drive &mdash; leave empty to hide the button)</span></span>
+              <input id="soc-downloads" type="url" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
             <button onclick="adminSaveSocial()" class="rounded-xl bg-admin px-5 py-2 text-sm font-bold text-oninv hover:bg-admin-hi">Save Links</button>
           </div>
         </div>
@@ -570,8 +572,8 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
     <div id="hint-scores" class="mb-4"></div>
     <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
       <input id="catalog-search" type="search" placeholder="Search published scores&hellip;" oninput="setSearch('catalog', this.value)" class="w-full sm:max-w-xs rounded-xl bg-surface border border-line px-3.5 py-2 text-sm text-ink placeholder-faint focus:border-accent" />
+      <select id="catalog-filter-select" onchange="setFilter('catalog', this.value)" aria-label="Filter catalog by instrument" class="rounded-xl bg-surface border border-line px-3 py-2 text-sm text-mute focus:border-accent"></select>
     </div>
-    <div id="catalog-filter-chips" class="flex flex-wrap gap-2 mb-2" role="group" aria-label="Filter catalog by tag"></div>
     <div id="catalog-diff-chips" class="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter catalog by difficulty"></div>
     <div id="catalog-grid"></div>
   </section>
@@ -723,7 +725,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
       <label class="flex items-center justify-between gap-3">
         <span class="text-mute">Motion</span>
         <select id="set-motion" onchange="setSetting('motion', this.value)" class="rounded-xl bg-sunken border border-line px-3 py-1.5 text-ink focus:border-accent">
-          <option value="system">Follow device</option>
+          <option value="system">Normal</option>
           <option value="reduced">Reduced</option>
           <option value="extra">Extra (intrusive)</option>
         </select>
@@ -869,19 +871,48 @@ const DEFAULTS = {
     { id:'pub-2', title:'Greensleeves', artist:'Traditional', arrangement:'Flute & Guitar Duet', desc:'Traditional English melody set as a gentle chamber duet with optional ornamentation.', video:'', tags:['Flute','Guitar'], links:[] }
   ],
   vault: [
-    { id:'vault-1', title:'\u00c9tude No. 1 in E minor', artist:'Original', arrangement:'Solo Piano', desc:'A private practice \u00e9tude focused on left-hand voicing and pedal control. Friends-only draft.', video:'', tags:['Piano'], links:[] }
+    {"id": "v-kny-ost", "title": "鬼滅の刃 OST Medley", "artist": "Go Shiina & Yuki Kajiura", "arrangement": "Concert Band", "difficulty": "", "desc": "Demon Slayer OST medley: Tanjiro no Uta, Flaming Thunder God, Into the Infinity Castle, and Akaza’s Love Theme.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Drum Kit", "Flute", "French Horn", "Glockenspiel", "Oboe", "Piano", "Snare Drum", "Tenor Saxophone", "Timpani", "Trombone", "Trumpet", "Tuba"], "genres": ["Anime", "Film/OST"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-kizuna", "title": "絆ノ奇跡 (Kizuna no Kiseki)", "artist": "MAN WITH A MISSION × milet", "arrangement": "Concert Band", "difficulty": "", "desc": "Demon Slayer opening 4 — Swordsmith Village Arc.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-ao-no-sumika", "title": "青のすみか (Ao no Sumika)", "artist": "Tatsuya Kitani", "arrangement": "Concert Band", "difficulty": "", "desc": "Jujutsu Kaisen season 2 opening.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-be-a-flower", "title": "花になって (Be a Flower)", "artist": "Ryokuoushoku Shakai", "arrangement": "Marching Band", "difficulty": "", "desc": "The Apothecary Diaries opening — shortened marching arrangement.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-fukashigi", "title": "不可思議のカルテ (Fukashigi no Carte)", "artist": "Hidehiro Kawai", "arrangement": "Concert Band", "difficulty": "", "desc": "Rascal Does Not Dream of Bunny Girl Senpai ending theme.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-hikaru-nara", "title": "光るなら (Hikaru Nara)", "artist": "Goose house", "arrangement": "Concert Band", "difficulty": "", "desc": "Your Lie in April opening theme.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-cruel-angel", "title": "The Cruel Angel’s Thesis", "artist": "佐藤英敏 (Hidetoshi Sato)", "arrangement": "Marching Band", "difficulty": "", "desc": "Neon Genesis Evangelion opening — for marching band.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-your-gaze", "title": "まなざしは光 (Your Gaze, Crepuscular)", "artist": "Tatsuya Kitani", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-zankyou-sanka", "title": "残響散歌 (Zankyou Sanka)", "artist": "Aimer", "arrangement": "Concert Band", "difficulty": "", "desc": "Demon Slayer opening 3 — Entertainment District Arc.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Piano", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-idol-marching", "title": "アイドル (Idol) — Marching Band", "artist": "YOASOBI", "arrangement": "Marching Band", "difficulty": "", "desc": "Oshi no Ko opening — TV size.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-idol-orchestra", "title": "アイドル (Idol) — Orchestra", "artist": "YOASOBI", "arrangement": "Orchestra", "difficulty": "", "desc": "Oshi no Ko opening — full-version orchestral arrangement.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Orchestra", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Bassoon", "Cello", "Clarinet", "Contrabass", "Flute", "Oboe", "Piccolo", "Snare Drum", "Tambourine", "Tenor Saxophone", "Timpani", "Triangle", "Trombone", "Trumpet", "Tuba", "Viola", "Violin"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-monster", "title": "怪物 (Monster)", "artist": "YOASOBI", "arrangement": "Marching Band", "difficulty": "", "desc": "Kaibutsu — BEASTARS season 2 opening.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-nanairo", "title": "七色シンフォニー (Nanairo Symphony)", "artist": "COALAMODE.", "arrangement": "Orchestra", "difficulty": "", "desc": "Your Lie in April opening 2.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Orchestra", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Cello", "Clarinet", "Contrabass", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba", "Viola", "Violin"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-ritn-simplified", "title": "夜に駆ける (Racing Into the Night) — Simplified", "artist": "YOASOBI", "arrangement": "Concert Band", "difficulty": "", "desc": "Simplified concert band version.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tambourine", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-ritn-concert", "title": "夜に駆ける (Racing Into the Night) — Concert Band", "artist": "YOASOBI", "arrangement": "Concert Band", "difficulty": "", "desc": "Original concert band arrangement.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tambourine", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-ritn-marching", "title": "夜に駆ける (Racing Into the Night) — Marching Band", "artist": "YOASOBI", "arrangement": "Marching Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-ritn-orchestra", "title": "夜に駆ける (Into the Night) — Orchestra", "artist": "YOASOBI", "arrangement": "Orchestra", "difficulty": "", "desc": "Reimagined orchestral arrangement.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Orchestra", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Cello", "Clarinet", "Contrabass", "Cymbals", "Flute", "Glockenspiel", "Snare Drum", "Tambourine", "Tenor Saxophone", "Triangle", "Trombone", "Trumpet", "Tuba", "Viola", "Violin", "Xylophone"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-ritn-melody", "title": "夜に駆ける (Racing Into the Night) — Melody Pack", "artist": "YOASOBI", "arrangement": "Melody pack", "difficulty": "", "desc": "Melody-only parts for concert winds.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Other", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-miku-range", "title": "高音厨音域テスト (Miku’s High Range Test)", "artist": "木村わいP (Kimurawai-P)", "arrangement": "Range test chart", "difficulty": "", "desc": "Hatsune Miku range-test parts across the flute, saxophone, brass, string, guitar and piano families.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Other", "Bass Clarinet", "Bass Guitar", "Bassoon", "Cello", "Clarinet", "Contrabass", "Flute", "Guitar", "Oboe", "Piano", "Piccolo", "Saxophone", "Trombone", "Trumpet", "Tuba", "Viola", "Violin"], "genres": ["J-Pop", "Other"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-tabun", "title": "たぶん (Tabun / Probably)", "artist": "YOASOBI", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-innocent", "title": "Innocent", "artist": "Joe Hisaishi", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Classical", "Film/OST"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-one-summers-day", "title": "One Summer’s Day", "artist": "Joe Hisaishi", "arrangement": "Marching Band", "difficulty": "", "desc": "From Spirited Away — for marching band.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["Classical", "Film/OST"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-bang-bang", "title": "Bang Bang", "artist": "K’naan", "arrangement": "Marching Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Horn", "Baritone Saxophone", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-blossoms", "title": "Blossoms of Summer Night", "artist": "苑迪萌", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Piano", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Classical"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-flamewall", "title": "Flamewall", "artist": "Camellia", "arrangement": "Concert Band", "difficulty": "", "desc": "Yes, this is a Geometry Dash reference.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Piano", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Video Game", "EDM / Electronic"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-haaland-concert", "title": "Haaland (Ha Ha Ha)", "artist": "", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-haaland-melody", "title": "Haaland (Ha Ha Ha) — Melody Pack", "artist": "", "arrangement": "Melody pack", "difficulty": "", "desc": "Melody-only parts across winds and strings.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Other", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bassoon", "Cello", "Clarinet", "Contrabass", "Flute", "Oboe", "Piccolo", "Soprano Saxophone", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba", "Viola", "Violin"], "genres": ["Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-tvb-news", "title": "TVB News Theme", "artist": "顧嘉煇 (Joseph Koo)", "arrangement": "Concert Band", "difficulty": "", "desc": "The Hong Kong TVB evening news theme.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Film/OST"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-acnh", "title": "Animal Crossing: New Horizons — Main Theme", "artist": "Kazumi Totaka", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Video Game"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-lifelight", "title": "Lifelight", "artist": "Hideki Sakamoto", "arrangement": "Marching Band", "difficulty": "", "desc": "Super Smash Bros. Ultimate main theme — marching band arrangement.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["Video Game"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []}
   ],
   voting: [
     { id:'vote-1', title:'A Cruel Angel\u2019s Thesis', artist:'Hidetoshi Sato', votes:0 },
     { id:'vote-2', title:'Monster', artist:'YOASOBI', votes:0 },
     { id:'vote-3', title:'Gurenge', artist:'Kayoko Kusano', votes:0 }
   ],
-  social: { youtube:'https://www.youtube.com/@unbranded_branden', instagram:'https://instagram.com/unbranded_branden' },
+  social: { youtube:'https://www.youtube.com/@unbranded_branden', instagram:'https://instagram.com/unbranded_branden', downloads:'' },
   genres: DEFAULT_GENRES,
   layout: { vault:'grid', catalog:'grid' },
   faq: [
     { id:'faq-1', q:'Can I request a song?', a:'Yes — use the suggestion form on the Vote page, or upvote it if it is already on the board.' },
-    { id:'faq-2', q:'Where do I get the sheet music?', a:'Every published score links to the store pages where it can be purchased or downloaded.' },
+    { id:'faq-2', q:'Where do I get the sheet music?', a:'Every published score has store links where it can be purchased or downloaded.' },
     { id:'faq-3', q:'Can I use an arrangement in my own video or performance?', a:'Usually yes with credit, but licensing depends on the original song. Send a message through the contact form and I will confirm.' }
   ]
 };
@@ -976,13 +1007,11 @@ function migrateScores(list) {
     if (typeof x.dateAdded !== 'string') { x.dateAdded = ''; changed = true; }
     if (!Array.isArray(x.genres)) { x.genres = []; changed = true; }
     if (typeof x.previewImg !== 'string') { x.previewImg = ''; changed = true; }
-    if (!Array.isArray(x.links)) {
-      x.links = [];
-      const legacy = safeUrl(x.pdf);
-      if (legacy) x.links.push({ label:'Sheet Music', url:legacy });
-      changed = true;
-    }
     if ('pdf' in x) { delete x.pdf; changed = true; }
+    if (typeof x.driveLink !== 'string') { x.driveLink = ''; changed = true; }
+    if (typeof x.musescoreLink !== 'string') { x.musescoreLink = ''; changed = true; }
+    if (typeof x.audioFile !== 'string') { x.audioFile = ''; changed = true; }
+    if (!Array.isArray(x.links)) { x.links = []; changed = true; }
     x.links = x.links.filter(l => l && safeUrl(l.url)).slice(0, 3).map(l => ({ label: String(l.label || ''), url: safeUrl(l.url) }));
   });
   return changed;
@@ -1004,6 +1033,7 @@ function loadState() {
   state.userVotes = loadKey(LS.userVotes, {});
   state.social = loadContent(LS.social, 'social', DEFAULTS.social);
   if (!state.social || typeof state.social !== 'object') state.social = clone(DEFAULTS.social);
+  if (typeof state.social.downloads !== 'string') state.social.downloads = '';
   state.genres = loadContent(LS.genres, 'genres', DEFAULTS.genres);
   if (!Array.isArray(state.genres)) state.genres = clone(DEFAULTS.genres);
   state.genres = state.genres.filter(g => typeof g === 'string' && g.trim()).map(g => g.trim());
@@ -1035,6 +1065,21 @@ function ytId(input) {
   const m = s.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/);
   return m ? m[1] : null;
 }
+function validAudioPath(v) {
+  const t = String(v || '').trim();
+  if (!t) return '';
+  if (/^https?:/i.test(t)) {
+    return t.startsWith(location.origin + '/') && /\.(mp3|m4a|wav|ogg)$/i.test(t) ? t : null;
+  }
+  return /^[\w][\w./ %-]*\.(mp3|m4a|wav|ogg)$/i.test(t) ? t : null;
+}
+function pauseAudioEls(except) {
+  document.querySelectorAll('audio').forEach(a => { if (a !== except) a.pause(); });
+}
+function audioBlock(item, kind) {
+  if (kind !== 'vault' || !item.audioFile) return '';
+  return `<div class="px-4 pt-3" onclick="event.stopPropagation()"><audio controls preload="none" class="w-full" src="${attr(item.audioFile)}" aria-label="Audio: ${attr(item.title)}"></audio></div>`;
+}
 function validPreviewPath(p) {
   const t = String(p || '').trim();
   if (!t) return '';
@@ -1046,23 +1091,23 @@ function validPreviewPath(p) {
 function iframeHTML(id, title) {
   return `<iframe class="w-full h-full" src="https://www.youtube-nocookie.com/embed/${id}" title="${attr(title)}" loading="lazy" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
 }
-function embedBlock(item) {
-  const id = ytId(item.video);
+function embedBlock(item, kind) {
+  const id = kind === 'vault' ? null : ytId(item.video);
   if (id && state.settings.lite) {
     return `<div class="embed-slot relative aspect-video bg-sunken">
       <img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy" class="absolute inset-0 w-full h-full object-cover opacity-80" />
-      <button onclick="event.stopPropagation();loadEmbed(this,'${id}','${attr(item.title)}')" class="absolute inset-0 grid place-items-center" aria-label="Load video: ${attr(item.title)}">
+      <button data-vid="${id}" data-title="${attr(item.title)}" onclick="event.stopPropagation();loadEmbed(this)" class="absolute inset-0 grid place-items-center" aria-label="Load video: ${attr(item.title)}">
         <span class="rounded-xl bg-surface/90 border border-line px-4 py-2 text-sm font-bold text-ink">&#9654; Load video</span>
       </button>
     </div>`;
   }
   if (id) return `<div class="embed-slot aspect-video bg-sunken">${iframeHTML(id, item.title)}</div>`;
   if (item.previewImg) return `<div class="aspect-video bg-sunken overflow-hidden"><img src="${attr(item.previewImg)}" alt="Sheet preview: ${attr(item.title)}" loading="lazy" class="w-full h-full object-contain" /></div>`;
-  return `<div class="aspect-video bg-gradient-to-br from-surface to-sunken flex flex-col items-center justify-center gap-1 text-faint"><span class="font-display text-4xl" aria-hidden="true">&#9835;</span><span class="text-xs">No video linked yet</span></div>`;
+  return `<div class="aspect-video bg-gradient-to-br from-surface to-sunken flex flex-col items-center justify-center gap-1 text-faint"><span class="font-display text-4xl" aria-hidden="true">&#9835;</span><span class="text-xs">No preview yet</span></div>`;
 }
-function loadEmbed(btn, id, title) {
+function loadEmbed(btn) {
   const slot = btn.closest('.embed-slot');
-  if (slot) slot.innerHTML = iframeHTML(id, title);
+  if (slot) slot.innerHTML = iframeHTML(btn.dataset.vid, btn.dataset.title);
 }
 
 let toastTimer = null;
@@ -1268,7 +1313,7 @@ function openHelp() {
     items.push('The <strong>Friends</strong> link in the menu unlocks a private vault with a passcode.');
   } else if (v === 'scores') {
     title = 'Published Scores';
-    items.push('Tap a score to expand it &mdash; video, description, and links to buy the sheet music.');
+    items.push('Tap a score to expand it &mdash; video, description, and links to get the sheet music.');
     items.push('Toggle <strong>grid / list</strong> at the top right; list rows include a &#9654; audio preview.');
     items.push('Narrow down with the search box or the tag chips.');
     items.push('Inside a score, <strong>Copy link</strong> gives you a direct URL to share it.');
@@ -1435,19 +1480,27 @@ function renderAdminTextList() {
 function applySocial() {
   const yt = state.social.youtube || '#';
   const ig = state.social.instagram || '#';
+  const dl = state.social.downloads || '';
   ['icon-youtube','foot-youtube'].forEach(id => { $(id).href = yt; });
   ['icon-instagram','foot-instagram'].forEach(id => { $(id).href = ig; });
+  ['nav-downloads','nav-downloads-m'].forEach(id => {
+    $(id).href = dl || '#';
+    $(id).classList.toggle('hidden', !dl);
+  });
   $('soc-youtube').value = state.social.youtube || '';
   $('soc-instagram').value = state.social.instagram || '';
+  $('soc-downloads').value = state.social.downloads || '';
 }
 function adminSaveSocial() {
   const yt = $('soc-youtube').value.trim();
   const ig = $('soc-instagram').value.trim();
+  const dl = $('soc-downloads').value.trim();
   const ytSafe = safeUrl(yt);
   const igSafe = safeUrl(ig);
-  if ((yt && !ytSafe) || (ig && !igSafe)) { toast('Links must be normal web URLs (https://\u2026).', false); return; }
+  const dlSafe = safeUrl(dl);
+  if ((yt && !ytSafe) || (ig && !igSafe) || (dl && !dlSafe)) { toast('Links must be normal web URLs (https://\u2026).', false); return; }
   confirmAction('Save these social links?', () => {
-    state.social = { youtube: ytSafe, instagram: igSafe };
+    state.social = { youtube: ytSafe, instagram: igSafe, downloads: dlSafe };
     saveKey(LS.social, state.social);
     afterContentChange();
     applySocial();
@@ -1509,6 +1562,7 @@ function refreshAudioUI() {
 }
 function toggleAudioKey(key, vid) {
   if (!vid) return;
+  pauseAudioEls(null);
   if (currentAudio === key && ytPlayer && ytPlayerReady) {
     if (audioState === 'playing') ytPlayer.pauseVideo();
     else ytPlayer.playVideo();
@@ -1934,11 +1988,13 @@ function badgeRow(item) {
 function metaLine(item) {
   return [item.artist, item.arrangement].filter(Boolean).map(esc).join(' &middot; ');
 }
-function linkButtons(item, size = 'sm') {
+function scoreLinkButtons(item, size = 'sm') {
   const pad = size === 'lg' ? 'px-5 py-2.5' : 'px-4 py-2';
-  return (item.links || []).map((l, i) =>
-    `<a href="${attr(l.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 rounded-xl ${i === 0 ? 'bg-accent text-oninv hover:bg-accent-hi' : 'border border-accent/60 text-accent hover:bg-accent/10'} ${pad} text-sm font-bold transition-colors">${esc(l.label || 'Sheet Music')}</a>`
-  ).join('');
+  const btns = (item.links || []).map((l, i) =>
+    `<a href="${attr(l.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 rounded-xl ${i === 0 ? 'bg-accent text-oninv hover:bg-accent-hi' : 'border border-accent/60 text-accent hover:bg-accent/10'} ${pad} text-sm font-bold transition-colors">${esc(l.label || 'Sheet Music')}</a>`);
+  if (item.driveLink) btns.push(`<a href="${attr(item.driveLink)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 rounded-xl bg-accent text-oninv hover:bg-accent-hi ${pad} text-sm font-bold transition-colors">&#8595; Download</a>`);
+  if (item.musescoreLink) btns.push(`<a href="${attr(item.musescoreLink)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 rounded-xl border border-accent/60 text-accent hover:bg-accent/10 ${pad} text-sm font-bold transition-colors">&#9835; MuseScore</a>`);
+  return btns.join('');
 }
 function adminItemButtons(kind, id) {
   if (state.access !== 'admin') return '';
@@ -1948,11 +2004,14 @@ function adminItemButtons(kind, id) {
   </div>`;
 }
 function scoreCard(item, kind) {
-  const chips = (item.tags || []).map(t =>
-    `<span class="text-[11px] font-medium rounded-full bg-sunken border border-line px-2 py-0.5 text-mute">${esc(t)}</span>`).join(' ');
+  const allTags = item.tags || [];
+  const chips = allTags.slice(0, 4).map(t =>
+    `<span class="text-[11px] font-medium rounded-full bg-sunken border border-line px-2 py-0.5 text-mute">${esc(t)}</span>`).join(' ')
+    + (allTags.length > 4 ? ` <span class="text-[11px] font-medium rounded-full border border-line px-2 py-0.5 text-faint">+${allTags.length - 4} more</span>` : '');
   const meta = metaLine(item);
   return `<article onclick="openScore('${kind}','${item.id}')" class="fade-in cursor-pointer bg-surface border border-line rounded-2xl overflow-hidden card-hover flex flex-col" role="button" tabindex="0" onkeydown="if(event.key==='Enter'&&event.target===this){openScore('${kind}','${item.id}')}">
-    ${embedBlock(item)}
+    ${embedBlock(item, kind)}
+    ${audioBlock(item, kind)}
     <div class="p-5 flex flex-col gap-3 flex-1">
       <div>
         <div class="flex items-start justify-between gap-2">
@@ -1963,13 +2022,13 @@ function scoreCard(item, kind) {
       </div>
       ${item.desc ? `<p class="text-sm text-mute">${esc(item.desc)}</p>` : ''}
       ${chips ? `<div class="flex flex-wrap gap-1.5">${chips}</div>` : ''}
-      <div class="mt-auto pt-2 flex items-center gap-2 flex-wrap">${linkButtons(item)}${adminItemButtons(kind, item.id)}</div>
+      ${scoreLinkButtons(item) || state.access === 'admin' ? `<div class="mt-auto pt-2 flex items-center gap-2 flex-wrap">${scoreLinkButtons(item)}${adminItemButtons(kind, item.id)}</div>` : ''}
     </div>
   </article>`;
 }
 function scoreRow(item, kind) {
   const meta = metaLine(item);
-  const vid = ytId(item.video);
+  const vid = kind === 'vault' ? null : ytId(item.video);
   const aKey = 'score:' + kind + ':' + item.id;
   const isCurrent = currentAudio === aKey;
   const isPlaying = isCurrent && audioState === 'playing';
@@ -1997,7 +2056,8 @@ function openScore(kind, id, updateHash = true) {
     .concat((item.genres || []).map(g =>
     `<span class="text-xs font-medium rounded-full bg-accent/10 border border-accent/40 px-2.5 py-1 text-accent">${esc(g)}</span>`)).join(' ');
   $('score-modal-body').innerHTML = `
-    ${embedBlock(item)}
+    ${embedBlock(item, kind)}
+    ${audioBlock(item, kind)}
     <div class="p-6 sm:p-7">
       <div class="flex items-start justify-between gap-4">
         <div class="min-w-0">
@@ -2009,7 +2069,7 @@ function openScore(kind, id, updateHash = true) {
       ${item.desc ? `<p class="text-sm text-mute mt-4">${esc(item.desc)}</p>` : ''}
       ${item.previewImg && ytId(item.video) ? `<img src="${attr(item.previewImg)}" alt="Sheet preview: ${attr(item.title)}" loading="lazy" class="mt-5 w-full rounded-xl border border-line bg-sunken" />` : ''}
       ${chips ? `<div class="flex flex-wrap gap-1.5 mt-4">${chips}</div>` : ''}
-      ${(item.links || []).length ? `<div class="flex flex-wrap gap-2 mt-6">${linkButtons(item, 'lg')}</div>` : ''}
+      ${scoreLinkButtons(item, 'lg') ? `<div class="flex flex-wrap gap-2 mt-6">${scoreLinkButtons(item, 'lg')}</div>` : ''}
       <div class="mt-6 flex items-center gap-3 flex-wrap">
         <button onclick="copyScoreLink('${item.id}')" class="text-xs font-semibold text-mute hover:text-accent border border-line rounded-xl px-3 py-1.5 transition-colors">Copy link to this score</button>
         ${fbActive ? `<span class="text-xs text-faint">Viewed ${(viewCounts[item.id] ?? 0) + ''} time${(viewCounts[item.id] ?? 0) === 1 ? '' : 's'}</span>` : ''}
@@ -2035,18 +2095,22 @@ function copyScoreLink(id) {
   else fail();
 }
 
-function renderFilterChips(kind) {
+function renderTagFilter(kind) {
   const isVault = kind === 'vault';
+  const el = $(isVault ? 'vault-filter-select' : 'catalog-filter-select');
+  const seen = new Map();
+  listOf(kind).forEach(x => (x.tags || []).forEach(t => {
+    const k = String(t).toLowerCase();
+    if (k && !seen.has(k)) seen.set(k, String(t));
+  }));
+  const opts = [...seen.values()].sort((a,b) => a.localeCompare(b));
   let current = isVault ? vaultFilter : catalogFilter;
-  if (current && !TAGS.some(t => t.toLowerCase() === current)) {
+  if (current && !seen.has(current)) {
     current = '';
     if (isVault) vaultFilter = ''; else catalogFilter = '';
   }
-  const el = $(isVault ? 'vault-filter-chips' : 'catalog-filter-chips');
-  const allChip = `<button type="button" class="chip text-xs sm:text-sm rounded-full border border-line px-3.5 py-1.5 text-mute hover:border-accent" aria-pressed="${current === ''}" onclick="setFilter('${kind}',-1)">All tags</button>`;
-  const tagChips = TAGS.map((t,i) =>
-    `<button type="button" class="chip text-xs sm:text-sm rounded-full border border-line px-3.5 py-1.5 text-mute hover:border-accent" aria-pressed="${current === t.toLowerCase()}" onclick="setFilter('${kind}',${i})">${esc(t)}</button>`).join('');
-  el.innerHTML = allChip + tagChips;
+  el.innerHTML = '<option value="">All instruments</option>' + opts.map(t => `<option value="${attr(t.toLowerCase())}">${esc(t)}</option>`).join('');
+  el.value = current;
 }
 function renderDiffChips(kind) {
   const isVault = kind === 'vault';
@@ -2062,10 +2126,9 @@ function setDiff(kind, i) {
   renderDiffChips(kind);
   if (kind === 'vault') renderVault(); else renderCatalog();
 }
-function setFilter(kind, i) {
-  const val = i < 0 ? '' : TAGS[i].toLowerCase();
+function setFilter(kind, val) {
+  val = String(val || '').toLowerCase();
   if (kind === 'vault') vaultFilter = val; else catalogFilter = val;
-  renderFilterChips(kind);
   if (kind === 'vault') renderVault(); else renderCatalog();
 }
 function setSearch(kind, val) {
@@ -2092,6 +2155,7 @@ function applyLayoutButtons() {
 }
 function renderScores(kind) {
   const isVault = kind === 'vault';
+  renderTagFilter(kind);
   const el = $(isVault ? 'vault-grid' : 'catalog-grid');
   const filter = isVault ? vaultFilter : catalogFilter;
   const q = isVault ? vaultSearch : catalogSearch;
@@ -2134,17 +2198,31 @@ function readScoreForm(kind) {
   const p = prefixOf(kind);
   const title = $(p + '-title').value.trim();
   if (!title) { toast('Title is required.', false); return null; }
-  const video = $(p + '-video').value.trim();
+  const video = kind === 'vault' ? '' : $('c-video').value.trim();
   if (video && !ytId(video)) { toast('That YouTube link could not be read. Paste a full video URL or its 11-character ID.', false); return null; }
   const previewImg = validPreviewPath($(p + '-preview').value);
   if (previewImg === null) { toast('Preview must be an image file inside your repository (e.g. previews/score.png). External links are blocked.', false); return null; }
+  let driveLink = '';
+  let musescoreLink = '';
+  let audioFile = '';
   const links = [];
-  for (let i = 1; i <= 3; i++) {
-    const raw = $(p + '-link' + i + '-url').value.trim();
-    if (!raw) continue;
-    const url = safeUrl(raw);
-    if (!url) { toast('Store link ' + i + ' must be a normal web URL (https://\u2026).', false); return null; }
-    links.push({ label: $(p + '-link' + i + '-label').value.trim(), url });
+  if (kind === 'vault') {
+    const driveRaw = $('v-drive').value.trim();
+    driveLink = safeUrl(driveRaw);
+    if (driveRaw && !driveLink) { toast('The Google Drive link must be a normal web address (https://\u2026).', false); return null; }
+    const msRaw = $('v-musescore').value.trim();
+    musescoreLink = safeUrl(msRaw);
+    if (msRaw && !musescoreLink) { toast('The MuseScore link must be a normal web address (https://\u2026).', false); return null; }
+    audioFile = validAudioPath($('v-audio').value);
+    if (audioFile === null) { toast('The audio must be a sound file inside your repository (e.g. audio/etude.mp3).', false); return null; }
+  } else {
+    for (let i = 1; i <= 3; i++) {
+      const raw = $('c-link' + i + '-url').value.trim();
+      if (!raw) continue;
+      const url = safeUrl(raw);
+      if (!url) { toast('Store link ' + i + ' must be a normal web URL (https://\u2026).', false); return null; }
+      links.push({ label: $('c-link' + i + '-label').value.trim(), url });
+    }
   }
   return {
     title,
@@ -2156,16 +2234,26 @@ function readScoreForm(kind) {
     previewImg,
     tags: [...pickerSel[kind]],
     genres: [...pickerGen[kind]],
+    driveLink,
+    musescoreLink,
+    audioFile,
     links
   };
 }
 function clearScoreForm(kind) {
   const p = prefixOf(kind);
-  ['title','artist','arrangement','desc','video','preview'].forEach(f => { $(p + '-' + f).value = ''; });
+  ['title','artist','arrangement','desc','preview'].forEach(f => { $(p + '-' + f).value = ''; });
+  if (kind === 'catalog') $('c-video').value = '';
   $(p + '-difficulty').value = '';
-  for (let i = 1; i <= 3; i++) {
-    $(p + '-link' + i + '-label').value = '';
-    $(p + '-link' + i + '-url').value = '';
+  if (kind === 'vault') {
+    $('v-drive').value = '';
+    $('v-musescore').value = '';
+    $('v-audio').value = '';
+  } else {
+    for (let i = 1; i <= 3; i++) {
+      $('c-link' + i + '-label').value = '';
+      $('c-link' + i + '-url').value = '';
+    }
   }
   pickerSel[kind] = new Set();
   pickerGen[kind] = new Set();
@@ -2192,12 +2280,18 @@ function startEdit(kind, id) {
   $(p + '-arrangement').value = item.arrangement || '';
   $(p + '-difficulty').value = item.difficulty || '';
   $(p + '-desc').value = item.desc || '';
-  $(p + '-video').value = item.video || '';
+  if (kind === 'catalog') $('c-video').value = item.video || '';
   $(p + '-preview').value = item.previewImg || '';
-  for (let i = 1; i <= 3; i++) {
-    const l = (item.links || [])[i - 1];
-    $(p + '-link' + i + '-label').value = l ? (l.label || '') : '';
-    $(p + '-link' + i + '-url').value = l ? l.url : '';
+  if (kind === 'vault') {
+    $('v-drive').value = item.driveLink || '';
+    $('v-musescore').value = item.musescoreLink || '';
+    $('v-audio').value = item.audioFile || '';
+  } else {
+    for (let i = 1; i <= 3; i++) {
+      const l = (item.links || [])[i - 1];
+      $('c-link' + i + '-label').value = l ? (l.label || '') : '';
+      $('c-link' + i + '-url').value = l ? l.url : '';
+    }
   }
   pickerSel[kind] = new Set(item.tags || []);
   pickerGen[kind] = new Set(item.genres || []);
@@ -2282,9 +2376,10 @@ function renderAdminScoreLists() {
     `<li class="flex items-center justify-between gap-3 bg-sunken border border-line rounded-xl px-3 py-2">
       <div class="min-w-0">
         <p class="truncate text-ink">${esc(item.title)}</p>
-        <p class="truncate text-xs text-faint">${[item.artist, item.arrangement].filter(Boolean).map(esc).join(' &middot; ') || 'No creator info'} &middot; ${(item.links||[]).length} link${(item.links||[]).length === 1 ? '' : 's'} &middot; ${ytId(item.video) ? 'Video linked' : 'No video'}</p>
+        <p class="truncate text-xs text-faint">${[item.artist, item.arrangement].filter(Boolean).map(esc).join(' &middot; ') || 'No creator info'} &middot; ${kind === 'vault' ? (item.audioFile ? 'Audio linked' : 'No audio') : (ytId(item.video) ? 'Video linked' : 'No video')}${(item.links||[]).length ? ' &middot; ' + (item.links||[]).length + ' store link' + ((item.links||[]).length === 1 ? '' : 's') : ''}${item.driveLink ? ' &middot; Drive' : ''}${item.musescoreLink ? ' &middot; MuseScore' : ''}${item.audioFile ? ' &middot; Audio' : ''}</p>
       </div>
       <div class="flex items-center gap-2 shrink-0">
+        ${kind === 'vault' ? `<button onclick="transferToCatalog('${item.id}')" class="text-xs font-bold rounded-lg bg-admin px-2.5 py-1 text-oninv hover:bg-admin-hi" title="Copy to Published">&rarr; Publish</button>` : ''}
         ${kind === 'catalog' ? `<button onclick="toggleFeatured('${item.id}')" class="text-sm leading-none ${state.featured === item.id ? 'text-admin' : 'text-faint hover:text-admin'}" aria-label="${state.featured === item.id ? 'Unset featured' : 'Set as featured'}" title="Feature on home page">&#9733;</button>` : ''}
         <button onclick="moveScore('${kind}','${item.id}',-1)" class="text-mute hover:text-ink text-sm leading-none" aria-label="Move up">&#9650;</button>
         <button onclick="moveScore('${kind}','${item.id}',1)" class="text-mute hover:text-ink text-sm leading-none" aria-label="Move down">&#9660;</button>
@@ -2296,6 +2391,32 @@ function renderAdminScoreLists() {
   $('admin-catalog-list').innerHTML = state.catalog.length ? state.catalog.map(x => row(x,'catalog')).join('') : '<li class="text-faint">Catalog is empty — add your first arrangement with the form.</li>';
 }
 
+function transferToCatalog(id) {
+  const item = state.vault.find(x => x.id === id);
+  if (!item) return;
+  confirmAction('Publish a copy of this vault score? Drive and MuseScore links are removed; it opens in the Published form so you can add store links. The vault copy stays until you delete it.', () => {
+    const copy = clone(item);
+    copy.id = uid();
+    copy.dateAdded = new Date().toISOString();
+    copy.driveLink = '';
+    copy.musescoreLink = '';
+    copy.audioFile = '';
+    copy.links = [];
+    state.catalog.push(copy);
+    saveKey(LS.catalog, state.catalog);
+    afterContentChange();
+    renderVault();
+    renderCatalog();
+    renderFeatured();
+    renderStats();
+    renderVoting();
+    renderAdminScoreLists();
+    renderAdminVoteList();
+    renderDashboard();
+    startEdit('catalog', copy.id);
+    toast('Copied to Published — add the store links and save.');
+  });
+}
 function toggleFeatured(id) {
   const on = state.featured !== id;
   confirmAction(on ? 'Feature this arrangement on the home page?' : 'Remove this arrangement from the featured spot?', () => {
@@ -2317,7 +2438,7 @@ function renderFeatured() {
     `<span class="text-xs font-medium rounded-full bg-sunken border border-line px-2.5 py-1 text-mute">${esc(t)}</span>`).join(' ');
   $('featured-card').innerHTML = `
     <div class="grid lg:grid-cols-2 gap-8 items-center bg-surface border border-line rounded-2xl overflow-hidden p-5 sm:p-7">
-      <div class="rounded-xl overflow-hidden border border-line">${embedBlock(item)}</div>
+      <div class="rounded-xl overflow-hidden border border-line">${embedBlock(item, 'catalog')}</div>
       <div>
         <div class="flex gap-1.5 mb-3">${badgeRow(item)}</div>
         <h3 class="font-display text-3xl font-bold text-ink leading-tight">${esc(item.title)}</h3>
@@ -2325,7 +2446,7 @@ function renderFeatured() {
         ${item.desc ? `<p class="text-sm text-mute mt-4">${esc(item.desc)}</p>` : ''}
         ${chips ? `<div class="flex flex-wrap gap-1.5 mt-4">${chips}</div>` : ''}
         <div class="flex flex-wrap items-center gap-2 mt-6">
-          ${linkButtons(item, 'lg')}
+          ${scoreLinkButtons(item, 'lg')}
           <button onclick="openScore('catalog','${item.id}')" class="rounded-xl border border-line px-5 py-2.5 text-sm font-bold text-mute hover:text-ink hover:border-mute transition-colors">Details</button>
           ${state.access === 'admin' ? `<button onclick="toggleFeatured('${item.id}')" class="rounded-xl border border-admin/50 px-4 py-2.5 text-sm font-semibold text-admin hover:bg-admin/10">&#9733; Unfeature</button>` : ''}
         </div>
@@ -2804,6 +2925,12 @@ window.addEventListener('scroll', () => { $('back-to-top').classList.toggle('sho
 ['edit-modal','confirm-modal','score-modal','intro-modal','help-modal','settings-modal'].forEach(id => {
   $(id).addEventListener('click', e => { if (e.target === $(id)) $(id).close(); });
 });
+document.addEventListener('play', e => {
+  if (e.target && e.target.tagName === 'AUDIO') {
+    stopAudio();
+    pauseAudioEls(e.target);
+  }
+}, true);
 $('score-modal').addEventListener('close', () => {
   if (location.hash.startsWith('#/s/')) setHash(ROUTES[currentView]);
 });
@@ -2842,8 +2969,6 @@ async function fetchPublished() {
   renderStats();
   renderFeatured();
   renderFaq();
-  renderFilterChips('vault');
-  renderFilterChips('catalog');
   renderDiffChips('vault');
   renderDiffChips('catalog');
   applyLayoutButtons();
