@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://www.youtube.com https://www.gstatic.com https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.goatcounter.com; form-action https://formspree.io; base-uri 'self'; object-src 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://www.youtube.com https://www.gstatic.com https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.github.com https://*.goatcounter.com; form-action https://formspree.io; base-uri 'self'; object-src 'none'" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icon-192.png" />
@@ -53,10 +53,10 @@ tailwind.config = {
   --c-bg: 250 250 250;
   --c-surface: 250 250 250;
   --c-sunken: 228 229 241;
-  --c-line: 210 211 219;
+  --c-line: 147 148 165;
   --c-ink: 0 0 0;
-  --c-mute: 72 75 106;
-  --c-faint: 147 148 165;
+  --c-mute: 0 0 0;
+  --c-faint: 72 75 106;
   --c-accent: 72 75 106;
   --c-accent-hi: 0 0 0;
   --c-on-accent: 250 250 250;
@@ -125,11 +125,14 @@ html { scrollbar-width: thin; scrollbar-color: rgb(var(--c-line)) transparent; }
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:rgb(var(--c-line)); border-radius:999px; border:2px solid rgb(var(--c-bg)); }
 ::-webkit-scrollbar-thumb:hover { background:rgb(var(--c-accent)/.6); }
+.mnav { max-height:0; overflow:hidden; opacity:0; padding-top:0; padding-bottom:0; border-top:0 solid rgb(var(--c-line)/.7); transition: max-height calc(.3s/var(--speed,1)) ease, opacity calc(.25s/var(--speed,1)) ease, padding calc(.3s/var(--speed,1)) ease; }
+.mnav.open { max-height:20rem; opacity:1; padding-top:.75rem; padding-bottom:.75rem; border-top-width:1px; }
+@media (max-width:640px) { .chip { padding:.55rem .95rem; } #mobile-menu a { padding:.4rem 0; } .tab-btn { padding-top:.65rem; padding-bottom:.65rem; } .vote-btn { padding:.4rem .7rem; } }
 #back-to-top { opacity:0; pointer-events:none; transform:translateY(8px); transition:opacity calc(.25s/var(--speed,1)) ease, transform calc(.25s/var(--speed,1)) ease, color .15s, border-color .15s; }
 #back-to-top.show { opacity:1; pointer-events:auto; transform:none; }
 html[data-text="s"] { font-size:93.75%; }
 html[data-text="l"] { font-size:112.5%; }
-html[data-contrast="1"] { --c-line:147 148 165; --c-mute:0 0 0; --c-faint:72 75 106; --c-ink:0 0 0; }
+html[data-invert="1"] { --c-bg:17 18 22; --c-surface:24 25 31; --c-sunken:31 32 40; --c-line:82 84 104; --c-faint:130 132 152; --c-mute:206 208 220; --c-ink:250 250 250; --c-accent:158 161 196; --c-accent-hi:180 183 216; --c-on-accent:17 18 22; color-scheme:dark; }
 html[data-lite="1"] .backdrop-blur { backdrop-filter:none!important; -webkit-backdrop-filter:none!important; }
 html[data-lite="1"] .floaty { animation:none!important; }
 html[data-lite="1"] .shadow-glow, html[data-lite="1"] .shadow-2xl, html[data-lite="1"] .shadow-lg { box-shadow:none!important; }
@@ -187,6 +190,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
       <a href="#view-home" onclick="showView('home');return false;" class="nvl text-mute hover:text-accent transition-colors">Home</a>
       <a href="#view-scores" onclick="showView('scores');return false;" class="nvl text-mute hover:text-accent transition-colors">Published Scores</a>
       <a href="#view-vote" onclick="showView('vote');return false;" class="nvl text-mute hover:text-accent transition-colors">Vote</a>
+      <a id="nav-games" href="#view-games" onclick="showView('games');return false;" class="nvl text-mute hover:text-accent transition-colors">Games</a>
       <a id="nav-downloads" href="#" target="_blank" rel="noopener" class="nvl hidden whitespace-nowrap text-mute hover:text-accent transition-colors">Downloads</a>
       <a href="#view-access" onclick="goToFriends();return false;" class="nvl whitespace-nowrap text-mute hover:text-accent transition-colors">Friends<span id="nav-friends-dot" class="hidden ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-accent align-middle"></span></a>
     </div>
@@ -202,10 +206,11 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
       <button class="md:hidden text-mute text-2xl leading-none px-2" onclick="toggleMobileMenu()" aria-label="Toggle menu" aria-expanded="false" id="mobile-menu-btn">&#9776;</button>
     </div>
   </nav>
-  <div id="mobile-menu" class="hidden md:hidden border-t border-line/70 bg-base px-4 py-3 flex flex-col gap-3 text-sm font-medium">
+  <div id="mobile-menu" class="mnav md:hidden bg-base px-4 flex flex-col gap-3 text-sm font-medium">
     <a href="#view-home" onclick="showView('home');return false;" class="text-mute hover:text-accent">Home</a>
     <a href="#view-scores" onclick="showView('scores');return false;" class="text-mute hover:text-accent">Published Scores</a>
     <a href="#view-vote" onclick="showView('vote');return false;" class="text-mute hover:text-accent">Vote</a>
+    <a id="nav-games-m" href="#view-games" onclick="showView('games');return false;" class="text-mute hover:text-accent">Games</a>
     <a id="nav-downloads-m" href="#" target="_blank" rel="noopener" class="hidden text-mute hover:text-accent">Downloads</a>
     <a href="#view-access" onclick="goToFriends();return false;" class="text-mute hover:text-accent">Friends<span id="nav-friends-dot-m" class="hidden ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-accent align-middle"></span></a>
   </div>
@@ -318,7 +323,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
     <div id="vault-grid"></div>
   </section>
 
-  <section id="admin-center" class="hidden mx-auto max-w-6xl px-4 sm:px-6 py-16 sect scroll-mt-20">
+  <section id="admin-center" data-annoy-exempt class="hidden mx-auto max-w-6xl px-4 sm:px-6 py-16 sect scroll-mt-20">
     <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
       <div>
         <p class="text-admin text-xs font-bold tracking-[0.35em] uppercase mb-2">Admin</p>
@@ -337,6 +342,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
         <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="genres" onclick="setAdminTab('genres')">&#9839; Genres <span data-count="genres" class="opacity-70"></span></button>
         <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="faq" onclick="setAdminTab('faq')">&#63; FAQ <span data-count="faq" class="opacity-70"></span></button>
         <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="social" onclick="setAdminTab('social')">&#128279; YouTube / Instagram</button>
+        <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="games" onclick="setAdminTab('games')">&#127918; Games</button>
         <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="text" onclick="setAdminTab('text')">&#9998; Site Text</button>
         <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="data" onclick="setAdminTab('data')">&#128190; Backup &amp; Data</button>
       </div>
@@ -378,6 +384,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
                   <input id="c-video" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
                 <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Sheet preview image <span class="font-normal text-faint">(file in your repo, e.g. previews/canon.png)</span></span>
                   <input id="c-preview" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <div class="flex items-center gap-2"><input id="c-preview-file" type="file" accept="image/*" class="min-w-0 text-xs text-mute file:mr-2 file:rounded-lg file:border file:border-admin/60 file:bg-transparent file:text-admin file:text-xs file:font-semibold file:px-3 file:py-1.5" /><button type="button" onclick="ghUploadField('c-preview-file','previews','c-preview')" class="text-xs font-semibold rounded-lg border border-admin/60 text-admin px-3 py-1.5 hover:bg-admin/10 shrink-0">Upload image</button></div>
                 <div>
                   <p class="text-xs font-semibold text-mute mb-1.5">Sheet music store links <span class="font-normal text-faint">(up to 3)</span></p>
                   <div class="space-y-2">
@@ -431,12 +438,17 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
                   <input id="v-desc" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
                 <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Sheet preview image <span class="font-normal text-faint">(file in your repo, e.g. previews/canon.png)</span></span>
                   <input id="v-preview" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <div class="flex items-center gap-2"><input id="v-preview-file" type="file" accept="image/*" class="min-w-0 text-xs text-mute file:mr-2 file:rounded-lg file:border file:border-admin/60 file:bg-transparent file:text-admin file:text-xs file:font-semibold file:px-3 file:py-1.5" /><button type="button" onclick="ghUploadField('v-preview-file','previews','v-preview')" class="text-xs font-semibold rounded-lg border border-admin/60 text-admin px-3 py-1.5 hover:bg-admin/10 shrink-0">Upload image</button></div>
+                <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Score PDF <span class="font-normal text-faint">(file in your repo, e.g. scores-pdfs/piece.pdf)</span></span>
+                  <input id="v-pdf" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <div class="flex items-center gap-2"><input id="v-pdf-file" type="file" accept="application/pdf" class="min-w-0 text-xs text-mute file:mr-2 file:rounded-lg file:border file:border-admin/60 file:bg-transparent file:text-admin file:text-xs file:font-semibold file:px-3 file:py-1.5" /><button type="button" onclick="ghUploadField('v-pdf-file','scores-pdfs','v-pdf')" class="text-xs font-semibold rounded-lg border border-admin/60 text-admin px-3 py-1.5 hover:bg-admin/10 shrink-0">Upload PDF</button></div>
                 <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Google Drive download link <span class="font-normal text-faint">(optional)</span></span>
                   <input id="v-drive" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
                 <label class="block"><span class="block text-xs font-semibold text-mute mb-1">MuseScore link <span class="font-normal text-faint">(optional)</span></span>
                   <input id="v-musescore" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
                 <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Audio file <span class="font-normal text-faint">(mp3 in your repo, e.g. audio/etude.mp3)</span></span>
                   <input id="v-audio" type="text" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
+                <div class="flex items-center gap-2"><input id="v-audio-file" type="file" accept="audio/*" class="min-w-0 text-xs text-mute file:mr-2 file:rounded-lg file:border file:border-admin/60 file:bg-transparent file:text-admin file:text-xs file:font-semibold file:px-3 file:py-1.5" /><button type="button" onclick="ghUploadField('v-audio-file','audio','v-audio')" class="text-xs font-semibold rounded-lg border border-admin/60 text-admin px-3 py-1.5 hover:bg-admin/10 shrink-0">Upload audio</button></div>
                 <div>
                   <p class="text-xs font-semibold text-mute mb-1.5">Tags <span class="font-normal text-faint">(tap to toggle)</span></p>
                   <div id="v-tag-picker" class="flex flex-wrap gap-1.5"></div>
@@ -538,7 +550,31 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
           <ul id="admin-text-list" class="space-y-2 text-sm max-w-2xl"></ul>
         </div>
 
+        <div data-tabpanel="games" class="hidden">
+          <h3 class="font-display text-xl font-bold text-ink mb-1.5">Games</h3>
+          <p class="text-sm text-mute mb-6 max-w-2xl">Control the toys. Changes publish for everyone.</p>
+          <div class="space-y-4 max-w-md">
+            <label class="flex items-center justify-between gap-4"><span class="text-sm text-mute">Show the Games page (quiz)</span><input id="ga-quiz" type="checkbox" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-admin))]" /></label>
+            <label class="flex items-center justify-between gap-4"><span class="text-sm text-mute">Snake leaderboard (404 page)</span><input id="ga-snakelb" type="checkbox" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-admin))]" /></label>
+            <label class="flex items-center justify-between gap-4"><span class="text-sm text-mute">Allow Annoying mode</span><input id="ga-annoy" type="checkbox" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-admin))]" /></label>
+            <label class="flex items-center justify-between gap-4"><span class="text-sm text-mute">Ad frequency (annoying mode)</span>
+              <select id="ga-adfreq" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin">
+                <option value="occasional">Occasional</option><option value="frequent">Frequent</option><option value="relentless">Relentless</option>
+              </select></label>
+            <button onclick="adminSaveGames()" class="rounded-xl bg-admin px-5 py-2.5 text-sm font-bold text-oninv hover:bg-admin-hi">Save game settings</button>
+          </div>
+        </div>
         <div data-tabpanel="data" class="hidden">
+          <div class="mb-8">
+            <h4 class="font-bold text-ink mb-1.5">Direct uploads (GitHub token)</h4>
+            <p class="text-sm text-mute mb-3 max-w-2xl">Lets the Upload buttons in the score forms save files straight into your repository. Create a fine-grained token at github.com &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens, scoped to only this repository with Contents read &amp; write. The token is stored only on this device.</p>
+            <div class="flex flex-col sm:flex-row gap-2 max-w-md">
+              <input id="gh-token" type="password" placeholder="github_pat_&hellip;" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" />
+              <button onclick="adminSaveGhToken()" class="rounded-xl bg-admin px-4 py-2 text-sm font-bold text-oninv hover:bg-admin-hi shrink-0">Save token</button>
+              <button onclick="adminClearGhToken()" class="rounded-xl border border-line px-4 py-2 text-sm font-semibold text-mute hover:text-ink shrink-0">Clear</button>
+            </div>
+            <p id="gh-token-status" class="text-xs text-faint mt-2"></p>
+          </div>
           <p class="text-sm text-mute mb-2 max-w-2xl">Your edits here are a <strong>local draft</strong> only you can see. To publish for everyone: <strong>Export</strong>, rename the file to <code class="text-xs bg-sunken border border-line rounded px-1.5 py-0.5">data.json</code>, and upload it to your GitHub repository next to index.html.</p>
           <p id="draft-status" class="text-xs mb-5"></p>
           <div class="flex flex-wrap gap-2 mb-6">
@@ -629,6 +665,51 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
   </section>
 </div>
 
+<div id="view-games" class="hidden">
+  <section class="mx-auto max-w-4xl px-4 sm:px-6 py-14 sect scroll-mt-20">
+    <p class="text-xs font-bold tracking-[.22em] text-faint uppercase mb-2">Games</p>
+    <h2 class="font-display text-3xl sm:text-4xl font-bold text-ink mb-2">The Music Quiz</h2>
+    <p class="text-sm text-mute mb-8 max-w-xl">500 questions. Three lives. The clock is short and the pity is real. A correct very-hard answer earns a life back. There is also a <a href="404.html" class="text-accent underline decoration-2 underline-offset-2">snake game</a> hiding on the 404 page.</p>
+    <div id="quiz-idle" class="rounded-2xl border border-line bg-surface p-8 text-center">
+      <button onclick="quizStart()" class="rounded-xl bg-accent px-8 py-3 font-bold text-oninv hover:bg-accent-hi transition-colors">Start quiz</button>
+      <p class="text-xs text-faint mt-3">Easy &amp; normal: 5s &middot; Hard &amp; very hard: 10s &middot; Keys 1&ndash;4 work on a keyboard</p>
+    </div>
+    <div id="quiz-play" class="hidden">
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm mb-4">
+        <span class="font-bold text-ink">&hearts; <span id="qz-lives">3</span></span>
+        <span class="text-mute">Answered: <strong id="qz-answered" class="text-ink tabular-nums">0</strong></span>
+        <span class="text-mute">Time: <strong id="qz-time" class="text-ink tabular-nums">0:00</strong></span>
+      </div>
+      <div class="flex items-center gap-3 mb-1">
+        <span class="text-xs font-semibold text-faint w-8">Pity</span>
+        <div class="flex-1 h-2.5 rounded-full bg-sunken border border-line overflow-hidden"><div id="qz-pity-bar" class="h-full" style="width:0%;background:rgb(72 75 106)"></div></div>
+        <span id="qz-pity-num" class="text-xs text-faint tabular-nums w-10 text-right">0</span>
+      </div>
+      <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs mb-5">
+        <span style="color:#2f8f46">Easy: <strong id="qz-e">0</strong></span>
+        <span style="color:#a8871d">Normal: <strong id="qz-n">0</strong></span>
+        <span style="color:#c53b3b">Hard: <strong id="qz-h">0</strong></span>
+        <span style="color:#7a2430">Very hard: <strong id="qz-v">0</strong></span>
+      </div>
+      <div class="rounded-2xl border border-line bg-surface p-6 sm:p-8">
+        <div class="flex items-center justify-between gap-3 mb-4">
+          <span id="qz-diff" class="text-xs font-bold tracking-wide uppercase"></span>
+          <span id="qz-timer-num" class="text-sm font-bold text-ink tabular-nums">5.0</span>
+        </div>
+        <div class="h-1.5 rounded-full bg-sunken overflow-hidden mb-5"><div id="qz-timer-bar" class="h-full bg-accent" style="width:100%"></div></div>
+        <p id="qz-question" class="font-display text-xl sm:text-2xl font-bold text-ink mb-6"></p>
+        <div id="qz-opts" class="grid sm:grid-cols-2 gap-3"></div>
+      </div>
+    </div>
+    <div id="quiz-over" class="hidden rounded-2xl border border-line bg-surface p-8">
+      <p class="font-display text-3xl font-bold text-ink mb-1">Run over</p>
+      <p id="qz-final" class="text-sm text-mute mb-6"></p>
+      <div id="qz-lb-slot"></div>
+      <button onclick="quizStart()" class="mt-6 rounded-xl bg-accent px-6 py-2.5 font-bold text-oninv hover:bg-accent-hi">Play again</button>
+      <button onclick="quizIdle()" class="mt-6 ml-2 rounded-xl border border-line px-6 py-2.5 font-semibold text-mute hover:text-ink">Back</button>
+    </div>
+  </section>
+</div>
 <div id="view-access" class="hidden">
   <section class="mx-auto max-w-6xl px-4 sm:px-6 pt-12 pb-20">
     <button onclick="showView('home')" class="inline-flex items-center gap-2 text-sm font-medium text-mute hover:text-accent transition-colors mb-10">&larr; Back to Main Page</button>
@@ -640,13 +721,13 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
       </div>
       <p data-edit="portalSub" class="text-mute text-sm mb-6 relative">Enter the friends passcode to unlock the private sheet music vault.</p>
       <div class="flex flex-col sm:flex-row gap-3 relative">
-        <input id="passcode-input" type="text" autocomplete="off" spellcheck="false" placeholder="Friends passcode&hellip;" class="flex-1 rounded-xl bg-sunken border border-line px-4 py-2.5 font-mono text-accent placeholder-faint focus:border-accent" />
+        <input id="passcode-input" autocapitalize="none" autocorrect="off" spellcheck="false" type="text" autocomplete="off" spellcheck="false" placeholder="Friends passcode&hellip;" class="flex-1 rounded-xl bg-sunken border border-line px-4 py-2.5 font-mono text-accent placeholder-faint focus:border-accent" />
         <button onclick="unlockAccess()" class="rounded-xl bg-accent px-6 py-2.5 font-bold text-oninv hover:bg-accent-hi transition-colors">Unlock</button>
         <button id="logout-btn" onclick="logoutAll()" class="hidden rounded-xl border border-line px-4 py-2.5 text-sm text-mute hover:text-ink hover:border-mute transition-colors">Log out</button>
       </div>
       <p id="passcode-feedback" class="text-sm mt-3 min-h-[1.25rem] relative" aria-live="polite"></p>
       <div id="admin-login" class="hidden relative mt-5 pt-5 border-t border-line/70 space-y-3">
-        <input id="al-email" type="email" autocomplete="username" placeholder="Email" class="w-full rounded-xl bg-sunken border border-line px-4 py-2.5 text-ink placeholder-faint focus:border-accent" />
+        <input id="al-email" autocapitalize="none" autocorrect="off" spellcheck="false" type="email" autocomplete="username" placeholder="Email" class="w-full rounded-xl bg-sunken border border-line px-4 py-2.5 text-ink placeholder-faint focus:border-accent" />
         <input id="al-pass" type="password" autocomplete="current-password" placeholder="Password" class="w-full rounded-xl bg-sunken border border-line px-4 py-2.5 text-ink placeholder-faint focus:border-accent" />
         <button onclick="adminLogin()" class="rounded-xl bg-ink px-6 py-2.5 font-bold text-oninv hover:bg-accent transition-colors">Continue</button>
       </div>
@@ -656,7 +737,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
 
 </main>
 
-<footer class="sect bg-sunken/60 mt-auto">
+<footer class="sect bg-sunken/60 mt-auto pb-24 sm:pb-8">
   <div class="mx-auto max-w-6xl px-4 sm:px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
     <p class="text-sm text-faint"><span data-edit="footerNote">&copy; unbranded_branden &middot; every note placed by hand.</span> <a href="404.html" class="text-faint/50 hover:text-accent transition-colors ml-2 text-xs" title="404">404</a></p>
     <div class="flex items-center gap-5 text-sm font-medium">
@@ -715,7 +796,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
   </div>
 </dialog>
 
-<dialog id="settings-modal" class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(92vw,26rem)]">
+<dialog id="settings-modal" data-annoy-exempt class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(92vw,26rem)]">
   <div class="p-6">
     <div class="flex items-start justify-between gap-3 mb-4">
       <h3 class="font-display text-2xl font-bold text-ink">Settings</h3>
@@ -755,10 +836,14 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
         <input id="set-lite" type="checkbox" onchange="setSetting('lite', this.checked)" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-accent))]" />
       </label>
       <label class="flex items-center justify-between gap-3 cursor-pointer">
-        <span class="text-mute">High contrast</span>
-        <input id="set-contrast" type="checkbox" onchange="setSetting('contrast', this.checked)" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-accent))]" />
+        <span class="text-mute">Inverted colors</span>
+        <input id="set-invert" type="checkbox" onchange="setSetting('invert', this.checked)" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-accent))]" />
       </label>
       <div class="flex flex-wrap gap-2 pt-2 border-t border-line/60">
+        <label id="annoy-row" class="flex items-center justify-between gap-4">
+          <span class="text-mute">Annoying mode <span class="text-faint text-xs">(session only)</span></span>
+          <input id="set-annoy" type="checkbox" onchange="annoyToggle(this)" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-accent))]" />
+        </label>
         <button onclick="startDance()" class="rounded-xl bg-accent px-4 py-2 text-sm font-bold text-oninv hover:bg-accent-hi">&#9763; Dance mode (virus)</button>
         <button onclick="resetTips()" class="rounded-xl border border-line px-4 py-2 text-sm text-mute hover:text-ink">Reset one-time tips</button>
       </div>
@@ -767,6 +852,21 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
   </div>
 </dialog>
 
+<div id="clicker-overlay" data-annoy-exempt class="hidden fixed inset-0 z-[75] bg-base overflow-y-auto">
+  <div class="max-w-3xl mx-auto px-4 py-10 text-center">
+    <p class="font-display text-3xl font-bold text-ink">Sheet Music Clicker</p>
+    <p class="text-sm text-mute mt-1 mb-6">Earn <strong>1 octillion</strong> sheets of music to silence the annoyance. Or refresh the page, coward.</p>
+    <p id="clk-count" class="font-display text-4xl font-bold text-ink tabular-nums">0</p>
+    <p id="clk-rate" class="text-xs text-faint mb-5">0 / s</p>
+    <button id="clk-note" onclick="clkClick()" class="mx-auto grid place-items-center w-36 h-36 rounded-full bg-ink text-oninv text-6xl select-none active:scale-95 transition-transform" aria-label="Earn sheet music">&#9835;</button>
+    <div id="clk-shop" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mt-8 text-left"></div>
+    <div id="clk-victory" class="hidden mt-8 rounded-2xl border border-line bg-surface p-6">
+      <p class="font-display text-2xl font-bold text-ink">FREEDOM.</p>
+      <p class="text-sm text-mute mt-1">Annoying mode has been disabled. You may live normally again.</p>
+    </div>
+    <button onclick="closeClicker()" class="mt-8 rounded-xl border border-line px-5 py-2 text-sm font-semibold text-mute hover:text-ink">Close (the annoyance stays)</button>
+  </div>
+</div>
 <div id="dance-overlay" class="hidden fixed inset-0 z-[60] pointer-events-none">
   <div id="virus-scanlines" aria-hidden="true"></div>
   <div id="virus-popups" aria-hidden="true"></div>
@@ -790,6 +890,8 @@ const LS = {
   voting: 'smp_voting',
   userVotes: 'smp_userVotes',
   social: 'smp_social',
+  ghToken: 'smp_ghToken',
+  games: 'smp_games',
   texts: 'smp_texts',
   layout: 'smp_layout',
   featured: 'smp_featured',
@@ -871,36 +973,36 @@ const DEFAULTS = {
     { id:'pub-2', title:'Greensleeves', artist:'Traditional', arrangement:'Flute & Guitar Duet', desc:'Traditional English melody set as a gentle chamber duet with optional ornamentation.', video:'', tags:['Flute','Guitar'], links:[] }
   ],
   vault: [
-    {"id": "v-kny-ost", "title": "鬼滅の刃 OST Medley", "artist": "Go Shiina & Yuki Kajiura", "arrangement": "Concert Band", "difficulty": "", "desc": "Demon Slayer OST medley: Tanjiro no Uta, Flaming Thunder God, Into the Infinity Castle, and Akaza’s Love Theme.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Drum Kit", "Flute", "French Horn", "Glockenspiel", "Oboe", "Piano", "Snare Drum", "Tenor Saxophone", "Timpani", "Trombone", "Trumpet", "Tuba"], "genres": ["Anime", "Film/OST"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-kizuna", "title": "絆ノ奇跡 (Kizuna no Kiseki)", "artist": "MAN WITH A MISSION × milet", "arrangement": "Concert Band", "difficulty": "", "desc": "Demon Slayer opening 4 — Swordsmith Village Arc.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-ao-no-sumika", "title": "青のすみか (Ao no Sumika)", "artist": "Tatsuya Kitani", "arrangement": "Concert Band", "difficulty": "", "desc": "Jujutsu Kaisen season 2 opening.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-be-a-flower", "title": "花になって (Be a Flower)", "artist": "Ryokuoushoku Shakai", "arrangement": "Marching Band", "difficulty": "", "desc": "The Apothecary Diaries opening — shortened marching arrangement.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-fukashigi", "title": "不可思議のカルテ (Fukashigi no Carte)", "artist": "Hidehiro Kawai", "arrangement": "Concert Band", "difficulty": "", "desc": "Rascal Does Not Dream of Bunny Girl Senpai ending theme.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-hikaru-nara", "title": "光るなら (Hikaru Nara)", "artist": "Goose house", "arrangement": "Concert Band", "difficulty": "", "desc": "Your Lie in April opening theme.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-cruel-angel", "title": "The Cruel Angel’s Thesis", "artist": "佐藤英敏 (Hidetoshi Sato)", "arrangement": "Marching Band", "difficulty": "", "desc": "Neon Genesis Evangelion opening — for marching band.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-your-gaze", "title": "まなざしは光 (Your Gaze, Crepuscular)", "artist": "Tatsuya Kitani", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-zankyou-sanka", "title": "残響散歌 (Zankyou Sanka)", "artist": "Aimer", "arrangement": "Concert Band", "difficulty": "", "desc": "Demon Slayer opening 3 — Entertainment District Arc.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Piano", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-idol-marching", "title": "アイドル (Idol) — Marching Band", "artist": "YOASOBI", "arrangement": "Marching Band", "difficulty": "", "desc": "Oshi no Ko opening — TV size.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-idol-orchestra", "title": "アイドル (Idol) — Orchestra", "artist": "YOASOBI", "arrangement": "Orchestra", "difficulty": "", "desc": "Oshi no Ko opening — full-version orchestral arrangement.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Orchestra", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Bassoon", "Cello", "Clarinet", "Contrabass", "Flute", "Oboe", "Piccolo", "Snare Drum", "Tambourine", "Tenor Saxophone", "Timpani", "Triangle", "Trombone", "Trumpet", "Tuba", "Viola", "Violin"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-monster", "title": "怪物 (Monster)", "artist": "YOASOBI", "arrangement": "Marching Band", "difficulty": "", "desc": "Kaibutsu — BEASTARS season 2 opening.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-nanairo", "title": "七色シンフォニー (Nanairo Symphony)", "artist": "COALAMODE.", "arrangement": "Orchestra", "difficulty": "", "desc": "Your Lie in April opening 2.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Orchestra", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Cello", "Clarinet", "Contrabass", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba", "Viola", "Violin"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-ritn-simplified", "title": "夜に駆ける (Racing Into the Night) — Simplified", "artist": "YOASOBI", "arrangement": "Concert Band", "difficulty": "", "desc": "Simplified concert band version.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tambourine", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-ritn-concert", "title": "夜に駆ける (Racing Into the Night) — Concert Band", "artist": "YOASOBI", "arrangement": "Concert Band", "difficulty": "", "desc": "Original concert band arrangement.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tambourine", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-ritn-marching", "title": "夜に駆ける (Racing Into the Night) — Marching Band", "artist": "YOASOBI", "arrangement": "Marching Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-ritn-orchestra", "title": "夜に駆ける (Into the Night) — Orchestra", "artist": "YOASOBI", "arrangement": "Orchestra", "difficulty": "", "desc": "Reimagined orchestral arrangement.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Orchestra", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Cello", "Clarinet", "Contrabass", "Cymbals", "Flute", "Glockenspiel", "Snare Drum", "Tambourine", "Tenor Saxophone", "Triangle", "Trombone", "Trumpet", "Tuba", "Viola", "Violin", "Xylophone"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-ritn-melody", "title": "夜に駆ける (Racing Into the Night) — Melody Pack", "artist": "YOASOBI", "arrangement": "Melody pack", "difficulty": "", "desc": "Melody-only parts for concert winds.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Other", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-miku-range", "title": "高音厨音域テスト (Miku’s High Range Test)", "artist": "木村わいP (Kimurawai-P)", "arrangement": "Range test chart", "difficulty": "", "desc": "Hatsune Miku range-test parts across the flute, saxophone, brass, string, guitar and piano families.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Other", "Bass Clarinet", "Bass Guitar", "Bassoon", "Cello", "Clarinet", "Contrabass", "Flute", "Guitar", "Oboe", "Piano", "Piccolo", "Saxophone", "Trombone", "Trumpet", "Tuba", "Viola", "Violin"], "genres": ["J-Pop", "Other"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-tabun", "title": "たぶん (Tabun / Probably)", "artist": "YOASOBI", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-innocent", "title": "Innocent", "artist": "Joe Hisaishi", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Classical", "Film/OST"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-one-summers-day", "title": "One Summer’s Day", "artist": "Joe Hisaishi", "arrangement": "Marching Band", "difficulty": "", "desc": "From Spirited Away — for marching band.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["Classical", "Film/OST"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-bang-bang", "title": "Bang Bang", "artist": "K’naan", "arrangement": "Marching Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Horn", "Baritone Saxophone", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-blossoms", "title": "Blossoms of Summer Night", "artist": "苑迪萌", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Piano", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Classical"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-flamewall", "title": "Flamewall", "artist": "Camellia", "arrangement": "Concert Band", "difficulty": "", "desc": "Yes, this is a Geometry Dash reference.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Piano", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Video Game", "EDM / Electronic"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-haaland-concert", "title": "Haaland (Ha Ha Ha)", "artist": "", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-haaland-melody", "title": "Haaland (Ha Ha Ha) — Melody Pack", "artist": "", "arrangement": "Melody pack", "difficulty": "", "desc": "Melody-only parts across winds and strings.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Other", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bassoon", "Cello", "Clarinet", "Contrabass", "Flute", "Oboe", "Piccolo", "Soprano Saxophone", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba", "Viola", "Violin"], "genres": ["Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-tvb-news", "title": "TVB News Theme", "artist": "顧嘉煇 (Joseph Koo)", "arrangement": "Concert Band", "difficulty": "", "desc": "The Hong Kong TVB evening news theme.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Film/OST"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-acnh", "title": "Animal Crossing: New Horizons — Main Theme", "artist": "Kazumi Totaka", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Video Game"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
-    {"id": "v-lifelight", "title": "Lifelight", "artist": "Hideki Sakamoto", "arrangement": "Marching Band", "difficulty": "", "desc": "Super Smash Bros. Ultimate main theme — marching band arrangement.", "video": "", "previewImg": "", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["Video Game"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []}
+    {"id": "v-kny-ost", "title": "鬼滅の刃 OST Medley", "artist": "Go Shiina & Yuki Kajiura", "arrangement": "Concert Band", "difficulty": "", "desc": "Demon Slayer OST medley: Tanjiro no Uta, Flaming Thunder God, Into the Infinity Castle, and Akaza’s Love Theme.", "video": "", "previewImg": "previews/v-kny-ost.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Drum Kit", "Flute", "French Horn", "Glockenspiel", "Oboe", "Piano", "Snare Drum", "Tenor Saxophone", "Timpani", "Trombone", "Trumpet", "Tuba"], "genres": ["Anime", "Film/OST"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-kizuna", "title": "絆ノ奇跡 (Kizuna no Kiseki)", "artist": "MAN WITH A MISSION × milet", "arrangement": "Concert Band", "difficulty": "", "desc": "Demon Slayer opening 4 — Swordsmith Village Arc.", "video": "", "previewImg": "previews/v-kizuna.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-ao-no-sumika", "title": "青のすみか (Ao no Sumika)", "artist": "Tatsuya Kitani", "arrangement": "Concert Band", "difficulty": "", "desc": "Jujutsu Kaisen season 2 opening.", "video": "", "previewImg": "previews/v-ao-no-sumika.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-be-a-flower", "title": "花になって (Be a Flower)", "artist": "Ryokuoushoku Shakai", "arrangement": "Marching Band", "difficulty": "", "desc": "The Apothecary Diaries opening — shortened marching arrangement.", "video": "", "previewImg": "previews/v-be-a-flower.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-fukashigi", "title": "不可思議のカルテ (Fukashigi no Carte)", "artist": "Hidehiro Kawai", "arrangement": "Concert Band", "difficulty": "", "desc": "Rascal Does Not Dream of Bunny Girl Senpai ending theme.", "video": "", "previewImg": "previews/v-fukashigi.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-hikaru-nara", "title": "光るなら (Hikaru Nara)", "artist": "Goose house", "arrangement": "Concert Band", "difficulty": "", "desc": "Your Lie in April opening theme.", "video": "", "previewImg": "previews/v-hikaru-nara.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-cruel-angel", "title": "The Cruel Angel’s Thesis", "artist": "佐藤英敏 (Hidetoshi Sato)", "arrangement": "Marching Band", "difficulty": "", "desc": "Neon Genesis Evangelion opening — for marching band.", "video": "", "previewImg": "previews/v-cruel-angel.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-your-gaze", "title": "まなざしは光 (Your Gaze, Crepuscular)", "artist": "Tatsuya Kitani", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "previews/v-your-gaze.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-zankyou-sanka", "title": "残響散歌 (Zankyou Sanka)", "artist": "Aimer", "arrangement": "Concert Band", "difficulty": "", "desc": "Demon Slayer opening 3 — Entertainment District Arc.", "video": "", "previewImg": "previews/v-zankyou-sanka.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Piano", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-idol-marching", "title": "アイドル (Idol) — Marching Band", "artist": "YOASOBI", "arrangement": "Marching Band", "difficulty": "", "desc": "Oshi no Ko opening — TV size.", "video": "", "previewImg": "previews/v-idol-marching.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-idol-orchestra", "title": "アイドル (Idol) — Orchestra", "artist": "YOASOBI", "arrangement": "Orchestra", "difficulty": "", "desc": "Oshi no Ko opening — full-version orchestral arrangement.", "video": "", "previewImg": "previews/v-idol-orchestra.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Orchestra", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Bassoon", "Cello", "Clarinet", "Contrabass", "Flute", "Oboe", "Piccolo", "Snare Drum", "Tambourine", "Tenor Saxophone", "Timpani", "Triangle", "Trombone", "Trumpet", "Tuba", "Viola", "Violin"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-monster", "title": "怪物 (Monster)", "artist": "YOASOBI", "arrangement": "Marching Band", "difficulty": "", "desc": "Kaibutsu — BEASTARS season 2 opening.", "video": "", "previewImg": "previews/v-monster.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-nanairo", "title": "七色シンフォニー (Nanairo Symphony)", "artist": "COALAMODE.", "arrangement": "Orchestra", "difficulty": "", "desc": "Your Lie in April opening 2.", "video": "", "previewImg": "previews/v-nanairo.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Orchestra", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Cello", "Clarinet", "Contrabass", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba", "Viola", "Violin"], "genres": ["J-Pop", "Anime"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-ritn-simplified", "title": "夜に駆ける (Racing Into the Night) — Simplified", "artist": "YOASOBI", "arrangement": "Concert Band", "difficulty": "", "desc": "Simplified concert band version.", "video": "", "previewImg": "previews/v-ritn-simplified.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tambourine", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-ritn-concert", "title": "夜に駆ける (Racing Into the Night) — Concert Band", "artist": "YOASOBI", "arrangement": "Concert Band", "difficulty": "", "desc": "Original concert band arrangement.", "video": "", "previewImg": "previews/v-ritn-concert.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tambourine", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-ritn-marching", "title": "夜に駆ける (Racing Into the Night) — Marching Band", "artist": "YOASOBI", "arrangement": "Marching Band", "difficulty": "", "desc": "", "video": "", "previewImg": "previews/v-ritn-marching.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-ritn-orchestra", "title": "夜に駆ける (Into the Night) — Orchestra", "artist": "YOASOBI", "arrangement": "Orchestra", "difficulty": "", "desc": "Reimagined orchestral arrangement.", "video": "", "previewImg": "previews/v-ritn-orchestra.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Orchestra", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Cello", "Clarinet", "Contrabass", "Cymbals", "Flute", "Glockenspiel", "Snare Drum", "Tambourine", "Tenor Saxophone", "Triangle", "Trombone", "Trumpet", "Tuba", "Viola", "Violin", "Xylophone"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-ritn-melody", "title": "夜に駆ける (Racing Into the Night) — Melody Pack", "artist": "YOASOBI", "arrangement": "Melody pack", "difficulty": "", "desc": "Melody-only parts for concert winds.", "video": "", "previewImg": "previews/v-ritn-melody.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Other", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-miku-range", "title": "高音厨音域テスト (Miku’s High Range Test)", "artist": "木村わいP (Kimurawai-P)", "arrangement": "Range test chart", "difficulty": "", "desc": "Hatsune Miku range-test parts across the flute, saxophone, brass, string, guitar and piano families.", "video": "", "previewImg": "previews/v-miku-range.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Other", "Bass Clarinet", "Bass Guitar", "Bassoon", "Cello", "Clarinet", "Contrabass", "Flute", "Guitar", "Oboe", "Piano", "Piccolo", "Saxophone", "Trombone", "Trumpet", "Tuba", "Viola", "Violin"], "genres": ["J-Pop", "Other"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-tabun", "title": "たぶん (Tabun / Probably)", "artist": "YOASOBI", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "previews/v-tabun.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["J-Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-innocent", "title": "Innocent", "artist": "Joe Hisaishi", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "previews/v-innocent.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Classical", "Film/OST"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-one-summers-day", "title": "One Summer’s Day", "artist": "Joe Hisaishi", "arrangement": "Marching Band", "difficulty": "", "desc": "From Spirited Away — for marching band.", "video": "", "previewImg": "previews/v-one-summers-day.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["Classical", "Film/OST"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-bang-bang", "title": "Bang Bang", "artist": "K’naan", "arrangement": "Marching Band", "difficulty": "", "desc": "", "video": "", "previewImg": "previews/v-bang-bang.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Horn", "Baritone Saxophone", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-blossoms", "title": "Blossoms of Summer Night", "artist": "苑迪萌", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "previews/v-blossoms.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Piano", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Classical"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-flamewall", "title": "Flamewall", "artist": "Camellia", "arrangement": "Concert Band", "difficulty": "", "desc": "Yes, this is a Geometry Dash reference.", "video": "", "previewImg": "previews/v-flamewall.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Piano", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Video Game", "EDM / Electronic"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-haaland-concert", "title": "Haaland (Ha Ha Ha)", "artist": "", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "previews/v-haaland-concert.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-haaland-melody", "title": "Haaland (Ha Ha Ha) — Melody Pack", "artist": "", "arrangement": "Melody pack", "difficulty": "", "desc": "Melody-only parts across winds and strings.", "video": "", "previewImg": "previews/v-haaland-melody.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Other", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bassoon", "Cello", "Clarinet", "Contrabass", "Flute", "Oboe", "Piccolo", "Soprano Saxophone", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba", "Viola", "Violin"], "genres": ["Pop"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-tvb-news", "title": "TVB News Theme", "artist": "顧嘉煇 (Joseph Koo)", "arrangement": "Concert Band", "difficulty": "", "desc": "The Hong Kong TVB evening news theme.", "video": "", "previewImg": "previews/v-tvb-news.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Film/OST"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-acnh", "title": "Animal Crossing: New Horizons — Main Theme", "artist": "Kazumi Totaka", "arrangement": "Concert Band", "difficulty": "", "desc": "", "video": "", "previewImg": "previews/v-acnh.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Concert Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Clarinet", "Drum Kit", "Flute", "Tenor Saxophone", "Trombone", "Trumpet", "Tuba"], "genres": ["Video Game"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []},
+    {"id": "v-lifelight", "title": "Lifelight", "artist": "Hideki Sakamoto", "arrangement": "Marching Band", "difficulty": "", "desc": "Super Smash Bros. Ultimate main theme — marching band arrangement.", "video": "", "previewImg": "previews/v-lifelight.jpg", "dateAdded": "2026-08-16T12:00:00.000Z", "tags": ["Marching Band", "Alto Saxophone", "Baritone Saxophone", "Bass Clarinet", "Bass Drum", "Clarinet", "Cymbals", "Flute", "Snare Drum", "Sousaphone", "Tenor Drums", "Tenor Saxophone", "Trombone", "Trumpet"], "genres": ["Video Game"], "driveLink": "", "musescoreLink": "", "audioFile": "", "links": []}
   ],
   voting: [
     { id:'vote-1', title:'A Cruel Angel\u2019s Thesis', artist:'Hidetoshi Sato', votes:0 },
@@ -909,6 +1011,7 @@ const DEFAULTS = {
   ],
   social: { youtube:'https://www.youtube.com/@unbranded_branden', instagram:'https://instagram.com/unbranded_branden', downloads:'' },
   genres: DEFAULT_GENRES,
+  games: { quiz:true, snakeLB:true, annoyAllowed:true, adFreq:'occasional' },
   layout: { vault:'grid', catalog:'grid' },
   faq: [
     { id:'faq-1', q:'Can I request a song?', a:'Yes — use the suggestion form on the Vote page, or upvote it if it is already on the board.' },
@@ -918,7 +1021,7 @@ const DEFAULTS = {
 };
 const VOTE_STATUS = { open:'', considering:'Considering', 'in-progress':'In Progress', arranged:'Arranged' };
 
-const DEFAULT_SETTINGS = { speed:1, motion:'system', lite:false, text:'m', contrast:false };
+const DEFAULT_SETTINGS = { speed:1, motion:'system', lite:false, text:'m', invert:false };
 let state = { catalog:[], vault:[], voting:[], userVotes:{}, social:{}, genres:[], texts:{}, layout:{ vault:'grid', catalog:'grid' }, featured:'', faq:[], seen:{}, settings:{ ...DEFAULT_SETTINGS }, access:'none' };
 let selectedGenres = [];
 let vaultFilter = '';
@@ -1011,6 +1114,7 @@ function migrateScores(list) {
     if (typeof x.driveLink !== 'string') { x.driveLink = ''; changed = true; }
     if (typeof x.musescoreLink !== 'string') { x.musescoreLink = ''; changed = true; }
     if (typeof x.audioFile !== 'string') { x.audioFile = ''; changed = true; }
+    if (typeof x.pdfFile !== 'string') { x.pdfFile = ''; changed = true; }
     if (!Array.isArray(x.links)) { x.links = []; changed = true; }
     x.links = x.links.filter(l => l && safeUrl(l.url)).slice(0, 3).map(l => ({ label: String(l.label || ''), url: safeUrl(l.url) }));
   });
@@ -1034,6 +1138,9 @@ function loadState() {
   state.social = loadContent(LS.social, 'social', DEFAULTS.social);
   if (!state.social || typeof state.social !== 'object') state.social = clone(DEFAULTS.social);
   if (typeof state.social.downloads !== 'string') state.social.downloads = '';
+  state.games = loadContent(LS.games, 'games', DEFAULTS.games);
+  if (!state.games || typeof state.games !== 'object' || Array.isArray(state.games)) state.games = clone(DEFAULTS.games);
+  state.games = { quiz: state.games.quiz !== false, snakeLB: state.games.snakeLB !== false, annoyAllowed: state.games.annoyAllowed !== false, adFreq: ['occasional','frequent','relentless'].includes(state.games.adFreq) ? state.games.adFreq : 'occasional' };
   state.genres = loadContent(LS.genres, 'genres', DEFAULTS.genres);
   if (!Array.isArray(state.genres)) state.genres = clone(DEFAULTS.genres);
   state.genres = state.genres.filter(g => typeof g === 'string' && g.trim()).map(g => g.trim());
@@ -1054,7 +1161,7 @@ function loadState() {
   if (!['system','reduced','extra'].includes(state.settings.motion)) state.settings.motion = 'system';
   if (!['s','m','l'].includes(state.settings.text)) state.settings.text = 'm';
   state.settings.lite = Boolean(state.settings.lite);
-  state.settings.contrast = Boolean(state.settings.contrast);
+  state.settings.invert = Boolean(state.settings.invert);
   state.access = loadAccess();
 }
 
@@ -1080,6 +1187,75 @@ function audioBlock(item, kind) {
   if (kind !== 'vault' || !item.audioFile) return '';
   return `<div class="px-4 pt-3" onclick="event.stopPropagation()"><audio controls preload="none" class="w-full" src="${attr(item.audioFile)}" aria-label="Audio: ${attr(item.title)}"></audio></div>`;
 }
+function validPdfPath(v) {
+  const t = String(v || '').trim();
+  if (!t) return '';
+  if (/^https?:/i.test(t)) return t.startsWith(location.origin + '/') && /\.pdf$/i.test(t) ? t : null;
+  return /^[\w][\w./ %-]*\.pdf$/i.test(t) ? t : null;
+}
+function ghRepo() {
+  const host = location.hostname;
+  if (!host.endsWith('.github.io')) return null;
+  const owner = host.split('.')[0];
+  return { owner, repo: host };
+}
+function ghTokenStatus() {
+  const el = $('gh-token-status');
+  if (!el) return;
+  const t = localStorage.getItem(LS.ghToken);
+  const repo = ghRepo();
+  if (!repo) { el.textContent = 'Uploads only work on the live github.io site, not local previews.'; return; }
+  el.textContent = t ? 'Token saved on this device. Uploads go to ' + repo.owner + '/' + repo.repo + '.' : 'No token saved yet.';
+}
+function adminSaveGhToken() {
+  const v = $('gh-token').value.trim();
+  if (!v) { toast('Paste a token first.', false); return; }
+  try { localStorage.setItem(LS.ghToken, v); } catch {}
+  $('gh-token').value = '';
+  ghTokenStatus();
+  toast('Token saved on this device.');
+}
+function adminClearGhToken() {
+  try { localStorage.removeItem(LS.ghToken); } catch {}
+  ghTokenStatus();
+  toast('Token removed.');
+}
+async function ghUploadField(fileInputId, folder, targetFieldId) {
+  const input = $(fileInputId);
+  const file = input.files && input.files[0];
+  if (!file) { toast('Choose a file first.', false); return; }
+  if (file.size > 25 * 1024 * 1024) { toast('That file is over 25MB \u2014 too large to upload this way.', false); return; }
+  const repo = ghRepo();
+  if (!repo) { toast('Uploads only work on the live github.io site.', false); return; }
+  const token = localStorage.getItem(LS.ghToken);
+  if (!token) { toast('Save a GitHub token first (Backup & Data tab).', false); return; }
+  const clean = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  const path = folder + '/' + clean;
+  const base64 = await new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(String(r.result).split(',')[1]);
+    r.onerror = () => rej(new Error('read failed'));
+    r.readAsDataURL(file);
+  });
+  const api = 'https://api.github.com/repos/' + repo.owner + '/' + repo.repo + '/contents/' + path.split('/').map(encodeURIComponent).join('/');
+  const headers = { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' };
+  toast('Uploading\u2026');
+  try {
+    let sha;
+    const probe = await fetch(api, { headers });
+    if (probe.ok) sha = (await probe.json()).sha;
+    const body = { message: 'Upload ' + path + ' via admin panel', content: base64 };
+    if (sha) body.sha = sha;
+    const res = await fetch(api, { method: 'PUT', headers, body: JSON.stringify(body) });
+    if (res.status === 401 || res.status === 403) { toast('GitHub rejected the token. Check its scope and expiry.', false); return; }
+    if (!res.ok) { toast('Upload failed (' + res.status + '). Is the token scoped to this repository?', false); return; }
+    $(targetFieldId).value = path;
+    input.value = '';
+    toast('Uploaded. It goes live once GitHub redeploys (~1 minute).');
+  } catch {
+    toast('Upload failed \u2014 network or permission problem.', false);
+  }
+}
 function validPreviewPath(p) {
   const t = String(p || '').trim();
   if (!t) return '';
@@ -1102,7 +1278,7 @@ function embedBlock(item, kind) {
     </div>`;
   }
   if (id) return `<div class="embed-slot aspect-video bg-sunken">${iframeHTML(id, item.title)}</div>`;
-  if (item.previewImg) return `<div class="aspect-video bg-sunken overflow-hidden"><img src="${attr(item.previewImg)}" alt="Sheet preview: ${attr(item.title)}" loading="lazy" class="w-full h-full object-contain" /></div>`;
+  if (item.previewImg) return `<div class="aspect-video bg-sunken overflow-hidden"><img src="${attr(item.previewImg)}" alt="Sheet preview: ${attr(item.title)}" loading="lazy" class="w-full h-full object-cover object-top" /></div>`;
   return `<div class="aspect-video bg-gradient-to-br from-surface to-sunken flex flex-col items-center justify-center gap-1 text-faint"><span class="font-display text-4xl" aria-hidden="true">&#9835;</span><span class="text-xs">No preview yet</span></div>`;
 }
 function loadEmbed(btn) {
@@ -1157,12 +1333,12 @@ function applySettings() {
   if (s.motion === 'system') el.removeAttribute('data-motion'); else el.dataset.motion = s.motion;
   if (s.lite) el.dataset.lite = '1'; else el.removeAttribute('data-lite');
   el.dataset.text = s.text;
-  if (s.contrast) el.dataset.contrast = '1'; else el.removeAttribute('data-contrast');
+  if (s.invert) el.dataset.invert = '1'; else el.removeAttribute('data-invert');
   $('set-motion').value = s.motion;
   $('set-speed').value = String(s.speed);
   $('set-text').value = s.text;
   $('set-lite').checked = s.lite;
-  $('set-contrast').checked = s.contrast;
+  $('set-invert').checked = s.invert;
 }
 function setSetting(key, val) {
   if (key === 'speed') val = Number(val);
@@ -1221,6 +1397,490 @@ function spawnPopup(i) {
   el.appendChild(bd);
   wrap.appendChild(el);
 }
+let annoying = false;
+let adTimer = null;
+let dblLast = null;
+let dblTime = 0;
+const CLK = { s:0, click:0, sr:0, pp:0, fl:0, al:0, te:0, bari:false, oboe:false, contra:false, lock:0, timer:null, won:false };
+const CLK_GOAL = 1e27;
+const CLK_ITEMS = [
+  { k:'sr', name:'Sight Reading', base:15, mult:1.15 },
+  { k:'pp', name:'Perfect Pitch', base:100, mult:1.6 },
+  { k:'fl', name:'Flute', base:250, mult:1.4 },
+  { k:'al', name:'Alto Saxophone', base:400, mult:1.5 },
+  { k:'te', name:'Tenor Saxophone', base:800, mult:2 },
+  { k:'trumpet', name:'Trumpet', base:500 },
+  { k:'clarinet', name:'Clarinet', base:300 },
+  { k:'bari', name:'Baritone Saxophone', base:2000, once:true },
+  { k:'oboe', name:'Oboe', base:0, once:true },
+  { k:'contra', name:'Contra-alto Flute', base:777777, once:true }
+];
+function fmtN(x) {
+  if (x < 1000) return String(Math.floor(x));
+  const units = ['K','M','B','T','Qa','Qi','Sx','Sp','Oc'];
+  let u = -1;
+  while (x >= 1000 && u < units.length - 1) { x /= 1000; u++; }
+  return (x >= 100 ? Math.floor(x) : x.toFixed(1)) + units[u];
+}
+function clkRate() { return (CLK.sr + CLK.al * 100) * Math.pow(1.5, CLK.fl) * Math.pow(2, CLK.te); }
+function clkPow() { return Math.pow(2, CLK.pp) * (CLK.oboe ? 1 : 1); }
+function clkCost(it) { return it.mult ? Math.ceil(it.base * Math.pow(it.mult, CLK[it.k])) : it.base; }
+function clkClick() { CLK.s += clkPow(); clkRender(); }
+function clkBuy(k) {
+  const it = CLK_ITEMS.find(i => i.k === k);
+  const cost = clkCost(it);
+  if (Date.now() < CLK.lock) { toast('The clarinet broke the shop. Wait.', false); return; }
+  if (CLK.s < cost) return;
+  CLK.s -= cost;
+  if (k === 'trumpet') {
+    CLK.s = 0; CLK.sr = 0; CLK.pp = 0; CLK.fl = 0; CLK.al = 0; CLK.te = 0; CLK.bari = false;
+    toast('The trumpet has taken everything from you.', false);
+  } else if (k === 'clarinet') {
+    CLK.s = 0; CLK.sr = 0; CLK.pp = 0; CLK.fl = 0; CLK.al = 0; CLK.te = 0; CLK.bari = false;
+    CLK.lock = Date.now() + 60000;
+    toast('Why would you buy that. Shop closed for a minute.', false);
+  } else if (k === 'bari') { CLK.bari = true; CLK.s = Math.max(CLK.s, 1) * 2; toast('lowwwwww'); }
+  else if (k === 'oboe') { CLK.oboe = true; toast('they exist?'); }
+  else if (k === 'contra') { CLK.contra = true; CLK.s = CLK_GOAL; toast('what even is this'); }
+  else {
+    CLK[k]++;
+    if (k === 'fl') toast('i mean i guess bro');
+    if (k === 'al') toast('i mean i guess bro');
+    if (k === 'te') toast('I DO NOT get it BRO');
+  }
+  clkRender();
+}
+function clkRender() {
+  if (CLK.s >= CLK_GOAL && !CLK.won) {
+    CLK.won = true;
+    annoySet(false);
+    $('clk-victory').classList.remove('hidden');
+  }
+  $('clk-count').textContent = fmtN(CLK.s) + ' sheets';
+  $('clk-rate').textContent = fmtN(clkRate()) + ' / s';
+  const locked = Date.now() < CLK.lock;
+  $('clk-shop').innerHTML = CLK_ITEMS.map(it => {
+    const done = it.once && CLK[it.k];
+    const cost = clkCost(it);
+    const owned = it.mult ? CLK[it.k] : 0;
+    return `<button onclick="clkBuy('${it.k}')" ${done || locked ? 'disabled' : ''} class="rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm ${done || locked || CLK.s < cost ? 'opacity-45' : 'hover:border-accent'}">
+      <span class="block font-bold text-ink">${it.name}${owned ? ' <span class="text-faint font-normal">x' + owned + '</span>' : ''}</span>
+      <span class="block text-xs text-mute">${done ? 'owned' : fmtN(cost) + ' sheets'}</span>
+    </button>`;
+  }).join('');
+}
+function openClicker() {
+  $('clicker-overlay').classList.remove('hidden');
+  if (!CLK.timer) CLK.timer = setInterval(() => { CLK.s += clkRate() / 4; clkRender(); }, 250);
+  clkRender();
+  if (adTimer) { clearInterval(adTimer); adTimer = null; }
+}
+function closeClicker() {
+  $('clicker-overlay').classList.add('hidden');
+  if (CLK.timer) { clearInterval(CLK.timer); CLK.timer = null; }
+  if (annoying && !adTimer) annoyAds();
+}
+function annoyToggle(box) {
+  if (box.checked) { annoySet(true); }
+  else { box.checked = true; openClicker(); }
+}
+function annoySet(on) {
+  annoying = on;
+  const box = $('set-annoy');
+  if (box) box.checked = on;
+  if (on) { annoyAds(); toast('Annoying mode on. Good luck.'); }
+  else {
+    if (adTimer) { clearInterval(adTimer); adTimer = null; }
+    document.querySelectorAll('.annoy-ad').forEach(a => a.remove());
+  }
+}
+function adInterval() {
+  const f = (state.games && state.games.adFreq) || 'occasional';
+  return f === 'relentless' ? 12000 : f === 'frequent' ? 25000 : 45000;
+}
+function annoyAds() {
+  spawnAd();
+  adTimer = setInterval(spawnAd, adInterval());
+}
+function spawnAd() {
+  if (!annoying) return;
+  const pool = [...state.catalog.map(x => ({ x, kind:'catalog' })), ...state.vault.map(x => ({ x, kind:'vault' }))];
+  if (!pool.length) return;
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  const ads = document.querySelectorAll('.annoy-ad');
+  if (ads.length >= 3) ads[0].remove();
+  const d = document.createElement('div');
+  d.className = 'annoy-ad virus-pop';
+  d.style.position = 'fixed';
+  d.style.zIndex = 60;
+  d.style.left = (8 + Math.random() * 55) + 'vw';
+  d.style.top = (12 + Math.random() * 55) + 'vh';
+  d.innerHTML = `<div class="vp-bar"><span>HOT SHEET MUSIC DEAL</span><button onclick="this.closest('.annoy-ad').remove()" aria-label="Close ad">&#10005;</button></div>
+    <div class="vp-body"><strong>${esc(pick.x.title)}</strong><br><span class="text-mute">${esc(pick.x.artist || 'a mystery artist')}</span><br>
+    <button onclick="openScore('${pick.kind}','${pick.x.id}');this.closest('.annoy-ad').remove()" class="mt-2 rounded-lg bg-accent text-oninv text-xs font-bold px-3 py-1.5">GET IT NOW &rarr;</button>
+    <span class="text-faint text-xs ml-2">100% free*</span></div>`;
+  document.body.appendChild(d);
+}
+document.addEventListener('click', e => {
+  if (!annoying) return;
+  const t = e.target.closest('button, a, summary, .chip, [role="button"]');
+  if (!t || t.closest('[data-annoy-exempt]')) return;
+  const now = Date.now();
+  if (dblLast === t && now - dblTime < 650) { dblLast = null; return; }
+  e.preventDefault();
+  e.stopPropagation();
+  dblLast = t;
+  dblTime = now;
+  const tip = document.createElement('span');
+  tip.textContent = 'double click!';
+  tip.className = 'fixed z-[70] text-xs font-bold bg-ink text-oninv rounded-lg px-2 py-1 pointer-events-none';
+  tip.style.left = e.clientX + 'px';
+  tip.style.top = (e.clientY - 28) + 'px';
+  document.body.appendChild(tip);
+  setTimeout(() => tip.remove(), 550);
+}, true);
+
+const QZ_POS = { C:0, D:2, E:4, F:5, G:7, A:9, B:11 };
+const QZ_LET = ['C','D','E','F','G','A','B'];
+const QZ_ACC = { '-2':' double-flat', '-1':' flat', '0':'', '1':' sharp', '2':' double-sharp' };
+function qzNote(l, a) { return l + QZ_ACC[String(a)]; }
+function qzInterval(rootL, rootA, num, qual) {
+  const ri = QZ_LET.indexOf(rootL);
+  const tl = QZ_LET[(ri + num - 1) % 7];
+  let nat = (QZ_POS[tl] - QZ_POS[rootL] + 12) % 12;
+  if (num === 8) nat = 12;
+  const perfect = [1,4,5,8].includes(num);
+  const base = {1:0,2:2,3:4,4:5,5:7,6:9,7:11,8:12}[num];
+  const adj = qual === 'M' || qual === 'P' ? 0 : qual === 'm' ? -1 : qual === 'A' ? 1 : (perfect ? -1 : -2);
+  const ta = rootA + (base + adj - nat);
+  if (Math.abs(ta) > 2) return null;
+  return { l: tl, a: ta };
+}
+function qzShuffle(arr, rnd) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+function qzQ(t, correct, wrongs, d) {
+  const opts = [correct, ...wrongs.filter(w => w !== correct).slice(0, 3)];
+  while (opts.length < 4) opts.push(opts[opts.length - 1] + ' ');
+  const order = qzShuffle([0,1,2,3], Math.random);
+  const shuffled = order.map(i => opts[i]);
+  return { t, opts: shuffled, a: order.indexOf(0), d };
+}
+function qzNoteWrongs(l, a) {
+  const out = [];
+  for (const da of [-2,-1,1,2]) if (Math.abs(a + da) <= 2) out.push(qzNote(l, a + da));
+  const ni = QZ_LET.indexOf(l);
+  out.push(qzNote(QZ_LET[(ni + 1) % 7], 0), qzNote(QZ_LET[(ni + 6) % 7], 0), qzNote(QZ_LET[(ni + 1) % 7], a));
+  return [...new Set(out)];
+}
+let QZ_POOLS = null;
+function qzBuild() {
+  const E = [], N = [], H = [], V = [];
+  const terms = [
+    ['forte','loud'],['piano (dynamic)','soft'],['mezzo forte','moderately loud'],['mezzo piano','moderately soft'],['fortissimo','very loud'],['pianissimo','very soft'],
+    ['crescendo','gradually getting louder'],['decrescendo','gradually getting softer'],['diminuendo','gradually getting softer'],
+    ['allegro','fast'],['adagio','slow'],['andante','at a walking pace'],['largo','very slow and broad'],['presto','very fast'],['moderato','at a moderate speed'],['lento','slowly'],['vivace','lively and fast'],
+    ['accelerando','gradually speeding up'],['ritardando','gradually slowing down'],['rallentando','gradually slowing down'],
+    ['fermata','hold the note longer than its value'],['staccato','short and detached'],['legato','smooth and connected'],['accent','emphasize the note'],
+    ['a tie','joins two notes of the same pitch'],['a slur','play the notes smoothly connected'],['da capo','repeat from the beginning'],['dal segno','repeat from the sign'],['fine','the end'],['a coda','a closing section'],
+    ['a measure','the space between two bar lines'],['a bar line','a vertical line dividing the staff'],['a time signature','shows beats per measure and beat value'],
+    ['the treble clef','the G clef'],['the bass clef','the F clef'],['the grand staff','treble and bass staves joined together'],
+    ['a scale','a series of notes in stepwise order'],['an octave','the distance of eight letter names'],['a chord','three or more notes played together'],
+    ['a melody','the main tune'],['harmony','notes that support the melody'],['a rest','a symbol for silence'],
+    ['a sharp','raises a note by a half step'],['a flat','lowers a note by a half step'],['a natural','cancels a sharp or flat'],['an interval','the distance between two pitches']
+  ];
+  const defs = terms.map(t => t[1]);
+  terms.forEach(([w, d], i) => E.push(qzQ('What does ' + w + ' mean?', d, qzShuffle(defs.filter((x, j) => j !== i), Math.random), 'e')));
+  const beats = [['whole note','4'],['half note','2'],['quarter note','1'],['eighth note','1/2'],['sixteenth note','1/4'],['dotted half note','3'],['dotted quarter note','1 1/2']];
+  beats.forEach(([nm, b]) => E.push(qzQ('In 4/4 time, how many beats does a ' + nm + ' get?', b, ['4','2','1','3','1/2','1 1/2','1/4'], 'e')));
+  const fams = [['Flute','Woodwind'],['Trumpet','Brass'],['Violin','String'],['Snare drum','Percussion'],['Clarinet','Woodwind'],['Tuba','Brass'],['Cello','String'],['Timpani','Percussion'],['Oboe','Woodwind'],['Trombone','Brass'],['Viola','String'],['Xylophone','Percussion'],['Alto saxophone','Woodwind'],['French horn','Brass'],['Double bass','String'],['Bass drum','Percussion'],['Piccolo','Woodwind'],['Euphonium','Brass'],['Harp','String'],['Cymbals','Percussion'],['Bassoon','Woodwind'],['Marimba','Percussion'],['Guitar','String'],['Bass clarinet','Woodwind']];
+  fams.forEach(([i, f]) => E.push(qzQ('Which family does the ' + i.toLowerCase() + ' belong to?', f, ['Woodwind','Brass','String','Percussion'], 'e')));
+  const tl = ['E','G','B','D','F'], ts = ['F','A','C','E'], bl = ['G','B','D','F','A'], bs = ['A','C','E','G'];
+  const ord = ['1st','2nd','3rd','4th','5th'];
+  tl.forEach((x, i) => E.push(qzQ('What note sits on the ' + ord[i] + ' line of the treble clef (from the bottom)?', x, QZ_LET, 'e')));
+  ts.forEach((x, i) => E.push(qzQ('What note sits in the ' + ord[i] + ' space of the treble clef (from the bottom)?', x, QZ_LET, 'e')));
+  bl.forEach((x, i) => E.push(qzQ('What note sits on the ' + ord[i] + ' line of the bass clef (from the bottom)?', x, QZ_LET, 'e')));
+  bs.forEach((x, i) => E.push(qzQ('What note sits in the ' + ord[i] + ' space of the bass clef (from the bottom)?', x, QZ_LET, 'e')));
+  [['C major','0'],['G major','1 sharp'],['D major','2 sharps'],['A major','3 sharps'],['F major','1 flat'],['B flat major','2 flats'],['E flat major','3 flats']].forEach(([k, c]) =>
+    E.push(qzQ('How many sharps or flats are in the key of ' + k + '?', c, ['0','1 sharp','2 sharps','3 sharps','1 flat','2 flats','3 flats'], 'e')));
+  const sol = ['do','re','mi','fa','sol','la','ti'];
+  for (let i = 0; i < 6; i++) E.push(qzQ('In solfege, what syllable comes after ' + sol[i] + '?', sol[i + 1], sol.filter(x => x !== sol[i + 1]), 'e'));
+  [['forte','piano (dynamic)'],['allegro','adagio'],['crescendo','decrescendo'],['staccato','legato'],['a sharp','a flat']].forEach(([a, b]) =>
+    E.push(qzQ('What is the opposite of ' + a + '?', b, terms.map(t => t[0]).filter(x => x !== b && x !== a), 'e')));
+  [['3/4','3'],['4/4','4'],['2/4','2'],['6/8','6']].forEach(([sig, b]) => E.push(qzQ('How many beats are in one measure of ' + sig + ' time?', b, ['2','3','4','6'], 'e')));
+  QZ_LET.forEach((l, i) => E.push(qzQ('In the musical alphabet, what letter comes after ' + l + '?', QZ_LET[(i + 1) % 7], QZ_LET, 'e')));
+  E.push(qzQ('How many lines does a musical staff have?', '5', ['4','5','6','3'], 'e'));
+  E.push(qzQ('How many keys does a full-size piano have?', '88', ['76','88','96','100'], 'e'));
+  E.push(qzQ('How many half steps are in an octave?', '12', ['10','11','12','13'], 'e'));
+  [['C','D'],['D','E'],['F','G'],['G','A'],['A','B'],['E','F']].forEach(([a, b]) => E.push(qzQ('What is the interval from ' + a + ' up to ' + b + '?', 'a 2nd', ['a 2nd','a 3rd','a 4th','a 5th'], 'e')));
+  [['C sharp','D flat'],['D sharp','E flat'],['F sharp','G flat'],['G sharp','A flat'],['A sharp','B flat']].forEach(([a, b]) =>
+    E.push(qzQ('Which note is enharmonically the same as ' + a + '?', b, qzNoteWrongs(b[0], -1).concat([b]), 'e')));
+  [['allegro','adagio','allegro'],['presto','largo','presto'],['vivace','lento','vivace']].forEach(([a, b, ans]) =>
+    E.push(qzQ('Which tempo is faster: ' + a + ' or ' + b + '?', ans, [a, b], 'e')));
+  [['whole rest','4'],['half rest','2'],['quarter rest','1']].forEach(([nm, b]) => E.push(qzQ('In 4/4 time, how many beats of silence does a ' + nm + ' get?', b, ['1','2','3','4'], 'e')));
+  E.push(qzQ('Which dynamic is louder: mf or mp?', 'mf', ['mf','mp'], 'e'));
+  E.push(qzQ('Which dynamic is louder: f or mf?', 'f', ['f','mf'], 'e'));
+  E.push(qzQ('Which dynamic is softer: pp or p?', 'pp', ['pp','p'], 'e'));
+  E.push(qzQ('Which note lasts longer: a half note or a quarter note?', 'a half note', ['a half note','a quarter note'], 'e'));
+  E.push(qzQ('Which note lasts longer: a whole note or a half note?', 'a whole note', ['a whole note','a half note'], 'e'));
+  E.push(qzQ('Which note is shorter: an eighth note or a quarter note?', 'an eighth note', ['an eighth note','a quarter note'], 'e'));
+
+  const MAJ = [['C',0,'0'],['G',1,'1 sharp'],['D',1,'2 sharps'],['A',1,'3 sharps'],['E',1,'4 sharps'],['B',1,'5 sharps'],['F sharp',1,'6 sharps'],['C sharp',1,'7 sharps'],['F',-1,'1 flat'],['B flat',-1,'2 flats'],['E flat',-1,'3 flats'],['A flat',-1,'4 flats'],['D flat',-1,'5 flats'],['G flat',-1,'6 flats'],['C flat',-1,'7 flats']];
+  const sigOpts = ['0','1 sharp','2 sharps','3 sharps','4 sharps','5 sharps','6 sharps','7 sharps','1 flat','2 flats','3 flats','4 flats','5 flats','6 flats','7 flats'];
+  MAJ.forEach(([k,, c]) => N.push(qzQ('How many sharps or flats are in ' + k + ' major?', c, sigOpts, 'n')));
+  const MIN = [['A','0'],['E','1 sharp'],['B','2 sharps'],['F sharp','3 sharps'],['C sharp','4 sharps'],['G sharp','5 sharps'],['D sharp','6 sharps'],['A sharp','7 sharps'],['D','1 flat'],['G','2 flats'],['C','3 flats'],['F','4 flats'],['B flat','5 flats'],['E flat','6 flats'],['A flat','7 flats']];
+  MIN.forEach(([k, c]) => N.push(qzQ('How many sharps or flats are in ' + k + ' minor?', c, sigOpts, 'n')));
+  const REL = [['C','A'],['G','E'],['D','B'],['A','F sharp'],['E','C sharp'],['B','G sharp'],['F sharp','D sharp'],['C sharp','A sharp'],['F','D'],['B flat','G'],['E flat','C'],['A flat','F'],['D flat','B flat'],['G flat','E flat'],['C flat','A flat']];
+  const minNames = REL.map(r => r[1]);
+  const majNames = REL.map(r => r[0]);
+  REL.forEach(([M, m]) => N.push(qzQ('What is the relative minor of ' + M + ' major?', m, minNames, 'n')));
+  REL.forEach(([M, m]) => N.push(qzQ('What is the relative major of ' + m + ' minor?', M, majNames, 'n')));
+  const shOrd = ['F','C','G','D','A','E','B'];
+  const flOrd = ['B','E','A','D','G','C','F'];
+  const ordW = ['1st','2nd','3rd','4th','5th','6th','7th'];
+  shOrd.forEach((x, i) => N.push(qzQ('What is the ' + ordW[i] + ' sharp to appear in key signatures?', x + ' sharp', shOrd.map(y => y + ' sharp'), 'n')));
+  flOrd.forEach((x, i) => N.push(qzQ('What is the ' + ordW[i] + ' flat to appear in key signatures?', x + ' flat', flOrd.map(y => y + ' flat'), 'n')));
+  const iName = { '1P':'a perfect unison','2m':'a minor 2nd','2M':'a major 2nd','3m':'a minor 3rd','3M':'a major 3rd','4P':'a perfect 4th','4A':'an augmented 4th','5d':'a diminished 5th','5P':'a perfect 5th','6m':'a minor 6th','6M':'a major 6th','7m':'a minor 7th','7M':'a major 7th','8P':'a perfect octave' };
+  const iVals = Object.values(iName);
+  let natPairs = 0;
+  for (const a of QZ_LET) for (let num = 2; num <= 7 && natPairs < 40; num++) {
+    const ai = QZ_LET.indexOf(a);
+    const b = QZ_LET[(ai + num - 1) % 7];
+    const semis = (QZ_POS[b] - QZ_POS[a] + 12) % 12;
+    const key = Object.keys(iName).find(k => {
+      const nn = Number(k[0]); if (nn !== num) return false;
+      const q = k[1];
+      const base = {2:2,3:4,4:5,5:7,6:9,7:11}[nn];
+      const need = q === 'M' || q === 'P' ? base : q === 'm' ? base - 1 : q === 'A' ? base + 1 : base - 1;
+      return need === semis;
+    });
+    if (!key) continue;
+    natPairs++;
+    N.push(qzQ('What is the full name (with quality) of the interval from ' + a + ' up to ' + b + '?', iName[key], iVals, 'n'));
+  }
+  const TRANS = [['alto saxophone','E flat'],['tenor saxophone','B flat'],['baritone saxophone','E flat'],['soprano saxophone','B flat'],['clarinet','B flat'],['bass clarinet','B flat'],['trumpet','B flat'],['French horn','F'],['English horn','F'],['piccolo','C'],['flute','C'],['oboe','C'],['trombone','C'],['tuba','C']];
+  TRANS.forEach(([i, k]) => N.push(qzQ('The standard ' + i + ' is pitched in what key?', k, ['C','B flat','E flat','F'], 'n')));
+  QZ_LET.forEach(l => { for (const a of [0, 1]) {
+    const t = qzInterval(l, a, 2, 'M');
+    const src = qzNote(l, a);
+    const down = QZ_LET[(QZ_LET.indexOf(l) + 6) % 7];
+    const dsem = (QZ_POS[l] + a - QZ_POS[down] + 12) % 12;
+    const da = 2 - dsem + 0;
+    if (Math.abs(da) <= 2) N.push(qzQ('A B flat instrument plays a written ' + src + '. What is the concert pitch?', qzNote(down, da), qzNoteWrongs(down, da), 'n'));
+  }});
+  const t2 = [['sforzando','a sudden strong accent'],['subito','suddenly'],['marcato','marked and emphasized'],['tenuto','hold the note for its full value'],['dolce','sweetly'],['cantabile','in a singing style'],['grave','very slow and solemn'],['prestissimo','as fast as possible'],['sotto voce','in an undertone'],['tutti','everyone plays'],['divisi','the section divides into parts'],['pizzicato','pluck the strings'],['arco','play with the bow'],['con sordino','with a mute'],['glissando','a continuous slide between notes'],['tremolo','rapid repetition of a note'],['a trill','rapid alternation between two adjacent notes'],['a grace note','a quick ornamental note'],['syncopation','accenting the off-beats'],['an ostinato','a persistently repeated pattern'],['rubato','flexible give-and-take in tempo'],['a tempo','return to the previous speed'],['simile','continue in the same manner'],['poco a poco','little by little'],['molto','very'],['con moto','with motion'],['allargando','broadening and slowing'],['morendo','dying away'],['sempre','always'],['meno mosso','less motion, slower']];
+  const t2defs = t2.map(x => x[1]);
+  t2.forEach(([w, d], i) => N.push(qzQ('What does ' + w + ' mean?', d, qzShuffle(t2defs.filter((x, j) => j !== i), Math.random), 'n')));
+  [['6/8','compound duple'],['cut time (2/2)','simple duple'],['9/8','compound triple'],['12/8','compound quadruple'],['3/8','simple triple'],['5/4','irregular (asymmetric)']].forEach(([sig, m]) =>
+    N.push(qzQ('What kind of meter is ' + sig + '?', m, ['simple duple','simple triple','compound duple','compound triple','compound quadruple','irregular (asymmetric)'], 'n')));
+  const deg = [['1st','tonic'],['2nd','supertonic'],['3rd','mediant'],['4th','subdominant'],['5th','dominant'],['6th','submediant'],['7th','leading tone']];
+  deg.forEach(([o, nm]) => N.push(qzQ('What is the name of the ' + o + ' degree of a major scale?', nm, deg.map(d => d[1]), 'n')));
+  [['E sharp','F'],['B sharp','C'],['F flat','E'],['C flat','B']].forEach(([a, b]) => N.push(qzQ('Which note is enharmonically the same as ' + a + '?', b, QZ_LET, 'n')));
+  const majRoots = [['C',0],['G',0],['D',0],['A',0],['E',0],['F',0],['B',-1],['E',-1],['A',-1],['B',0],['D',-1],['F',1]];
+  majRoots.forEach(([l, a]) => {
+    const third = qzInterval(l, a, 3, 'M');
+    const fifth = qzInterval(l, a, 5, 'P');
+    if (third) N.push(qzQ('What is the 3rd note of the ' + qzNote(l, a) + ' major scale?', qzNote(third.l, third.a), qzNoteWrongs(third.l, third.a), 'n'));
+    if (fifth) N.push(qzQ('What is the 5th note of the ' + qzNote(l, a) + ' major scale?', qzNote(fifth.l, fifth.a), qzNoteWrongs(fifth.l, fifth.a), 'n'));
+  });
+  [['3rd and 4th','a half step'],['7th and 8th','a half step'],['1st and 2nd','a whole step'],['2nd and 3rd','a whole step'],['4th and 5th','a whole step'],['5th and 6th','a whole step'],['6th and 7th','a whole step']].forEach(([pos, ans]) =>
+    N.push(qzQ('In a major scale, what is the distance between the ' + pos + ' degrees?', ans, ['a half step','a whole step','a minor 3rd'], 'n')));
+  [['I','major'],['ii','minor'],['iii','minor'],['IV','major'],['V','major'],['vi','minor'],['vii\u00b0','diminished']].forEach(([rn, q]) =>
+    N.push(qzQ('In a major key, what quality is the ' + rn + ' triad?', q, ['major','minor','diminished','augmented'], 'n')));
+  [['G major','F sharp'],['D major','F sharp and C sharp'],['A major','F sharp, C sharp and G sharp'],['F major','B flat'],['B flat major','B flat and E flat'],['E flat major','B flat, E flat and A flat'],['E major','F, C, G and D sharp'],['A flat major','B, E, A and D flat'],['B major','F, C, G, D and A sharp'],['D flat major','B, E, A, D and G flat']].forEach(([k, ans]) =>
+    N.push(qzQ('Which notes are altered in the key of ' + k + '?', ans, ['F sharp','B flat','F sharp and C sharp','B flat and E flat','F sharp, C sharp and G sharp','B flat, E flat and A flat','E, A and D flat','F, C, G and D sharp','A, D and G sharp','B, E, A and D flat','F, C, G, D and A sharp','B, E, A, D and G flat'], 'n')));
+  [['B flat','C'],['E flat','F'],['F','B flat']].forEach(([inst, w]) => N.push(qzQ('For a concert C, what written note must a ' + inst + ' instrument play?' , w === 'C' ? 'C' : w, ['C','D','A','B flat','F','G'], 'n')));
+  N.push(qzQ('How many eighth notes equal one half note?', '4', ['2','3','4','6'], 'n'));
+  N.push(qzQ('How many sixteenth notes equal one quarter note?', '4', ['2','3','4','8'], 'n'));
+  N.push(qzQ('What does D.C. al Fine mean?', 'repeat from the beginning and end at Fine', ['repeat from the beginning and end at Fine','repeat from the sign and end at Fine','jump straight to the coda','end immediately'], 'n'));
+  N.push(qzQ('What does D.S. al Coda mean?', 'repeat from the sign, then jump to the coda', ['repeat from the sign, then jump to the coda','repeat from the beginning, then stop','play the coda twice','skip to the final measure'], 'n'));
+  N.push(qzQ('Which clef does the viola primarily read?', 'alto clef', ['treble clef','bass clef','alto clef','tenor clef'], 'n'));
+  N.push(qzQ('Which voice type is the highest?', 'soprano', ['soprano','alto','tenor','bass'], 'n'));
+  N.push(qzQ('Which voice type is the lowest?', 'bass', ['soprano','alto','tenor','bass'], 'n'));
+  N.push(qzQ('What is the dominant (V) chord of C major?', 'G major', ['F major','G major','A minor','D minor'], 'n'));
+  N.push(qzQ('What is the subdominant (IV) chord of C major?', 'F major', ['F major','G major','E minor','B diminished'], 'n'));
+  N.push(qzQ('An interval of exactly 6 half steps is called what?', 'a tritone', ['a tritone','a perfect 5th','a perfect 4th','a major 3rd'], 'n'));
+
+  const hardIv = [['C',0,4,'A'],['D',0,5,'d'],['E',0,3,'m'],['F',0,4,'A'],['G',0,7,'m'],['A',0,6,'m'],['B',0,3,'M'],['E',-1,3,'M'],['A',-1,4,'P'],['B',-1,6,'M'],['F',1,5,'P'],['C',1,4,'P'],['D',0,7,'M'],['G',0,2,'m'],['A',0,4,'A'],['E',0,5,'d'],['B',-1,3,'m'],['D',1,3,'m'],['G',1,4,'P'],['C',0,6,'A']];
+  const qWord = { M:'major', m:'minor', P:'perfect', A:'augmented', d:'diminished' };
+  const numWord = { 2:'2nd', 3:'3rd', 4:'4th', 5:'5th', 6:'6th', 7:'7th', 8:'octave' };
+  hardIv.forEach(([l, a, num, q]) => {
+    const t = qzInterval(l, a, num, q);
+    if (t) H.push(qzQ('What note is ' + (q === 'A' ? 'an' : 'a') + ' ' + qWord[q] + ' ' + numWord[num] + ' above ' + qzNote(l, a) + '?', qzNote(t.l, t.a), qzNoteWrongs(t.l, t.a), 'h'));
+  });
+  [['E major','F sharp, C sharp, G sharp and D sharp'],['A major','F sharp, C sharp and G sharp'],['B major','F sharp, C sharp, G sharp, D sharp and A sharp'],['A flat major','B flat, E flat, A flat and D flat'],['D flat major','B flat, E flat, A flat, D flat and G flat'],['F sharp major','F, C, G, D, A and E sharp']].forEach(([k, ans]) =>
+    H.push(qzQ('Name every altered note in ' + k + ', in key-signature order.', ans, ['F sharp, C sharp and G sharp','F sharp, C sharp, G sharp and D sharp','F sharp, C sharp, G sharp, D sharp and A sharp','B flat, E flat and A flat','B flat, E flat, A flat and D flat','B flat, E flat, A flat, D flat and G flat','F, C, G, D, A and E sharp'], 'h')));
+  const modes = [['2nd','Dorian'],['3rd','Phrygian'],['4th','Lydian'],['5th','Mixolydian'],['6th','Aeolian'],['7th','Locrian']];
+  modes.forEach(([o, m]) => H.push(qzQ('Which mode starts on the ' + o + ' degree of a major scale?', m, modes.map(x => x[1]).concat(['Ionian']), 'h')));
+  H.push(qzQ('D Dorian uses the same notes as which major scale?', 'C major', ['C major','D major','G major','F major'], 'h'));
+  H.push(qzQ('G Mixolydian uses the same notes as which major scale?', 'C major', ['C major','G major','D major','F major'], 'h'));
+  const triads = [['C',0,'A'],['E',0,'m'],['G',0,'A'],['B',-1,'m'],['F',1,'m'],['D',0,'d'],['A',-1,'M'],['B',0,'d'],['E',-1,'A'],['C',1,'m']];
+  triads.forEach(([l, a, q]) => {
+    const third = qzInterval(l, a, 3, q === 'm' || q === 'd' ? 'm' : 'M');
+    const fifth = qzInterval(l, a, 5, q === 'd' ? 'd' : q === 'A' ? 'A' : 'P');
+    if (!third || !fifth) return;
+    const name = { M:'major', m:'minor', d:'diminished', A:'augmented' }[q];
+    const ans = qzNote(l, a) + ' \u2013 ' + qzNote(third.l, third.a) + ' \u2013 ' + qzNote(fifth.l, fifth.a);
+    const w1 = qzNote(l, a) + ' \u2013 ' + qzNote(third.l, third.a + (q === 'm' ? 1 : -1)) + ' \u2013 ' + qzNote(fifth.l, fifth.a);
+    const w2 = qzNote(l, a) + ' \u2013 ' + qzNote(third.l, third.a) + ' \u2013 ' + qzNote(fifth.l, fifth.a + 1 > 2 ? fifth.a - 1 : fifth.a + 1);
+    const w3 = qzNote(l, a) + ' \u2013 ' + qzNote(third.l, third.a - 1 < -2 ? third.a + 1 : third.a - 1) + ' \u2013 ' + qzNote(fifth.l, fifth.a - 1 < -2 ? fifth.a + 1 : fifth.a - 1);
+    H.push(qzQ('Spell the ' + qzNote(l, a) + ' ' + name + ' triad.', ans, [w1, w2, w3], 'h'));
+  });
+  [['C','F'],['G','C'],['D','G'],['F','B flat'],['A','D'],['E','A']].forEach(([w, c]) =>
+    H.push(qzQ('A French horn (in F) plays a written ' + w + '. What is the concert pitch?', c, ['C','F','G','B flat','D','A','E'], 'h')));
+
+  const vhIv = [['B',0,5,'A'],['C',0,5,'A'],['F',0,7,'d'],['G',1,5,'A'],['E',-1,7,'A'],['A',1,3,'A'],['D',-1,7,'d'],['C',1,5,'A'],['F',1,4,'A'],['B',-1,2,'A'],['E',0,6,'A'],['A',0,7,'A'],['G',-1,3,'d'],['D',1,6,'d'],['C',-1,4,'d'],['F',0,2,'A'],['B',0,7,'d'],['E',1,4,'d']];
+  vhIv.forEach(([l, a, num, q]) => {
+    const t = qzInterval(l, a, num, q);
+    if (t) V.push(qzQ('What note is ' + (q === 'A' ? 'an' : 'a') + ' ' + qWord[q] + ' ' + numWord[num] + ' above ' + qzNote(l, a) + '?', qzNote(t.l, t.a), qzNoteWrongs(t.l, t.a), 'v'));
+  });
+  const formulas = [['minor pentatonic scale','root, flat 3rd, 4th, 5th, flat 7th'],['major pentatonic scale','root, 2nd, 3rd, 5th, 6th'],['blues scale','root, flat 3rd, 4th, flat 5th, 5th, flat 7th'],['Dorian mode (vs. major)','flat 3rd and flat 7th'],['Mixolydian mode (vs. major)','flat 7th only'],['Lydian mode (vs. major)','raised 4th only'],['Phrygian mode (vs. major)','flat 2nd, flat 3rd, flat 6th and flat 7th'],['Locrian mode (vs. major)','flat 2nd, flat 3rd, flat 5th, flat 6th and flat 7th']];
+  const fAns = formulas.map(f => f[1]);
+  formulas.forEach(([nm, ans], i) => V.push(qzQ('What does the ' + nm + ' include?', ans, qzShuffle(fAns.filter((x, j) => j !== i), Math.random), 'v')));
+  const sev = [['G',0,'dom7'],['C',0,'maj7'],['D',0,'m7'],['B',0,'m7b5'],['C',1,'dim7'],['F',1,'m7'],['E',-1,'maj7'],['A',0,'dom7'],['G',1,'dim7'],['B',-1,'m7b5'],['D',1,'dim7'],['F',0,'maj7']];
+  sev.forEach(([l, a, kind]) => {
+    const q3 = kind === 'maj7' || kind === 'dom7' ? 'M' : 'm';
+    const q5 = kind === 'm7b5' || kind === 'dim7' ? 'd' : 'P';
+    const q7 = kind === 'maj7' ? 'M' : kind === 'dim7' ? 'd' : 'm';
+    const t3 = qzInterval(l, a, 3, q3), t5 = qzInterval(l, a, 5, q5), t7 = qzInterval(l, a, 7, q7);
+    if (!t3 || !t5 || !t7) return;
+    const label = { maj7:'major 7th', dom7:'dominant 7th', m7:'minor 7th', m7b5:'half-diminished 7th', dim7:'diminished 7th' }[kind];
+    const ans = [qzNote(l, a), qzNote(t3.l, t3.a), qzNote(t5.l, t5.a), qzNote(t7.l, t7.a)].join(' \u2013 ');
+    const w1 = [qzNote(l, a), qzNote(t3.l, t3.a), qzNote(t5.l, t5.a), qzNote(t7.l, Math.abs(t7.a + 1) <= 2 ? t7.a + 1 : t7.a - 1)].join(' \u2013 ');
+    const w2 = [qzNote(l, a), qzNote(t3.l, Math.abs(t3.a - 1) <= 2 ? t3.a - 1 : t3.a + 1), qzNote(t5.l, t5.a), qzNote(t7.l, t7.a)].join(' \u2013 ');
+    const w3 = [qzNote(l, a), qzNote(t3.l, t3.a), qzNote(t5.l, Math.abs(t5.a - 1) <= 2 ? t5.a - 1 : t5.a + 1), qzNote(t7.l, t7.a)].join(' \u2013 ');
+    V.push(qzQ('Spell the ' + qzNote(l, a) + ' ' + label + ' chord.', ans, [w1, w2, w3], 'v'));
+  });
+  [['F double-sharp','G'],['C double-flat','B flat'],['E double-sharp','F sharp'],['B double-sharp','C sharp'],['G double-flat','F'],['A double-flat','G']].forEach(([a, b]) =>
+    V.push(qzQ('Which note sounds the same as ' + a + '?', b, qzNoteWrongs(b[0], b.includes('sharp') ? 1 : b.includes('flat') ? -1 : 0).concat(QZ_LET), 'v')));
+  V.push(qzQ('What is the complete order of flats in a key signature?', 'B, E, A, D, G, C, F', ['B, E, A, D, G, C, F','F, C, G, D, A, E, B','B, A, E, D, G, C, F','E, B, A, D, G, C, F'], 'v'));
+  V.push(qzQ('What is the complete order of sharps in a key signature?', 'F, C, G, D, A, E, B', ['F, C, G, D, A, E, B','B, E, A, D, G, C, F','F, G, C, D, A, E, B','C, F, G, D, A, E, B'], 'v'));
+  V.push(qzQ('What is the leading tone of C sharp major?', 'B sharp', ['B sharp','B','C','B flat'], 'v'));
+  V.push(qzQ('What is the leading tone of A flat minor (harmonic)?', 'G', ['G','G flat','G sharp','A'], 'v'));
+  V.push(qzQ('An augmented 6th is enharmonically equal to which interval?', 'a minor 7th', ['a minor 7th','a major 6th','a major 7th','a diminished 7th'], 'v'));
+  V.push(qzQ('A diminished 4th is enharmonically equal to which interval?', 'a major 3rd', ['a major 3rd','a minor 3rd','a perfect 4th','a major 2nd'], 'v'));
+  V.push(qzQ('What note is a doubly-augmented 4th above C?', 'F double-sharp', ['F double-sharp','F sharp','G','G sharp'], 'v'));
+  V.push(qzQ('Spell the whole-tone scale starting on C.', 'C, D, E, F sharp, G sharp, A sharp', ['C, D, E, F sharp, G sharp, A sharp','C, D, E, F, G, A','C, D, E flat, F, G, A flat','C, D, E, F sharp, G, A'], 'v'));
+
+  const trim = (arr, want, tag) => {
+    if (arr.length < want) throw new Error('pool short ' + tag + ' ' + arr.length);
+    return qzShuffle(arr, Math.random).slice(0, want);
+  };
+  QZ_POOLS = { e: trim(E, 150, 'e'), n: trim(N, 250, 'n'), h: trim(H, 50, 'h'), v: trim(V, 50, 'v') };
+}
+const QZ = { on:false, lives:3, pity:0, nextHardAt:50, answered:0, correct:0, e:0, n:0, h:0, v:0, t0:0, q:null, deadline:0, timer:null, clock:null, lastVH:false, bags:null, timeMs:0 };
+function quizIdle() {
+  $('quiz-idle').classList.remove('hidden');
+  $('quiz-play').classList.add('hidden');
+  $('quiz-over').classList.add('hidden');
+}
+function quizStart() {
+  if (!QZ_POOLS) { try { qzBuild(); } catch (err) { toast('Quiz failed to build: ' + err.message, false); return; } }
+  Object.assign(QZ, { on:true, lives:3, pity:0, nextHardAt:50, answered:0, correct:0, e:0, n:0, h:0, v:0, t0:Date.now(), lastVH:false, timeMs:0 });
+  QZ.bags = { e:[...QZ_POOLS.e], n:[...QZ_POOLS.n], h:[...QZ_POOLS.h], v:[...QZ_POOLS.v] };
+  Object.values(QZ.bags).forEach(b => qzShuffle(b, Math.random));
+  $('quiz-idle').classList.add('hidden');
+  $('quiz-over').classList.add('hidden');
+  $('quiz-play').classList.remove('hidden');
+  if (QZ.clock) clearInterval(QZ.clock);
+  QZ.clock = setInterval(qzHud, 200);
+  qzNext();
+}
+function qzPickDiff() {
+  if (QZ.pity >= 250) return 'v';
+  if (QZ.pity >= QZ.nextHardAt && !QZ.lastVH) { QZ.nextHardAt += 50; return 'h'; }
+  return Math.random() < 0.5 ? 'e' : 'n';
+}
+function qzDraw(d) {
+  const order = { e:['e','n','h','v'], n:['n','e','h','v'], h:['h','v','n','e'], v:['v','h','n','e'] }[d];
+  for (const k of order) if (QZ.bags[k].length) { const q = QZ.bags[k].pop(); q.d = q.d || k; return q; }
+  return null;
+}
+function qzNext() {
+  const d = qzPickDiff();
+  const q = qzDraw(d);
+  if (!q) { qzOver('You emptied all 500 questions. Absurd.'); return; }
+  QZ.q = q;
+  QZ.lastVH = q.d === 'v';
+  const secs = q.d === 'h' || q.d === 'v' ? 10 : 5;
+  QZ.deadline = Date.now() + secs * 1000;
+  const dn = { e:['EASY','#2f8f46'], n:['NORMAL','#a8871d'], h:['HARD','#c53b3b'], v:['VERY HARD','#7a2430'] }[q.d];
+  $('qz-diff').textContent = dn[0];
+  $('qz-diff').style.color = dn[1];
+  $('qz-question').textContent = q.t;
+  $('qz-opts').innerHTML = q.opts.map((o, i) =>
+    `<button onclick="qzAnswer(${i})" class="qz-opt rounded-xl border border-line bg-base px-4 py-3 text-left text-sm font-semibold text-ink hover:border-accent transition-colors"><span class="text-faint mr-2">${i + 1}</span>${esc(o)}</button>`).join('');
+  if (QZ.timer) clearInterval(QZ.timer);
+  QZ.timer = setInterval(qzTick, 100);
+  qzTick();
+}
+function qzTick() {
+  const left = Math.max(0, QZ.deadline - Date.now());
+  const secs = QZ.q.d === 'h' || QZ.q.d === 'v' ? 10000 : 5000;
+  $('qz-timer-num').textContent = (left / 1000).toFixed(1);
+  $('qz-timer-bar').style.width = (left / secs * 100) + '%';
+  if (left <= 0) qzAnswer(-1);
+}
+function qzHud() {
+  QZ.timeMs = Date.now() - QZ.t0;
+  const m = Math.floor(QZ.timeMs / 60000), sec = Math.floor(QZ.timeMs / 1000) % 60;
+  $('qz-time').textContent = m + ':' + String(sec).padStart(2, '0');
+  $('qz-lives').textContent = QZ.lives;
+  $('qz-answered').textContent = QZ.answered;
+  $('qz-pity-num').textContent = QZ.pity;
+  $('qz-pity-bar').style.width = Math.max(0, Math.min(100, QZ.pity / 250 * 100)) + '%';
+  $('qz-e').textContent = QZ.e; $('qz-n').textContent = QZ.n; $('qz-h').textContent = QZ.h; $('qz-v').textContent = QZ.v;
+}
+function qzAnswer(i) {
+  if (!QZ.on || !QZ.q) return;
+  clearInterval(QZ.timer);
+  QZ.timer = null;
+  const q = QZ.q;
+  QZ.q = null;
+  const right = i === q.a;
+  QZ.answered++;
+  QZ[q.d]++;
+  QZ.pity += q.d === 'e' ? 10 : q.d === 'n' ? 5 : q.d === 'h' ? -50 : -100;
+  if (q.d === 'v') QZ.nextHardAt = Math.max(50, Math.floor(Math.max(QZ.pity, 0) / 50) * 50 + 50);
+  if (right) {
+    QZ.correct++;
+    if (q.d === 'v') QZ.lives = Math.min(5, QZ.lives + 1);
+  } else {
+    QZ.lives--;
+  }
+  const btns = document.querySelectorAll('.qz-opt');
+  btns.forEach((b, j) => {
+    b.disabled = true;
+    if (j === q.a) b.style.borderColor = '#2f8f46';
+    else if (j === i) b.style.borderColor = '#c53b3b';
+  });
+  qzHud();
+  if (QZ.lives <= 0) { setTimeout(() => qzOver('Three strikes.'), 650); return; }
+  setTimeout(qzNext, right ? 350 : 750);
+}
+function qzOver(msg) {
+  QZ.on = false;
+  if (QZ.timer) clearInterval(QZ.timer);
+  if (QZ.clock) clearInterval(QZ.clock);
+  QZ.timer = null; QZ.clock = null;
+  $('quiz-play').classList.add('hidden');
+  $('quiz-over').classList.remove('hidden');
+  const m = Math.floor(QZ.timeMs / 60000), sec = Math.floor(QZ.timeMs / 1000) % 60;
+  $('qz-final').textContent = msg + ' ' + QZ.answered + ' answered, ' + QZ.correct + ' correct, in ' + m + ':' + String(sec).padStart(2, '0') + '.';
+  lbAfterQuiz();
+}
+document.addEventListener('keydown', e => {
+  if (!QZ.on || !QZ.q) return;
+  if (['1','2','3','4'].includes(e.key) && !e.target.closest('input, textarea, select')) {
+    e.preventDefault();
+    qzAnswer(Number(e.key) - 1);
+  }
+});
+
 function startDance() {
   if (document.body.classList.contains('dancing')) return;
   stopAudio();
@@ -1245,7 +1905,16 @@ function endDance() {
   $('dance-overlay').classList.add('hidden');
   $('dance-overlay').classList.remove('show');
   $('virus-popups').innerHTML = '';
+  const ok = document.createElement('div');
+  ok.className = 'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] rounded-xl bg-ink text-oninv font-bold text-lg px-8 py-4 shadow-2xl pointer-events-none';
+  ok.textContent = 'VIRUS ISOLATED \u2714';
+  document.body.appendChild(ok);
+  setTimeout(() => ok.remove(), 1600);
 }
+window.addEventListener('scroll', () => {
+  const m = $('mobile-menu');
+  if (m && m.classList.contains('open')) toggleMobileMenu();
+}, { passive: true });
 function scrollTopSmooth() {
   window.scrollTo({ top: 0, behavior: motionReduced() ? 'auto' : 'smooth' });
 }
@@ -1334,15 +2003,16 @@ function openHelp() {
   $('help-modal').showModal();
 }
 
-const VIEWS = ['home','scores','vote','access'];
-const ROUTES = { home:'', scores:'#/scores', vote:'#/vote', access:'#/friends' };
+const VIEWS = ['home','scores','vote','access','games'];
+const ROUTES = { home:'', scores:'#/scores', vote:'#/vote', access:'#/friends', games:'#/games' };
 let currentView = 'home';
 let suppressRoute = false;
 function renderView(view) {
+  if (view === 'games' && state.games && !state.games.quiz) view = 'home';
   currentView = view;
   stopAudio();
   VIEWS.forEach(v => $('view-' + v).classList.toggle('hidden', v !== view));
-  if (!$('mobile-menu').classList.contains('hidden')) toggleMobileMenu();
+  if ($('mobile-menu').classList.contains('open')) toggleMobileMenu();
   closeGenreMenu();
   renderHints();
   window.scrollTo({ top: 0, behavior: 'auto' });
@@ -1377,6 +2047,7 @@ function applyRoute() {
   if (h === 'scores') renderView('scores');
   else if (h === 'vote') renderView('vote');
   else if (h === 'friends') renderView('access');
+  else if (h === 'games') renderView('games');
   else renderView('home');
 }
 window.addEventListener('hashchange', () => {
@@ -1394,8 +2065,8 @@ function goToFriends() {
 }
 function toggleMobileMenu() {
   const m = $('mobile-menu'), b = $('mobile-menu-btn');
-  const closed = m.classList.toggle('hidden');
-  b.setAttribute('aria-expanded', String(!closed));
+  const open = m.classList.toggle('open');
+  b.setAttribute('aria-expanded', String(open));
 }
 
 function captureDefaultTexts() {
@@ -1490,6 +2161,99 @@ function applySocial() {
   $('soc-youtube').value = state.social.youtube || '';
   $('soc-instagram').value = state.social.instagram || '';
   $('soc-downloads').value = state.social.downloads || '';
+}
+const BLOCKED_WORDS = ['fuck','shit','bitch','cunt','nigger','nigga','faggot','fag','retard','whore','slut','rape','rapist','nazi','kike','spic','chink','tranny','dyke','pussy','cock','dick','asshole','wank','cocksucker','pedo'];
+function validName(raw) {
+  const name = String(raw || '').trim();
+  if (name.length < 3) return { ok:false, msg:'At least 3 characters.' };
+  if (name.length > 13) return { ok:false, msg:'13 characters max.' };
+  if (!/^[\w \-'.]+$/.test(name)) return { ok:false, msg:'Letters, numbers, spaces and - \u2019 . only.' };
+  const folded = name.toLowerCase().replace(/0/g,'o').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/5/g,'s').replace(/7/g,'t').replace(/@/g,'a').replace(/\$/g,'s').replace(/[^a-z]/g,'');
+  for (const w of BLOCKED_WORDS) if (folded.includes(w)) return { ok:false, msg:'Pick a nicer name.' };
+  return { ok:true, name };
+}
+function applyGames() {
+  const g = state.games || DEFAULTS.games;
+  const d = $('nav-games'), m = $('nav-games-m');
+  if (d) d.classList.toggle('hidden', !g.quiz);
+  if (m) m.classList.toggle('hidden', !g.quiz);
+  const row = $('annoy-row');
+  if (row) row.classList.toggle('hidden', !g.annoyAllowed);
+  if (!g.annoyAllowed && annoying) annoySet(false);
+  if (!g.quiz && currentView === 'games') showView('home');
+}
+function adminSaveGames() {
+  confirmAction('Save game settings for everyone?', () => {
+    state.games = {
+      quiz: $('ga-quiz').checked,
+      snakeLB: $('ga-snakelb').checked,
+      annoyAllowed: $('ga-annoy').checked,
+      adFreq: $('ga-adfreq').value
+    };
+    saveKey(LS.games, state.games);
+    afterContentChange();
+    applyGames();
+    toast('Game settings saved.');
+  });
+}
+function lbFmtTime(ms) {
+  const m = Math.floor(ms / 60000), s = Math.floor(ms / 1000) % 60;
+  return m + ':' + String(s).padStart(2, '0');
+}
+function lbSortQuiz(a, b) { return (b.answered - a.answered) || (b.correct - a.correct) || (a.timeMs - b.timeMs); }
+async function lbFetchQuiz() {
+  const snap = await fbTools.getDocs(fbTools.query(fbTools.collection(fbdb, 'lbQuiz'), fbTools.orderBy('answered', 'desc'), fbTools.limit(50)));
+  const rows = [];
+  snap.forEach(d => { const x = d.data(); if (x && typeof x.answered === 'number') rows.push(x); });
+  return rows.sort(lbSortQuiz).slice(0, 10);
+}
+function lbBoardHtml(rows, mine) {
+  if (!rows.length) return '<p class="text-sm text-faint">No scores yet. Be the first.</p>';
+  return '<ol class="space-y-1.5">' + rows.map((r, i) => {
+    const me = mine && r.name === mine.name && r.answered === mine.answered && r.timeMs === mine.timeMs;
+    return `<li class="rounded-xl border ${me ? 'border-accent' : 'border-line'} bg-base px-3.5 py-2 text-sm">
+      <div class="flex items-center gap-2">
+        <span class="text-faint w-6">${i + 1}.</span>
+        <strong class="text-ink flex-1 truncate">${esc(r.name)}</strong>
+        <span class="text-mute tabular-nums">${r.answered} answered</span>
+        <span class="text-faint tabular-nums">${r.correct} \u2713</span>
+        <span class="text-faint tabular-nums">${lbFmtTime(r.timeMs)}</span>
+        <button onclick="this.closest('li').querySelector('.lb-detail').classList.toggle('hidden')" class="text-faint hover:text-ink text-xs font-bold px-1.5" aria-label="Show breakdown">&#9432;</button>
+      </div>
+      <div class="lb-detail hidden text-xs mt-1.5 pl-8">
+        <span style="color:#2f8f46">Easy ${r.e ?? 0}</span> &middot; <span style="color:#a8871d">Normal ${r.n ?? 0}</span> &middot; <span style="color:#c53b3b">Hard ${r.h ?? 0}</span> &middot; <span style="color:#7a2430">Very hard ${r.v ?? 0}</span>
+      </div>
+    </li>`;
+  }).join('') + '</ol>';
+}
+async function lbAfterQuiz() {
+  const slot = $('qz-lb-slot');
+  slot.innerHTML = '<p class="text-sm text-faint">Loading leaderboard\u2026</p>';
+  if (!fbdb || !fbTools) { slot.innerHTML = '<p class="text-sm text-faint">The global leaderboard needs the online connection.</p>'; return; }
+  let rows;
+  try { rows = await lbFetchQuiz(); }
+  catch { slot.innerHTML = '<p class="text-sm text-faint">Leaderboard unavailable right now.</p>'; return; }
+  const run = { answered: QZ.answered, correct: QZ.correct, timeMs: QZ.timeMs, e: QZ.e, n: QZ.n, h: QZ.h, v: QZ.v };
+  const qualifies = run.answered > 0 && (rows.length < 10 || lbSortQuiz(run, rows[rows.length - 1]) < 0);
+  slot.innerHTML = '<h3 class="font-display text-lg font-bold text-ink mb-3">Top 10 \u2014 Quiz</h3><div id="lb-board">' + lbBoardHtml(rows) + '</div>' +
+    (qualifies ? `<div id="lb-claim" class="mt-4 flex flex-wrap items-center gap-2">
+      <span class="text-sm font-semibold text-ink">Top 10! Claim it:</span>
+      <input id="lb-name" maxlength="13" placeholder="Your name (3\u201313)" class="rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-accent" />
+      <button onclick="lbSubmitQuiz()" class="rounded-xl bg-accent px-4 py-2 text-sm font-bold text-oninv hover:bg-accent-hi">Submit</button>
+    </div>` : '');
+}
+async function lbSubmitQuiz() {
+  const v = validName($('lb-name').value);
+  if (!v.ok) { toast(v.msg, false); return; }
+  const entry = { name: v.name, answered: QZ.answered, correct: QZ.correct, timeMs: QZ.timeMs, e: QZ.e, n: QZ.n, h: QZ.h, v: QZ.v, ts: Date.now() };
+  try {
+    await fbTools.addDoc(fbTools.collection(fbdb, 'lbQuiz'), entry);
+    const rows = await lbFetchQuiz();
+    $('lb-board').innerHTML = lbBoardHtml(rows, entry);
+    const claim = $('lb-claim');
+    if (claim) claim.remove();
+    toast('On the board.');
+  } catch { toast('Could not submit \u2014 check the Firestore rules.', false); }
 }
 function adminSaveSocial() {
   const yt = $('soc-youtube').value.trim();
@@ -1723,7 +2487,8 @@ function contentPayload() {
     texts: state.texts,
     featured: state.featured,
     faq: state.faq,
-    genres: state.genres
+    genres: state.genres,
+    games: state.games
   };
 }
 function publishContent(payload) {
@@ -1994,6 +2759,7 @@ function scoreLinkButtons(item, size = 'sm') {
     `<a href="${attr(l.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 rounded-xl ${i === 0 ? 'bg-accent text-oninv hover:bg-accent-hi' : 'border border-accent/60 text-accent hover:bg-accent/10'} ${pad} text-sm font-bold transition-colors">${esc(l.label || 'Sheet Music')}</a>`);
   if (item.driveLink) btns.push(`<a href="${attr(item.driveLink)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 rounded-xl bg-accent text-oninv hover:bg-accent-hi ${pad} text-sm font-bold transition-colors">&#8595; Download</a>`);
   if (item.musescoreLink) btns.push(`<a href="${attr(item.musescoreLink)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 rounded-xl border border-accent/60 text-accent hover:bg-accent/10 ${pad} text-sm font-bold transition-colors">&#9835; MuseScore</a>`);
+  if (item.pdfFile) btns.push(`<a href="${attr(item.pdfFile)}" download onclick="event.stopPropagation()" class="inline-flex items-center gap-1.5 rounded-xl border border-accent/60 text-accent hover:bg-accent/10 ${pad} text-sm font-bold transition-colors">&#8595; PDF</a>`);
   return btns.join('');
 }
 function adminItemButtons(kind, id) {
@@ -2205,6 +2971,7 @@ function readScoreForm(kind) {
   let driveLink = '';
   let musescoreLink = '';
   let audioFile = '';
+  let pdfFile = '';
   const links = [];
   if (kind === 'vault') {
     const driveRaw = $('v-drive').value.trim();
@@ -2215,6 +2982,8 @@ function readScoreForm(kind) {
     if (msRaw && !musescoreLink) { toast('The MuseScore link must be a normal web address (https://\u2026).', false); return null; }
     audioFile = validAudioPath($('v-audio').value);
     if (audioFile === null) { toast('The audio must be a sound file inside your repository (e.g. audio/etude.mp3).', false); return null; }
+    pdfFile = validPdfPath($('v-pdf').value);
+    if (pdfFile === null) { toast('The PDF must be a .pdf file inside your repository (e.g. scores-pdfs/piece.pdf).', false); return null; }
   } else {
     for (let i = 1; i <= 3; i++) {
       const raw = $('c-link' + i + '-url').value.trim();
@@ -2237,6 +3006,7 @@ function readScoreForm(kind) {
     driveLink,
     musescoreLink,
     audioFile,
+    pdfFile,
     links
   };
 }
@@ -2249,6 +3019,10 @@ function clearScoreForm(kind) {
     $('v-drive').value = '';
     $('v-musescore').value = '';
     $('v-audio').value = '';
+    $('v-pdf').value = '';
+    $('v-pdf-file').value = '';
+    $('v-preview-file').value = '';
+    $('v-audio-file').value = '';
   } else {
     for (let i = 1; i <= 3; i++) {
       $('c-link' + i + '-label').value = '';
@@ -2286,6 +3060,7 @@ function startEdit(kind, id) {
     $('v-drive').value = item.driveLink || '';
     $('v-musescore').value = item.musescoreLink || '';
     $('v-audio').value = item.audioFile || '';
+    $('v-pdf').value = item.pdfFile || '';
   } else {
     for (let i = 1; i <= 3; i++) {
       const l = (item.links || [])[i - 1];
@@ -2376,7 +3151,7 @@ function renderAdminScoreLists() {
     `<li class="flex items-center justify-between gap-3 bg-sunken border border-line rounded-xl px-3 py-2">
       <div class="min-w-0">
         <p class="truncate text-ink">${esc(item.title)}</p>
-        <p class="truncate text-xs text-faint">${[item.artist, item.arrangement].filter(Boolean).map(esc).join(' &middot; ') || 'No creator info'} &middot; ${kind === 'vault' ? (item.audioFile ? 'Audio linked' : 'No audio') : (ytId(item.video) ? 'Video linked' : 'No video')}${(item.links||[]).length ? ' &middot; ' + (item.links||[]).length + ' store link' + ((item.links||[]).length === 1 ? '' : 's') : ''}${item.driveLink ? ' &middot; Drive' : ''}${item.musescoreLink ? ' &middot; MuseScore' : ''}${item.audioFile ? ' &middot; Audio' : ''}</p>
+        <p class="truncate text-xs text-faint">${[item.artist, item.arrangement].filter(Boolean).map(esc).join(' &middot; ') || 'No creator info'} &middot; ${kind === 'vault' ? (item.audioFile ? 'Audio linked' : 'No audio') : (ytId(item.video) ? 'Video linked' : 'No video')}${(item.links||[]).length ? ' &middot; ' + (item.links||[]).length + ' store link' + ((item.links||[]).length === 1 ? '' : 's') : ''}${item.driveLink ? ' &middot; Drive' : ''}${item.musescoreLink ? ' &middot; MuseScore' : ''}${item.audioFile ? ' &middot; Audio' : ''}${item.pdfFile ? ' &middot; PDF' : ''}</p>
       </div>
       <div class="flex items-center gap-2 shrink-0">
         ${kind === 'vault' ? `<button onclick="transferToCatalog('${item.id}')" class="text-xs font-bold rounded-lg bg-admin px-2.5 py-1 text-oninv hover:bg-admin-hi" title="Copy to Published">&rarr; Publish</button>` : ''}
@@ -2401,6 +3176,7 @@ function transferToCatalog(id) {
     copy.driveLink = '';
     copy.musescoreLink = '';
     copy.audioFile = '';
+    copy.pdfFile = '';
     copy.links = [];
     state.catalog.push(copy);
     saveKey(LS.catalog, state.catalog);
@@ -2547,6 +3323,9 @@ function checklistItems() {
   ];
 }
 function renderDashboard() {
+  ghTokenStatus();
+  const g = state.games || DEFAULTS.games;
+  if ($('ga-quiz')) { $('ga-quiz').checked = g.quiz; $('ga-snakelb').checked = g.snakeLB; $('ga-annoy').checked = g.annoyAllowed; $('ga-adfreq').value = g.adFreq; }
   if (state.access !== 'admin') return;
   renderAdminCounts();
   const ballots = Object.keys(state.userVotes).length;
@@ -2648,7 +3427,7 @@ function renderDraftStatus() {
 function discardDraft() {
   if (!isDraft()) { toast('There is no local draft to discard.', false); return; }
   confirmAction('Discard your local draft? Unexported changes are lost and this browser goes back to the published content.', () => {
-    [LS.catalog, LS.vault, LS.voting, LS.social, LS.genres, LS.texts, LS.featured, LS.faq].forEach(k => {
+    [LS.catalog, LS.vault, LS.voting, LS.social, LS.genres, LS.texts, LS.featured, LS.faq, LS.games].forEach(k => {
       try { localStorage.removeItem(k); } catch {}
     });
     try { localStorage.removeItem(DRAFT_KEY); } catch {}
@@ -2713,6 +3492,7 @@ function importData(input) {
       saveKey(LS.voting, d.voting);
       saveKey(LS.social, (d.social && typeof d.social === 'object') ? d.social : {});
       saveKey(LS.genres, Array.isArray(d.genres) ? d.genres : DEFAULT_GENRES);
+      saveKey(LS.games, d.games && typeof d.games === 'object' ? d.games : DEFAULTS.games);
       saveKey(LS.texts, (d.texts && typeof d.texts === 'object') ? d.texts : {});
       saveKey(LS.featured, typeof d.featured === 'string' ? d.featured : '');
       saveKey(LS.faq, Array.isArray(d.faq) ? d.faq : []);
@@ -2964,6 +3744,7 @@ async function fetchPublished() {
   applySettings();
   applyTexts();
   applySocial();
+  applyGames();
   renderGenres();
   renderVoting();
   renderStats();
