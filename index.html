@@ -131,8 +131,11 @@ html { scrollbar-width: thin; scrollbar-color: rgb(var(--c-line)) transparent; }
 body.audio-open #back-to-top { bottom:9.5rem; }
 @media (min-width:640px) { body.audio-open #back-to-top { bottom:5.5rem; } }
 body.audio-open footer { padding-bottom:9rem; }
-html.inapp body { padding-top:2rem; }
-html.inapp header { top:2rem; }
+html.sitedown [data-dt-hide] { display:none !important; }
+html.sitedown #view-home > *:not(#downtime-home) { display:none !important; }
+@keyframes denied-slam { 0% { opacity:0; transform:scale(2.6) rotate(-14deg); } 55% { opacity:1; transform:scale(.92) rotate(-8deg); } 72% { transform:scale(1.06) rotate(-8deg); } 100% { opacity:1; transform:scale(1) rotate(-8deg); } }
+.denied-stamp { animation: denied-slam calc(.45s/var(--speed,1)) cubic-bezier(.2,1.4,.4,1) both; }
+@media (prefers-reduced-motion: reduce) { .denied-stamp { animation:none; } }
 .mnav { max-height:0; overflow:hidden; opacity:0; padding-top:0; padding-bottom:0; border-top:0 solid rgb(var(--c-line)/.7); transition: max-height calc(.3s/var(--speed,1)) ease, opacity calc(.25s/var(--speed,1)) ease, padding calc(.3s/var(--speed,1)) ease; }
 .mnav.open { max-height:20rem; opacity:1; padding-top:.75rem; padding-bottom:.75rem; border-top-width:1px; }
 @media (max-width:640px) { .chip { padding:.55rem .95rem; } #mobile-menu a { padding:.4rem 0; } .tab-btn { padding-top:.65rem; padding-bottom:.65rem; } .vote-btn { padding:.4rem .7rem; } }
@@ -187,9 +190,14 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
 </head>
 
 <body class="bg-base text-ink antialiased min-h-screen flex flex-col">
-<div id="inapp-bar" class="hidden fixed top-0 inset-x-0 z-[55] h-8 bg-ink text-oninv text-xs font-semibold flex items-center justify-center gap-2 px-3">
-  <button onclick="openExternalBrowser()" class="underline decoration-1 underline-offset-2 truncate">Built for a full browser &mdash; issues may occur here. Tap to open in your browser</button>
-  <button onclick="dismissInapp()" class="shrink-0 px-1.5" aria-label="Dismiss">&#10005;</button>
+<div id="inapp-bar" class="hidden bg-ink text-oninv text-xs px-3 py-2">
+  <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 max-w-3xl mx-auto">
+    <span class="font-semibold">Built for a full browser &mdash; issues may occur here.</span>
+    <button onclick="openExternalBrowser()" class="rounded-lg border border-oninv/50 px-2.5 py-1 font-bold">Open in browser &#8599;</button>
+    <button onclick="copySiteLink()" class="rounded-lg border border-oninv/50 px-2.5 py-1 font-bold">Copy link</button>
+    <button onclick="dismissInapp()" class="px-1.5 font-bold" aria-label="Dismiss">&#10005;</button>
+  </div>
+  <p id="inapp-more" class="hidden text-center mt-1.5 text-oninv/80"></p>
 </div>
 <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[80] focus:rounded-xl focus:bg-ink focus:text-oninv focus:px-4 focus:py-2 focus:text-sm focus:font-bold">Skip to content</a>
 
@@ -200,11 +208,11 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
     </button>
     <div class="hidden md:flex items-center gap-6 text-sm font-medium">
       <a href="#view-home" onclick="showView('home');return false;" class="nvl text-mute hover:text-accent transition-colors">Home</a>
-      <a href="#view-scores" onclick="showView('scores');return false;" class="nvl text-mute hover:text-accent transition-colors">Published Scores</a>
-      <a href="#view-vote" onclick="showView('vote');return false;" class="nvl text-mute hover:text-accent transition-colors">Vote</a>
+      <a data-dt-hide href="#view-scores" onclick="showView('scores');return false;" class="nvl text-mute hover:text-accent transition-colors">Published Scores</a>
+      <a data-dt-hide href="#view-vote" onclick="showView('vote');return false;" class="nvl text-mute hover:text-accent transition-colors">Vote</a>
       <a id="nav-games" href="#view-games" onclick="showView('games');return false;" class="nvl text-mute hover:text-accent transition-colors">Games</a>
-      <a id="nav-downloads" href="#" target="_blank" rel="noopener" class="nvl hidden whitespace-nowrap text-mute hover:text-accent transition-colors">Downloads</a>
-      <a href="#view-access" onclick="goToFriends();return false;" class="nvl whitespace-nowrap text-mute hover:text-accent transition-colors">Friends<span id="nav-friends-dot" class="hidden ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-accent align-middle"></span></a>
+      <a data-dt-hide id="nav-downloads" href="#" target="_blank" rel="noopener" class="nvl hidden whitespace-nowrap text-mute hover:text-accent transition-colors">Downloads</a>
+      <a data-dt-hide href="#view-access" onclick="goToFriends();return false;" class="nvl whitespace-nowrap text-mute hover:text-accent transition-colors">Friends<span id="nav-friends-dot" class="hidden ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-accent align-middle"></span></a>
     </div>
     <div class="flex items-center gap-2">
       <a id="icon-youtube" href="#" target="_blank" rel="noopener" aria-label="YouTube channel" title="YouTube" class="w-8 h-8 grid place-items-center rounded-full border border-line text-mute hover:text-accent hover:border-accent transition-colors">
@@ -213,24 +221,35 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
       <a id="icon-instagram" href="#" target="_blank" rel="noopener" aria-label="Instagram profile" title="Instagram" class="w-8 h-8 grid place-items-center rounded-full border border-line text-mute hover:text-accent hover:border-accent transition-colors">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
       </a>
+      <button onclick="openHelp()" aria-label="Help for this page" title="Help" class="w-8 h-8 grid place-items-center rounded-full border border-line text-mute hover:text-accent hover:border-accent transition-colors text-sm font-bold">&#63;</button>
       <button onclick="openSettings()" aria-label="Site settings" title="Settings" class="w-8 h-8 grid place-items-center rounded-full border border-line text-mute hover:text-accent hover:border-accent transition-colors text-sm">&#9881;</button>
-      <button onclick="openHelp()" aria-label="Help — what can I do here?" title="What can I do here?" class="w-8 h-8 grid place-items-center rounded-full border border-line text-mute hover:text-accent hover:border-accent transition-colors text-sm font-bold">?</button>
       <button class="md:hidden text-mute text-2xl leading-none px-2" onclick="toggleMobileMenu()" aria-label="Toggle menu" aria-expanded="false" id="mobile-menu-btn">&#9776;</button>
     </div>
   </nav>
   <div id="mobile-menu" class="mnav md:hidden bg-base px-4 flex flex-col gap-3 text-sm font-medium">
     <a href="#view-home" onclick="showView('home');return false;" class="text-mute hover:text-accent">Home</a>
-    <a href="#view-scores" onclick="showView('scores');return false;" class="text-mute hover:text-accent">Published Scores</a>
-    <a href="#view-vote" onclick="showView('vote');return false;" class="text-mute hover:text-accent">Vote</a>
+    <a data-dt-hide href="#view-scores" onclick="showView('scores');return false;" class="text-mute hover:text-accent">Published Scores</a>
+    <a data-dt-hide href="#view-vote" onclick="showView('vote');return false;" class="text-mute hover:text-accent">Vote</a>
     <a id="nav-games-m" href="#view-games" onclick="showView('games');return false;" class="text-mute hover:text-accent">Games</a>
-    <a id="nav-downloads-m" href="#" target="_blank" rel="noopener" class="hidden text-mute hover:text-accent">Downloads</a>
-    <a href="#view-access" onclick="goToFriends();return false;" class="text-mute hover:text-accent">Friends<span id="nav-friends-dot-m" class="hidden ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-accent align-middle"></span></a>
+    <a data-dt-hide id="nav-downloads-m" href="#" target="_blank" rel="noopener" class="hidden text-mute hover:text-accent">Downloads</a>
+    <a data-dt-hide href="#view-access" onclick="goToFriends();return false;" class="text-mute hover:text-accent">Friends<span id="nav-friends-dot-m" class="hidden ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-accent align-middle"></span></a>
   </div>
 </header>
 
 <main id="main-content" class="flex-1">
 
 <div id="view-home">
+  <section id="downtime-home" data-annoy-exempt class="hidden mx-auto max-w-md px-4 py-24 text-center">
+    <p class="font-display text-5xl font-bold text-ink mb-3">&#9835;</p>
+    <h2 data-edit="dtTitle" class="font-display text-3xl font-bold text-ink mb-2">Down for maintenance</h2>
+    <p data-edit="dtSub" class="text-sm text-mute mb-6">The site is temporarily offline while things get fixed and improved. Check back soon.</p>
+    <div class="rounded-2xl border border-line bg-surface p-5 text-sm space-y-2 mb-6">
+      <p class="text-mute"><span data-edit="dtActiveLabel">Downtime has been active for</span> <strong id="dt-timer" class="text-ink tabular-nums">0:00:00</strong></p>
+      <p class="text-mute"><span data-edit="dtEtaLabel">Estimated downtime:</span> <strong id="dt-eta" class="text-ink">unknown</strong></p>
+    </div>
+    <button id="dt-games-btn" onclick="downtimePlay()" class="hidden rounded-xl bg-accent px-6 py-2.5 font-bold text-oninv hover:bg-accent-hi"><span data-edit="dtPlay">Play the quiz while you wait &rarr;</span></button>
+    <p class="mt-10"><button onclick="downtimeAdmin()" class="text-xs text-faint hover:text-mute">admin</button></p>
+  </section>
 
   <section class="relative overflow-hidden">
     <span aria-hidden="true" class="floaty pointer-events-none select-none absolute -right-10 -top-24 font-display text-[22rem] leading-none text-ink/[.045]">&#9835;</span>
@@ -239,18 +258,6 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
       <p data-edit="heroEyebrow" class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-6">&mdash; Arranger &middot; Transcriber &middot; Musician</p>
       <h1 data-edit="heroHeading" class="font-display text-5xl sm:text-7xl font-bold tracking-tight text-ink leading-[1.02] max-w-4xl">Sheet Music &amp; Arrangements</h1>
       <p data-edit="heroSub" class="mt-6 text-lg text-mute max-w-2xl">Personal portfolio for original arrangements, transcriptions, and custom sheet music.</p>
-      <div class="mt-8 max-w-2xl">
-    <details class="help-block rounded-2xl border border-line bg-surface mb-8 group">
-      <summary class="cursor-pointer list-none px-5 py-3.5 flex items-center justify-between gap-3">
-        <span data-edit="helpTitle" class="font-display text-base font-bold text-ink">&#63; How it works</span>
-        <span class="text-faint text-sm group-open:rotate-180 transition-transform">&#9662;</span>
-      </summary>
-      <div class="px-5 pb-5 text-sm text-mute space-y-2.5">
-        <p data-edit="homeHelp1">This is my sheet music portfolio. Published Scores holds finished arrangements with videos and store links, the Vote page decides what I arrange next, and friends with the passcode get the private vault.</p>
-        <p data-edit="homeHelp2">Settings in the menu has inverted colors, text size and more. This is V0.9 — if you find a bug, tell me through the contact form below or on Instagram.</p>
-      </div>
-    </details>
-      </div>
       <p id="stats-strip" class="mt-8 text-xs font-semibold tracking-[0.2em] uppercase text-faint"></p>
       <div id="now-arranging" class="hidden mt-6 inline-flex items-center gap-3 rounded-xl border border-accent/50 bg-sunken px-4 py-2.5 text-sm">
         <span class="w-2 h-2 rounded-full bg-accent animate-pulse" aria-hidden="true"></span>
@@ -333,16 +340,6 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
         <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Members Only</p>
         <h2 data-edit="vaultTitle" class="font-display text-3xl font-bold text-ink">Exclusive Friends Vault</h2>
         <p data-edit="vaultSub" class="text-mute text-sm mt-2">Private drafts and works in progress, shared with friends only.</p>
-    <details class="help-block rounded-2xl border border-line bg-surface mb-8 group">
-      <summary class="cursor-pointer list-none px-5 py-3.5 flex items-center justify-between gap-3">
-        <span data-edit="helpTitle" class="font-display text-base font-bold text-ink">&#63; How it works</span>
-        <span class="text-faint text-sm group-open:rotate-180 transition-transform">&#9662;</span>
-      </summary>
-      <div class="px-5 pb-5 text-sm text-mute space-y-2.5">
-        <p data-edit="vaultHelp1">These are drafts and private arrangements — please keep them between us.</p>
-        <p data-edit="vaultHelp2">Buttons on each score: Drive opens the folder with every part, PDF grabs a single file, MuseScore opens the online score, and play starts a recording when one exists.</p>
-      </div>
-    </details>
       </div>
       <div class="flex items-center rounded-xl border border-line bg-surface overflow-hidden" role="group" aria-label="Vault layout">
         <button class="seg-btn px-3 py-1.5 text-sm text-mute" data-layout-btn="vault-grid" aria-pressed="true" onclick="setLayout('vault','grid')" title="Grid view" aria-label="Grid layout">&#9638;</button>
@@ -377,6 +374,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
         <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="faq" onclick="setAdminTab('faq')">&#63; FAQ <span data-count="faq" class="opacity-70"></span></button>
         <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="social" onclick="setAdminTab('social')">&#128279; YouTube / Instagram</button>
         <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="games" onclick="setAdminTab('games')">&#127918; Games</button>
+        <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="status" onclick="setAdminTab('status')">&#9888; Site status</button>
         <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="text" onclick="setAdminTab('text')">&#9998; Site Text</button>
         <button class="tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" data-tab="data" onclick="setAdminTab('data')">&#128190; Backup &amp; Data</button>
       </div>
@@ -587,17 +585,6 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
         <div data-tabpanel="games" class="hidden">
           <h3 class="font-display text-xl font-bold text-ink mb-1.5">Games</h3>
           <p class="text-sm text-mute mb-6 max-w-2xl">Control the toys. Changes publish for everyone.</p>
-          <div class="mb-8 max-w-md rounded-2xl border border-danger/40 p-4">
-            <h4 class="font-bold text-ink mb-2">Site status</h4>
-            <label class="flex items-center justify-between gap-4 mb-3"><span class="text-sm text-mute">Take the entire site down</span><input id="st-down" type="checkbox" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-danger))]" /></label>
-            <div class="flex items-center gap-2 mb-2">
-              <span class="text-sm text-mute flex-1">Estimated downtime</span>
-              <input id="st-eta-h" type="number" min="0" max="720" placeholder="h" aria-label="Estimated downtime hours" class="w-16 rounded-xl bg-sunken border border-line px-2.5 py-1.5 text-sm focus:border-admin" />
-              <input id="st-eta-m" type="number" min="0" max="59" placeholder="m" aria-label="Estimated downtime minutes" class="w-16 rounded-xl bg-sunken border border-line px-2.5 py-1.5 text-sm focus:border-admin" />
-            </div>
-            <p class="text-xs text-faint mb-3">Leave both empty for &ldquo;unknown&rdquo;. The Games page stays reachable from the downtime screen unless you turn it off below. The 404 snake always works.</p>
-            <button onclick="adminSaveSiteStatus()" class="rounded-xl bg-danger px-5 py-2.5 text-sm font-bold text-oninv hover:bg-danger-hi">Save site status</button>
-          </div>
           <div class="space-y-4 max-w-md">
             <label class="flex items-center justify-between gap-4"><span class="text-sm text-mute">Show the Games page (quiz)</span><input id="ga-quiz" type="checkbox" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-admin))]" /></label>
             <label class="flex items-center justify-between gap-4"><span class="text-sm text-mute">Snake leaderboard (404 page)</span><input id="ga-snakelb" type="checkbox" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-admin))]" /></label>
@@ -607,6 +594,22 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
                 <option value="occasional">Occasional</option><option value="frequent">Frequent</option><option value="relentless">Relentless</option>
               </select></label>
             <button onclick="adminSaveGames()" class="rounded-xl bg-admin px-5 py-2.5 text-sm font-bold text-oninv hover:bg-admin-hi">Save game settings</button>
+          </div>
+        </div>
+        <div data-tabpanel="status" class="hidden">
+          <h3 class="font-display text-xl font-bold text-ink mb-1.5">Site status</h3>
+          <p class="text-sm text-mute mb-6 max-w-2xl">Take the whole site down for maintenance. While down, visitors see only the downtime notice on Home and (optionally) the Games page. You keep full access. The 404 snake always works.</p>
+          <div class="max-w-md rounded-2xl border border-danger/40 p-4">
+            <label class="flex items-center justify-between gap-4 mb-3"><span class="text-sm text-mute">Take the entire site down</span><input id="st-down" type="checkbox" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-danger))]" /></label>
+            <label class="block mb-3"><span class="block text-xs font-semibold text-mute mb-1">Downtime description <span class="font-normal text-faint">(shown to visitors)</span></span>
+              <textarea id="st-desc" rows="2" class="w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin"></textarea></label>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-sm text-mute flex-1">Estimated downtime</span>
+              <input id="st-eta-h" type="number" min="0" max="720" placeholder="h" aria-label="Estimated downtime hours" class="w-16 rounded-xl bg-sunken border border-line px-2.5 py-1.5 text-sm focus:border-admin" />
+              <input id="st-eta-m" type="number" min="0" max="59" placeholder="m" aria-label="Estimated downtime minutes" class="w-16 rounded-xl bg-sunken border border-line px-2.5 py-1.5 text-sm focus:border-admin" />
+            </div>
+            <p class="text-xs text-faint mb-3">Leave hours and minutes empty for &ldquo;unknown&rdquo;. Turn the Games page on or off in the Games tab.</p>
+            <button onclick="adminSaveSiteStatus()" class="rounded-xl bg-danger px-5 py-2.5 text-sm font-bold text-oninv hover:bg-danger-hi">Save site status</button>
           </div>
         </div>
         <div data-tabpanel="data" class="hidden">
@@ -644,17 +647,6 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
         <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Public Catalog</p>
         <h2 data-edit="catalogTitle" class="font-display text-4xl sm:text-5xl font-bold text-ink mb-3">Published Sheet Music</h2>
         <p data-edit="catalogSub" class="text-mute mb-6 max-w-2xl">Every published arrangement, with performance video, tags, and store links.</p>
-    <details class="help-block rounded-2xl border border-line bg-surface mb-8 group">
-      <summary class="cursor-pointer list-none px-5 py-3.5 flex items-center justify-between gap-3">
-        <span data-edit="helpTitle" class="font-display text-base font-bold text-ink">&#63; How it works</span>
-        <span class="text-faint text-sm group-open:rotate-180 transition-transform">&#9662;</span>
-      </summary>
-      <div class="px-5 pb-5 text-sm text-mute space-y-2.5">
-        <p data-edit="scoresHelp1">Every card is a finished arrangement. Tap a card for details, the play button to hear it, and the store buttons to get the sheet music.</p>
-        <p data-edit="scoresHelp2">The search box, the instrument dropdown and the genre chips stack together to narrow things down.</p>
-        <p data-edit="scoresHelp3">Want something that is not here yet? Head to the Vote page and suggest it.</p>
-      </div>
-    </details>
       </div>
       <div class="flex items-center rounded-xl border border-line bg-surface overflow-hidden mb-6" role="group" aria-label="Catalog layout">
         <button class="seg-btn px-3 py-1.5 text-sm text-mute" data-layout-btn="catalog-grid" aria-pressed="true" onclick="setLayout('catalog','grid')" title="Grid view" aria-label="Grid layout">&#9638;</button>
@@ -678,17 +670,6 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
       <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Community</p>
       <h2 data-edit="votingTitle" class="font-display text-4xl sm:text-5xl font-bold text-ink">Vote for the Next Arrangement</h2>
       <p data-edit="votingSub" class="text-mute text-sm mt-3 mb-6">One vote per song, per visitor. The board re-sorts live as votes come in.</p>
-    <details class="help-block rounded-2xl border border-line bg-surface mb-8 group">
-      <summary class="cursor-pointer list-none px-5 py-3.5 flex items-center justify-between gap-3">
-        <span data-edit="helpTitle" class="font-display text-base font-bold text-ink">&#63; How it works</span>
-        <span class="text-faint text-sm group-open:rotate-180 transition-transform">&#9662;</span>
-      </summary>
-      <div class="px-5 pb-5 text-sm text-mute space-y-2.5">
-        <p data-edit="voteHelp1">Vote once per song — up if you want it arranged, down if you do not. The board re-sorts live and the bar under each row shows relative support.</p>
-        <p data-edit="voteHelp2">Press play to preview a song. A player bar appears at the bottom of the screen with a draggable progress slider.</p>
-        <p data-edit="voteHelp3">In progress means I am working on it, and Arranged links to the finished score. Suggest new songs with the form below — adding your name is optional.</p>
-      </div>
-    </details>
       <div id="hint-vote" class="mb-6"></div>
       <ul id="voting-board" class="space-y-3"></ul>
 
@@ -741,28 +722,6 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
     <p data-edit="gamesEyebrow" class="text-xs font-bold tracking-[.22em] text-faint uppercase mb-2">Games</p>
     <h2 data-edit="gamesTitle" class="font-display text-3xl sm:text-4xl font-bold text-ink mb-2">The Music Quiz</h2>
     <p class="text-sm text-mute mb-8 max-w-xl"><span data-edit="gamesIntro">500 questions. Three lives. The clock is short and the pity is real. A correct very-hard answer earns a life back.</span> <a href="404.html" class="text-accent underline decoration-2 underline-offset-2">There is also a snake hiding on the 404 page.</a></p>
-    <details id="games-help" class="help-block rounded-2xl border border-line bg-surface mb-6 group">
-      <summary class="cursor-pointer list-none px-6 py-4 flex items-center justify-between gap-3">
-        <span data-edit="helpTitle" class="font-display text-lg font-bold text-ink">&#63; How it works</span>
-        <span class="text-faint text-sm group-open:rotate-180 transition-transform">&#9662;</span>
-      </summary>
-      <div class="px-6 pb-6 text-sm text-mute space-y-4">
-        <div>
-          <p data-edit="gamesHelpH1" class="font-bold text-ink mb-1">The quiz</p>
-          <p data-edit="gamesHelp1">500 questions, drawn so nothing repeats in a run: 150 easy, 250 normal, 50 hard, 50 very hard. You start with 3 lives — a wrong answer or a timeout costs one, a correct very hard answer gives one back (max 5). Easy and normal give you 5 seconds; hard and very hard give 10. On a keyboard, keys 1 to 4 answer instantly.</p>
-        </div>
-        <div>
-          <p data-edit="gamesHelpH2" class="font-bold text-ink mb-1">The pity bar</p>
-          <p data-edit="gamesHelp2">Easy answers add 10, normal add 5. Each time the bar climbs another 50, a hard question arrives and knocks it back 50. Fill it to 250 and a very hard question is guaranteed, costing 100. You never get a hard question immediately after a very hard one, and yes — the bar can go negative.</p>
-          <p class="mt-1.5"><span style="color:#2f8f46" class="font-semibold">Easy</span> &middot; <span style="color:#a8871d" class="font-semibold">Normal</span> &middot; <span style="color:#c53b3b" class="font-semibold">Hard</span> &middot; <span style="color:#7a2430" class="font-semibold">Very hard</span></p>
-        </div>
-        <div>
-          <p data-edit="gamesHelpH3" class="font-bold text-ink mb-1">Leaderboards</p>
-          <p data-edit="gamesHelp3">Top 10, ranked by questions answered, then correct answers, then time. Land on it and you can claim it with a name of 3 to 13 characters — keep it clean. The info mark on any entry reveals that player&rsquo;s difficulty breakdown. The snake on the 404 page has its own board: apples eaten, then fastest time. Swipe, arrows or WASD; apples feed you, sheet music kills you.</p>
-        </div>
-        <p data-edit="gamesHelp4" class="text-faint text-xs">Annoying mode has its own way out. Good luck finding it.</p>
-      </div>
-    </details>
     <div id="quiz-idle" class="rounded-2xl border border-line bg-surface p-8 text-center">
       <button onclick="quizStart()" class="rounded-xl bg-accent px-8 py-3 font-bold text-oninv hover:bg-accent-hi transition-colors">Start quiz</button>
       <p data-edit="quizIdleHint" class="text-xs text-faint mt-3">Easy &amp; normal: 5s &middot; Hard &amp; very hard: 10s &middot; Keys 1&ndash;4 work on a keyboard</p>
@@ -813,15 +772,6 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
         <span id="portal-status-badge" class="hidden text-xs font-bold tracking-wider px-3 py-1.5 rounded-full border"></span>
       </div>
       <p data-edit="portalSub" class="text-mute text-sm mb-6 relative">Enter the friends passcode to unlock the private sheet music vault.</p>
-    <details class="help-block rounded-2xl border border-line bg-surface mb-8 group">
-      <summary class="cursor-pointer list-none px-5 py-3.5 flex items-center justify-between gap-3">
-        <span data-edit="helpTitle" class="font-display text-base font-bold text-ink">&#63; How it works</span>
-        <span class="text-faint text-sm group-open:rotate-180 transition-transform">&#9662;</span>
-      </summary>
-      <div class="px-5 pb-5 text-sm text-mute space-y-2.5">
-        <p data-edit="portalHelp1">Enter the passcode I gave you and the vault unlocks on this device — no account needed. If the code does not work, ask me; it may have changed.</p>
-      </div>
-    </details>
       <div class="flex flex-col sm:flex-row gap-3 relative">
         <input id="passcode-input" autocapitalize="none" autocorrect="off" spellcheck="false" type="text" autocomplete="off" spellcheck="false" placeholder="Friends passcode&hellip;" class="flex-1 rounded-xl bg-sunken border border-line px-4 py-2.5 font-mono text-accent placeholder-faint focus:border-accent" />
         <button onclick="unlockAccess()" class="rounded-xl bg-accent px-6 py-2.5 font-bold text-oninv hover:bg-accent-hi transition-colors">Unlock</button>
@@ -888,32 +838,46 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
   </div>
 </dialog>
 
-<dialog id="help-modal" class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(92vw,30rem)]">
-  <div class="p-7">
-    <div class="flex items-start justify-between gap-3">
-      <h3 id="help-title" class="font-display text-2xl font-bold text-ink mb-3"></h3>
-      <button onclick="$('help-modal').close()" class="text-mute hover:text-ink text-2xl leading-none" aria-label="Close">&times;</button>
+
+<dialog id="page-help-modal" data-annoy-exempt class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(92vw,30rem)]">
+  <div class="p-6 max-h-[80vh] overflow-y-auto">
+    <div class="flex items-start justify-between gap-3 mb-3">
+      <h3 class="font-display text-xl font-bold text-ink"><span data-edit="helpTitle">&#63; How it works</span></h3>
+      <button onclick="$('page-help-modal').close()" class="text-mute hover:text-ink text-2xl leading-none" aria-label="Close help">&times;</button>
     </div>
-    <div id="help-body" class="text-sm text-mute space-y-2.5"></div>
+    <div id="hv-home" class="hidden text-sm text-mute space-y-2.5">
+      <p data-edit="homeHelp1">This is my sheet music portfolio. Published Scores holds finished arrangements with videos and store links, the Vote page decides what I arrange next, and friends with the passcode get the private vault.</p>
+      <p data-edit="homeHelp2">Settings in the menu has inverted colors, text size and more. This is V0.9 — if you find a bug, tell me through the contact form below or on Instagram.</p>
+    </div>
+    <div id="hv-scores" class="hidden text-sm text-mute space-y-2.5">
+      <p data-edit="scoresHelp1">Every card is a finished arrangement. Tap a card for details, the play button to hear it, and the store buttons to get the sheet music.</p>
+      <p data-edit="scoresHelp2">The search box, the instrument dropdown and the genre chips stack together to narrow things down.</p>
+      <p data-edit="scoresHelp3">Want something that is not here yet? Head to the Vote page and suggest it.</p>
+    </div>
+    <div id="hv-vote" class="hidden text-sm text-mute space-y-2.5">
+      <p data-edit="voteHelp1">Vote once per song — up if you want it arranged, down if you do not. The board re-sorts live and the bar under each row shows relative support.</p>
+      <p data-edit="voteHelp2">Press play to preview a song. A player bar appears at the bottom of the screen with a draggable progress slider.</p>
+      <p data-edit="voteHelp3">In progress means I am working on it, and Arranged links to the finished score. Suggest new songs with the form below — adding your name is optional.</p>
+    </div>
+    <div id="hv-portal" class="hidden text-sm text-mute space-y-2.5">
+      <p data-edit="portalHelp1">Enter the passcode I gave you and the vault unlocks on this device — no account needed. If the code does not work, ask me; it may have changed.</p>
+    </div>
+    <div id="hv-vault" class="hidden text-sm text-mute space-y-2.5">
+      <p data-edit="vaultHelp1">These are drafts and private arrangements — please keep them between us.</p>
+      <p data-edit="vaultHelp2">Buttons on each score: Drive opens the folder with every part, PDF grabs a single file, MuseScore opens the online score, and play starts a recording when one exists.</p>
+    </div>
+    <div id="hv-games" class="hidden text-sm text-mute space-y-3">
+      <p data-edit="gamesHelpH1" class="font-bold text-ink">The quiz</p>
+      <p data-edit="gamesHelp1">500 questions, drawn so nothing repeats in a run: 150 easy, 250 normal, 50 hard, 50 very hard. You start with 3 lives — a wrong answer or a timeout costs one, a correct very hard answer gives one back (max 5). Easy and normal give you 5 seconds; hard and very hard give 10. On a keyboard, keys 1 to 4 answer instantly.</p>
+      <p data-edit="gamesHelpH2" class="font-bold text-ink">The pity bar</p>
+      <p data-edit="gamesHelp2">Easy answers add 10, normal add 5. Each time the bar climbs another 50, a hard question arrives and knocks it back 50. Fill it to 250 and a very hard question is guaranteed, costing 100. You never get a hard question immediately after a very hard one, and yes — the bar can go negative.</p>
+      <p><span style="color:#2f8f46" class="font-semibold">Easy</span> &middot; <span style="color:#a8871d" class="font-semibold">Normal</span> &middot; <span style="color:#c53b3b" class="font-semibold">Hard</span> &middot; <span style="color:#7a2430" class="font-semibold">Very hard</span></p>
+      <p data-edit="gamesHelpH3" class="font-bold text-ink">Leaderboards</p>
+      <p data-edit="gamesHelp3">Top 10, ranked by questions answered, then correct answers, then time. Land on it and you can claim it with a name of 3 to 13 characters — keep it clean. The info mark on any entry reveals that player&rsquo;s difficulty breakdown. The snake on the 404 page has its own board: apples eaten, then fastest time. Swipe, arrows or WASD; apples feed you, sheet music kills you.</p>
+      <p data-edit="gamesHelp4" class="text-faint text-xs">Annoying mode has its own way out. Good luck finding it.</p>
+    </div>
   </div>
 </dialog>
-
-<div id="downtime-overlay" data-annoy-exempt class="hidden fixed inset-0 z-[80] bg-base overflow-y-auto">
-  <div class="min-h-full grid place-items-center px-4 py-16">
-    <div class="max-w-md w-full text-center">
-      <p class="font-display text-xl font-bold text-ink mb-8"><span data-edit="logo"></span></p>
-      <p class="font-display text-5xl font-bold text-ink mb-3">&#9835;</p>
-      <h2 data-edit="dtTitle" class="font-display text-3xl font-bold text-ink mb-2">Down for maintenance</h2>
-      <p data-edit="dtSub" class="text-sm text-mute mb-6">The site is temporarily offline while things get fixed and improved. Check back soon.</p>
-      <div class="rounded-2xl border border-line bg-surface p-5 text-sm space-y-2 mb-6">
-        <p class="text-mute"><span data-edit="dtActiveLabel">Downtime has been active for</span> <strong id="dt-timer" class="text-ink tabular-nums">0:00:00</strong></p>
-        <p class="text-mute"><span data-edit="dtEtaLabel">Estimated downtime:</span> <strong id="dt-eta" class="text-ink">unknown</strong></p>
-      </div>
-      <button id="dt-games-btn" onclick="downtimePlay()" class="hidden rounded-xl bg-accent px-6 py-2.5 font-bold text-oninv hover:bg-accent-hi"><span data-edit="dtPlay">Play the quiz while you wait &rarr;</span></button>
-      <p class="mt-8"><button onclick="openAdminFromDowntime()" class="text-xs text-faint hover:text-mute">admin</button></p>
-    </div>
-  </div>
-</div>
 <dialog id="disclaimer-modal" data-annoy-exempt class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(92vw,26rem)]">
   <div class="p-6">
     <div class="flex items-start justify-between gap-3 mb-2">
@@ -1515,6 +1479,12 @@ function setSetting(key, val) {
   }
   toast('Setting applied.');
 }
+function openHelp() {
+  const key = currentView === 'access' ? (state.access === 'none' ? 'portal' : 'vault')
+    : ['home','scores','vote','games'].includes(currentView) ? currentView : 'home';
+  ['home','scores','vote','portal','vault','games'].forEach(k => $('hv-' + k).classList.toggle('hidden', k !== key));
+  try { $('page-help-modal').showModal(); } catch {}
+}
 function openSettings() {
   applySettings();
   $('settings-modal').showModal();
@@ -1644,7 +1614,18 @@ function closeClicker() {
 }
 function annoyToggle(box) {
   if (box.checked) { annoySet(true); }
-  else { box.checked = true; openClicker(); }
+  else { box.checked = true; showDenied(openClicker); }
+}
+function showDenied(cb) {
+  const wrap = document.createElement('div');
+  wrap.className = 'fixed inset-0 z-[85] grid place-items-center pointer-events-none';
+  wrap.innerHTML = '<span class="denied-stamp font-display text-6xl sm:text-7xl font-black tracking-[.15em] text-danger border-8 border-danger rounded-xl px-10 py-4 bg-base/85 backdrop-blur-sm select-none">DENIED</span>';
+  document.body.appendChild(wrap);
+  setTimeout(() => {
+    wrap.firstChild.style.transition = 'opacity .18s';
+    wrap.firstChild.style.opacity = '0';
+    setTimeout(() => { wrap.remove(); cb(); }, 190);
+  }, 950);
 }
 function annoySet(on) {
   annoying = on;
@@ -1686,7 +1667,8 @@ const GENERIC_ADS = [
   { t:'HOT SINGLE BASSOONS IN YOUR AREA', b:'Tall. Mysterious. Double reeds.', c:'MEET THEM' },
   { t:'HOT SINGLE VIOLAS IN YOUR AREA', b:'They can read alto clef. Can you?', c:'IMPRESS THEM' },
   { t:'HOT SINGLE TUBAS NEAR YOU', b:'Quantity available: one (1).', c:'CLAIM TUBA' },
-  { t:'BUY ONE FLUTE', b:'Get 100 clarinets FREE.* (*No refunds. We are trying to get rid of them.)', c:'BUY NOW' }
+  { t:'BUY ONE FLUTE', b:'Get 100 clarinets FREE.* (*No refunds. We are trying to get rid of them.)', c:'BUY NOW' },
+  { t:'CLARINET FACTS', b:'No.', c:'ACCEPT' }
 ];
 function spawnAd() {
   if (!annoying) return;
@@ -2102,26 +2084,47 @@ function endDance() {
   setTimeout(() => ok.remove(), 1600);
 }
 const INAPP = /Instagram|FBAN|FBAV|FB_IAB|Line\/|TikTok|musical_ly|Snapchat|MicroMessenger|Twitter|GSA\/|; wv\)/i.test(navigator.userAgent);
-function inappDismissed() {
-  try { return sessionStorage.getItem('smp_inappDismiss') === '1'; } catch { return false; }
-}
-if (INAPP && !inappDismissed()) {
-  document.documentElement.classList.add('inapp');
-  $('inapp-bar').classList.remove('hidden');
-}
+const IS_ANDROID = /android/i.test(navigator.userAgent);
+if (INAPP) $('inapp-bar').classList.remove('hidden');
 function dismissInapp() {
-  try { sessionStorage.setItem('smp_inappDismiss', '1'); } catch {}
-  document.documentElement.classList.remove('inapp');
   $('inapp-bar').classList.add('hidden');
+}
+function inappHint() {
+  $('inapp-more').textContent = IS_ANDROID
+    ? 'If nothing happened: tap the \u22EE menu (top right) and choose \u201COpen in browser\u201D \u2014 or use Copy link and paste it into Chrome.'
+    : 'This app blocks automatic opening. Tap the \u2026 or \u22EF menu (top right) and choose \u201COpen in external browser\u201D \u2014 or use Copy link and paste it into Safari.';
+  $('inapp-more').classList.remove('hidden');
 }
 function openExternalBrowser() {
   const url = location.href;
-  if (/android/i.test(navigator.userAgent)) {
-    location.href = 'intent://' + location.host + location.pathname + location.search + location.hash + '#Intent;scheme=https;end';
-    return;
+  if (IS_ANDROID) {
+    const intent = 'intent://' + location.host + location.pathname + location.search + '#Intent;scheme=https;S.browser_fallback_url=' + encodeURIComponent(url) + ';end';
+    const a = document.createElement('a');
+    a.href = intent;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  } else {
+    try { window.open(url, '_blank'); } catch {}
   }
-  window.open(url, '_blank');
-  toast('If nothing opened: use the browser menu (&#8942; or &#8226;&#8226;&#8226;) and choose "Open in browser".');
+  setTimeout(() => { if (document.visibilityState === 'visible') inappHint(); }, 700);
+}
+function copySiteLink() {
+  const url = location.href;
+  const done = () => { toast('Link copied \u2014 paste it into your browser.'); inappHint(); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(done).catch(() => copyFallback(url, done));
+  } else copyFallback(url, done);
+}
+function copyFallback(text, done) {
+  const t = document.createElement('textarea');
+  t.value = text;
+  t.style.position = 'fixed';
+  t.style.opacity = '0';
+  document.body.appendChild(t);
+  t.select();
+  try { document.execCommand('copy'); done(); } catch { toast('Copy failed \u2014 long-press the address bar instead.', false); }
+  t.remove();
 }
 window.addEventListener('scroll', () => {
   const m = $('mobile-menu');
@@ -2185,38 +2188,6 @@ function closeIntro() {
   introAction = null;
   if (a) a();
 }
-function openHelp() {
-  const v = currentView;
-  const lvl = state.access === 'admin' ? 'friends' : state.access;
-  let title = 'How this page works';
-  const items = [];
-  if (v === 'home') {
-    title = 'Home';
-    items.push('The two big cards open the <strong>catalog</strong> and the <strong>voting board</strong>.');
-    items.push('Tap the featured arrangement or any score anywhere to expand it with video and store links.');
-    items.push('The <strong>Friends</strong> link in the menu unlocks a private vault with a passcode.');
-  } else if (v === 'scores') {
-    title = 'Published Scores';
-    items.push('Tap a score to expand it &mdash; video, description, and links to get the sheet music.');
-    items.push('Toggle <strong>grid / list</strong> at the top right; list rows include a &#9654; audio preview.');
-    items.push('Narrow down with the search box or the tag chips.');
-    items.push('Inside a score, <strong>Copy link</strong> gives you a direct URL to share it.');
-  } else if (v === 'vote') {
-    title = 'Vote';
-    items.push('Everyone gets <strong>one vote per song</strong> &mdash; the board re-sorts live.');
-    items.push('&#9654; plays an audio preview of the song.');
-    items.push('Songs marked <strong>Arranged &#10003;</strong> are done &mdash; tap "View score" to see the result.');
-    items.push('Missing something? Use the <strong>suggestion form</strong> below the board.');
-  } else {
-    title = 'Friends Access';
-    items.push('This unlocks a private vault of drafts and works in progress.');
-    items.push('Friends stay signed in on their browser until they log out.');
-  }
-  if (lvl === 'friends' || lvl === 'admin') items.push('You are unlocked: the <strong>Friends Vault</strong> is on the Home page.');
-  $('help-title').textContent = title;
-  $('help-body').innerHTML = items.map(t => `<p>&bull; ${t}</p>`).join('');
-  $('help-modal').showModal();
-}
 
 const VIEWS = ['home','scores','vote','access','games'];
 const ROUTES = { home:'', scores:'#/scores', vote:'#/vote', access:'#/friends', games:'#/games' };
@@ -2224,6 +2195,8 @@ let currentView = 'home';
 let suppressRoute = false;
 function renderView(view) {
   if (view === 'games' && state.games && !state.games.quiz) view = 'home';
+  if (sitedownActive() && !['home','games'].includes(view) && !(view === 'access' && dtAccessFlag)) view = 'home';
+  if (view !== 'access') dtAccessFlag = false;
   currentView = view;
   if (typeof applySiteStatus === 'function' && state.siteStatus) applySiteStatus();
   stopAudio();
@@ -2399,26 +2372,32 @@ function fmtDur(ms) {
   const t = Math.max(0, Math.floor(ms / 1000));
   return Math.floor(t / 3600) + ':' + String(Math.floor(t / 60) % 60).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
 }
+let dtAccessFlag = false;
+function sitedownActive() {
+  return Boolean(state.siteStatus && state.siteStatus.down && state.access !== 'admin');
+}
 function applySiteStatus() {
+  const down = sitedownActive();
   const st = state.siteStatus || DEFAULTS.siteStatus;
-  const ov = $('downtime-overlay');
-  const gamesOpen = currentView === 'games' && state.games && state.games.quiz;
-  const show = st.down && state.access !== 'admin' && !gamesOpen;
-  const wasHidden = ov.classList.contains('hidden');
-  ov.classList.toggle('hidden', !show);
-  if (show && wasHidden && currentAudio) audioBarClose();
+  const was = document.documentElement.classList.contains('sitedown');
+  document.documentElement.classList.toggle('sitedown', down);
+  $('downtime-home').classList.toggle('hidden', !down);
   $('dt-games-btn').classList.toggle('hidden', !(state.games && state.games.quiz));
-  if (show) {
+  if (down) {
+    if (!was && currentAudio) audioBarClose();
     $('dt-eta').textContent = st.etaMin ? (Math.floor(st.etaMin / 60) ? Math.floor(st.etaMin / 60) + 'h ' : '') + (st.etaMin % 60) + 'm' : 'unknown';
     const tick = () => { $('dt-timer').textContent = fmtDur(Date.now() - (st.downSince || Date.now())); };
     tick();
     if (!dtTimer) dtTimer = setInterval(tick, 1000);
+    if (!['home','games'].includes(currentView) && !(currentView === 'access' && dtAccessFlag)) showView('home');
   } else if (dtTimer) { clearInterval(dtTimer); dtTimer = null; }
 }
 function downtimePlay() { showView('games'); }
-function openAdminFromDowntime() {
-  $('downtime-overlay').classList.add('hidden');
+function downtimeAdmin() {
+  dtAccessFlag = true;
   showView('access');
+  $('admin-login').classList.remove('hidden');
+  $('al-email').focus();
 }
 function adminSaveSiteStatus() {
   const on = $('st-down').checked;
@@ -2426,6 +2405,11 @@ function adminSaveSiteStatus() {
     const h = Number($('st-eta-h').value) || 0;
     const m = Number($('st-eta-m').value) || 0;
     const eta = h * 60 + m;
+    const desc = $('st-desc').value.trim();
+    if (desc && desc !== defaultText('dtSub')) state.texts.dtSub = desc;
+    else delete state.texts.dtSub;
+    saveKey(LS.texts, state.texts);
+    applyTexts();
     state.siteStatus = {
       down: on,
       downSince: on ? (state.siteStatus.down ? state.siteStatus.downSince : Date.now()) : 0,
@@ -3678,7 +3662,7 @@ function renderDashboard() {
   const g = state.games || DEFAULTS.games;
   if ($('ga-quiz')) { $('ga-quiz').checked = g.quiz; $('ga-snakelb').checked = g.snakeLB; $('ga-annoy').checked = g.annoyAllowed; $('ga-adfreq').value = g.adFreq; }
   const st = state.siteStatus || DEFAULTS.siteStatus;
-  if ($('st-down')) { $('st-down').checked = st.down; $('st-eta-h').value = st.etaMin ? Math.floor(st.etaMin / 60) || '' : ''; $('st-eta-m').value = st.etaMin ? st.etaMin % 60 || '' : ''; }
+  if ($('st-down')) { $('st-down').checked = st.down; $('st-eta-h').value = st.etaMin ? Math.floor(st.etaMin / 60) || '' : ''; $('st-eta-m').value = st.etaMin ? st.etaMin % 60 || '' : ''; $('st-desc').value = state.texts.dtSub || defaultText('dtSub'); }
   if (state.access !== 'admin') return;
   renderAdminCounts();
   const ballots = Object.keys(state.userVotes).length;
@@ -4101,7 +4085,7 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeGenreMenu(); if (document.body.classList.contains('dancing')) endDance(); } });
 window.addEventListener('scroll', () => { $('back-to-top').classList.toggle('show', window.scrollY > 400); }, { passive: true });
-['edit-modal','confirm-modal','score-modal','intro-modal','help-modal','settings-modal'].forEach(id => {
+['edit-modal','confirm-modal','score-modal','intro-modal','page-help-modal','settings-modal'].forEach(id => {
   $(id).addEventListener('click', e => { if (e.target === $(id)) $(id).close(); });
 });
 document.addEventListener('play', e => {
