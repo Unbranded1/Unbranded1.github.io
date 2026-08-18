@@ -21,7 +21,7 @@ h1 { font-family:Georgia,'Times New Roman',serif; font-size:56px; margin:0; lett
 .sub { color:#484b6a; font-size:14px; margin:.4rem 0 1.6rem; }
 .sub strong { color:#000; }
 .stage { position:relative; }
-canvas { display:block; width:min(92vw,378px); height:min(92vw,378px); background:#e4e5f1; border:2px solid #000; border-radius:12px; box-shadow:6px 6px 0 rgba(0,0,0,.85); }
+canvas { display:block; width:min(92vw,374px); height:min(92vw,374px); background:#e4e5f1; border:2px solid #000; border-radius:12px; box-shadow:6px 6px 0 rgba(0,0,0,.85); }
 .overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.6rem; background:rgba(250,250,250,.88); border-radius:12px; padding:1rem; }
 .overlay.hidden { display:none; }
 .overlay p { margin:0; font-size:14px; color:#484b6a; max-width:26ch; }
@@ -40,6 +40,18 @@ button, a { touch-action:manipulation; }
 .pad .d { grid-column:2; grid-row:2; }
 .pad .r { grid-column:3; grid-row:2; }
 .hint { font-size:12px; color:#9394a5; margin-top:1rem; max-width:34ch; }
+.claim { display:flex; gap:.5rem; flex-wrap:wrap; justify-content:center; }
+.claim.hidden { display:none; }
+.claim input { border:1.5px solid #d2d3db; border-radius:10px; padding:.55rem .8rem; font-size:14px; width:12rem; }
+.lb { margin-top:2rem; width:min(92vw,374px); text-align:left; }
+.lb h2 { font-family:Georgia,serif; font-size:20px; margin:0; }
+.lb.hidden { display:none; }
+.lb ol { list-style:none; margin:.7rem 0 0; padding:0; display:flex; flex-direction:column; gap:.35rem; }
+.lb li { display:flex; gap:.6rem; align-items:baseline; border:1.5px solid #d2d3db; border-radius:10px; padding:.45rem .7rem; font-size:13px; background:#fff; }
+.lb li .rk { color:#9394a5; width:1.4rem; }
+.lb li .nm { font-weight:700; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.lb li .ap, .lb li .tm { color:#484b6a; font-variant-numeric:tabular-nums; }
+canvas { touch-action:none; }
 footer { border-top:1px solid #d2d3db; padding:1.2rem; text-align:center; font-size:13px; color:#9394a5; }
 footer a { color:#484b6a; }
 @media (prefers-reduced-motion: reduce) { .links a::after, button.go { transition:none; } }
@@ -61,15 +73,20 @@ footer a { color:#484b6a; }
   <h1>404</h1>
   <p class="sub">This page slipped off the staff. Eat the <strong>apples</strong> &mdash; but whatever you do, <strong>don&rsquo;t collect the sheet music.</strong></p>
   <div class="stage">
-    <canvas id="game" width="378" height="378" role="img" aria-label="Snake game. Arrow keys or the buttons below to move. Apples grow the snake, sheet music ends the game."></canvas>
+    <canvas id="game" width="374" height="374" role="img" aria-label="Snake game. Arrow keys, swiping, or the buttons below to move. Apples grow the snake, sheet music ends the game."></canvas>
     <div id="overlay" class="overlay">
       <p class="big" id="ov-title">Snake, but musical</p>
       <p id="ov-msg">Apples feed you. Sheet music kills you. Walls and your own tail also kill you. Standard stuff.</p>
+      <div id="ov-claim" class="claim hidden">
+        <input id="lb-name" maxlength="13" placeholder="Your name (3&ndash;13)" autocapitalize="none" />
+        <button class="go" onclick="lbSubmit()">Claim top 10</button>
+      </div>
       <button class="go" id="ov-btn" onclick="startGame()">Play</button>
     </div>
   </div>
   <div class="hud">
     <span>Apples: <strong id="score">0</strong></span>
+    <span>Time: <strong id="time">0:00</strong></span>
     <span>Best: <strong id="best">0</strong></span>
   </div>
   <div class="pad" aria-label="Direction controls">
@@ -78,7 +95,12 @@ footer a { color:#484b6a; }
     <button class="d" onclick="steer(0,1)" aria-label="Down">&#9660;</button>
     <button class="r" onclick="steer(1,0)" aria-label="Right">&#9654;</button>
   </div>
-  <p class="hint">Arrow keys / WASD work too. Space restarts.</p>
+  <p class="hint">Arrow keys / WASD, swipe on the board, Space restarts.</p>
+  <section id="lb-wrap" class="lb hidden">
+    <h2>Top 10 &mdash; Snake</h2>
+    <p id="lb-status" class="hint" style="margin-top:.2rem">Loading&hellip;</p>
+    <ol id="lb-list"></ol>
+  </section>
   <noscript><p class="hint">The snake needs JavaScript &mdash; use the menu above to head back.</p></noscript>
 </main>
 <footer><a data-nav="" href="./index.html">Take me back to the music</a></footer>
@@ -87,11 +109,27 @@ footer a { color:#484b6a; }
 if (/^https?:$/.test(location.protocol)) {
   document.querySelectorAll('a[data-nav]').forEach(a => { a.href = '/' + a.dataset.nav; });
 }
-const G = 21;
+const FIREBASE_CONFIG = {
+  apiKey: 'AIzaSyAeojVpO6WGphfugsijSNz6u8lk0V5sjck',
+  authDomain: 'website-cc5f8.firebaseapp.com',
+  projectId: 'website-cc5f8',
+  appId: '1:16463386766:web:8f03322c3b8f91c36251df'
+};
+const BLOCKED_WORDS = ['fuck','shit','bitch','cunt','nigger','nigga','faggot','fag','retard','whore','slut','rape','rapist','nazi','kike','spic','chink','tranny','dyke','pussy','cock','dick','asshole','wank','cocksucker','pedo'];
+function validName(raw) {
+  const name = String(raw || '').trim();
+  if (name.length < 3) return { ok:false, msg:'At least 3 characters.' };
+  if (name.length > 13) return { ok:false, msg:'13 characters max.' };
+  if (!/^[\w \-'.]+$/.test(name)) return { ok:false, msg:'Letters, numbers, spaces and - \u2019 . only.' };
+  const folded = name.toLowerCase().replace(/0/g,'o').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/5/g,'s').replace(/7/g,'t').replace(/@/g,'a').replace(/\$/g,'s').replace(/[^a-z]/g,'');
+  for (const w of BLOCKED_WORDS) if (folded.includes(w)) return { ok:false, msg:'Pick a nicer name.' };
+  return { ok:true, name };
+}
+const G = 17;
 const cv = document.getElementById('game');
 const cx = cv.getContext('2d');
 const CELL = cv.width / G;
-let snake, dir, nextDir, apple, sheets, score, best, timer, speed, running, dead;
+let snake, prev, dir, nextDir, apple, sheets, score, best, logicTimer, speed, running, dead, lastStep, t0, runMs;
 try { best = Number(localStorage.getItem('smp_snakeHi') || 0) || 0; } catch { best = 0; }
 document.getElementById('best').textContent = best;
 function freeCell(occupied) {
@@ -112,45 +150,56 @@ function placeItems() {
   }
 }
 function reset() {
-  snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }];
+  snake = [{ x: 8, y: 8 }, { x: 7, y: 8 }, { x: 6, y: 8 }];
+  prev = snake.map(s => ({ ...s }));
   dir = { x: 1, y: 0 };
   nextDir = dir;
   score = 0;
-  speed = 140;
+  speed = 150;
   dead = false;
+  runMs = 0;
   document.getElementById('score').textContent = 0;
+  document.getElementById('time').textContent = '0:00';
   placeItems();
-  draw();
+  lastStep = performance.now();
+}
+function fmtT(ms) {
+  const m = Math.floor(ms / 60000), s = Math.floor(ms / 1000) % 60;
+  return m + ':' + String(s).padStart(2, '0');
 }
 function startGame() {
   reset();
   running = true;
+  t0 = Date.now();
   document.getElementById('overlay').classList.add('hidden');
-  clearTimeout(timer);
-  tick();
+  document.getElementById('ov-claim').classList.add('hidden');
+  clearTimeout(logicTimer);
+  step();
 }
 function endGame(msg) {
   running = false;
   dead = true;
-  clearTimeout(timer);
+  runMs = Date.now() - t0;
+  clearTimeout(logicTimer);
   if (score > best) {
     best = score;
     try { localStorage.setItem('smp_snakeHi', String(best)); } catch {}
     document.getElementById('best').textContent = best;
   }
   document.getElementById('ov-title').textContent = msg;
-  document.getElementById('ov-msg').textContent = 'You ate ' + score + ' apple' + (score === 1 ? '' : 's') + '.';
+  document.getElementById('ov-msg').textContent = 'You ate ' + score + ' apple' + (score === 1 ? '' : 's') + ' in ' + fmtT(runMs) + '.';
   document.getElementById('ov-btn').textContent = 'Play again';
   document.getElementById('overlay').classList.remove('hidden');
-  draw();
+  lbAfterRun();
 }
 function steer(x, y) {
   if (!running) return;
   if (x === -dir.x && y === -dir.y) return;
   nextDir = { x, y };
 }
-function tick() {
+function step() {
   dir = nextDir;
+  prev = snake.map(s => ({ ...s }));
   const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
   if (head.x < 0 || head.y < 0 || head.x >= G || head.y >= G) { endGame('Crashed into the wall'); return; }
   if (snake.some(s => s.x === head.x && s.y === head.y)) { endGame('Tied yourself in a knot'); return; }
@@ -159,13 +208,15 @@ function tick() {
   if (head.x === apple.x && head.y === apple.y) {
     score++;
     document.getElementById('score').textContent = score;
-    speed = Math.max(70, speed - 4);
+    speed = Math.max(75, speed - 4);
     placeItems();
   } else {
     snake.pop();
   }
-  draw();
-  timer = setTimeout(tick, speed);
+  while (prev.length < snake.length) prev.push({ ...prev[prev.length - 1] });
+  lastStep = performance.now();
+  if (running) document.getElementById('time').textContent = fmtT(Date.now() - t0);
+  logicTimer = setTimeout(step, speed);
 }
 const hasRound = typeof cx.roundRect === 'function';
 function rr(x, y, w, h, r) {
@@ -177,7 +228,8 @@ function rr(x, y, w, h, r) {
     cx.fillRect(x, y, w, h);
   }
 }
-function draw() {
+function draw(now) {
+  const t = running && !dead ? Math.min(1, (now - lastStep) / speed) : 1;
   cx.clearRect(0, 0, cv.width, cv.height);
   cx.fillStyle = 'rgba(147,148,165,.14)';
   for (let i = 0; i < G; i++) for (let j = 0; j < G; j++) if ((i + j) % 2) cx.fillRect(i * CELL, j * CELL, CELL, CELL);
@@ -188,38 +240,42 @@ function draw() {
     cx.lineWidth = 1;
     for (let l = 0; l < 3; l++) {
       cx.beginPath();
-      cx.moveTo(sh.x * CELL + 4, sh.y * CELL + 6 + l * 3.5);
-      cx.lineTo(sh.x * CELL + CELL - 4, sh.y * CELL + 6 + l * 3.5);
+      cx.moveTo(sh.x * CELL + 4, sh.y * CELL + 6 + l * 4);
+      cx.lineTo(sh.x * CELL + CELL - 4, sh.y * CELL + 6 + l * 4);
       cx.stroke();
     }
     cx.fillStyle = '#000';
-    cx.font = 'bold ' + (CELL * .62) + 'px Georgia';
+    cx.font = 'bold ' + (CELL * .6) + 'px Georgia';
     cx.textAlign = 'center';
     cx.textBaseline = 'middle';
     cx.fillText('\u266A', sh.x * CELL + CELL / 2, sh.y * CELL + CELL / 2 + 1);
   });
   cx.fillStyle = '#d93a3a';
   cx.beginPath();
-  cx.arc(apple.x * CELL + CELL / 2, apple.y * CELL + CELL / 2 + 1, CELL * .34, 0, Math.PI * 2);
+  cx.arc(apple.x * CELL + CELL / 2, apple.y * CELL + CELL / 2 + 1, CELL * .33, 0, Math.PI * 2);
   cx.fill();
   cx.fillStyle = '#2f8f46';
-  rr(apple.x * CELL + CELL / 2 - 1.5, apple.y * CELL + 3, 3, 5, 1.5);
+  rr(apple.x * CELL + CELL / 2 - 1.5, apple.y * CELL + 3.5, 3, 5, 1.5);
   snake.forEach((s, i) => {
+    const p = prev[i] || s;
+    const ix = (p.x + (s.x - p.x) * t) * CELL;
+    const iy = (p.y + (s.y - p.y) * t) * CELL;
     cx.fillStyle = i === 0 ? '#1f7a38' : dead ? '#9394a5' : '#2f8f46';
-    rr(s.x * CELL + 1.5, s.y * CELL + 1.5, CELL - 3, CELL - 3, i === 0 ? 6 : 4);
+    rr(ix + 1.5, iy + 1.5, CELL - 3, CELL - 3, i === 0 ? 6 : 4);
+    if (i === 0 && !dead) {
+      cx.fillStyle = '#fafafa';
+      const ex = ix + CELL / 2 + dir.x * 3;
+      const ey = iy + CELL / 2 + dir.y * 3;
+      cx.beginPath();
+      cx.arc(ex - (dir.y !== 0 ? 3.5 : 0), ey - (dir.x !== 0 ? 3.5 : 0), 2, 0, Math.PI * 2);
+      cx.arc(ex + (dir.y !== 0 ? 3.5 : 0), ey + (dir.x !== 0 ? 3.5 : 0), 2, 0, Math.PI * 2);
+      cx.fill();
+    }
   });
-  if (snake.length && !dead) {
-    const h = snake[0];
-    cx.fillStyle = '#fafafa';
-    const ex = h.x * CELL + CELL / 2 + dir.x * 3;
-    const ey = h.y * CELL + CELL / 2 + dir.y * 3;
-    cx.beginPath();
-    cx.arc(ex - (dir.y !== 0 ? 3.5 : 0), ey - (dir.x !== 0 ? 3.5 : 0), 2, 0, Math.PI * 2);
-    cx.arc(ex + (dir.y !== 0 ? 3.5 : 0), ey + (dir.x !== 0 ? 3.5 : 0), 2, 0, Math.PI * 2);
-    cx.fill();
-  }
+  requestAnimationFrame(draw);
 }
 document.addEventListener('keydown', e => {
+  if (e.target.closest('input')) return;
   const k = e.key;
   if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(k)) e.preventDefault();
   if (k === 'ArrowUp' || k === 'w' || k === 'W') steer(0, -1);
@@ -228,7 +284,88 @@ document.addEventListener('keydown', e => {
   else if (k === 'ArrowRight' || k === 'd' || k === 'D') steer(1, 0);
   else if ((k === ' ' || k === 'Enter') && !running) startGame();
 });
+let touchStart = null;
+cv.addEventListener('touchstart', e => { touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }, { passive: true });
+cv.addEventListener('touchmove', e => {
+  if (!touchStart) return;
+  const dx = e.touches[0].clientX - touchStart.x;
+  const dy = e.touches[0].clientY - touchStart.y;
+  if (Math.abs(dx) < 22 && Math.abs(dy) < 22) return;
+  if (Math.abs(dx) > Math.abs(dy)) steer(dx > 0 ? 1 : -1, 0);
+  else steer(0, dy > 0 ? 1 : -1);
+  touchStart = null;
+  e.preventDefault();
+}, { passive: false });
+let fb = null;
+let lbOn = true;
+let lastRun = null;
+async function fbInit() {
+  if (fb) return fb;
+  const appMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+  const fsMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+  const app = appMod.initializeApp(FIREBASE_CONFIG);
+  fb = { db: fsMod.getFirestore(app), fs: fsMod };
+  return fb;
+}
+function lbSort(a, b) { return (b.apples - a.apples) || (a.timeMs - b.timeMs); }
+async function lbFetch() {
+  const { db, fs } = await fbInit();
+  const snap = await fs.getDocs(fs.query(fs.collection(db, 'lbSnake'), fs.orderBy('apples', 'desc'), fs.limit(50)));
+  const rows = [];
+  snap.forEach(d => { const x = d.data(); if (x && typeof x.apples === 'number') rows.push(x); });
+  return rows.sort(lbSort).slice(0, 10);
+}
+function lbRender(rows) {
+  const list = document.getElementById('lb-list');
+  const status = document.getElementById('lb-status');
+  if (!rows.length) { status.textContent = 'No scores yet. Be the first.'; list.innerHTML = ''; return; }
+  status.textContent = '';
+  list.innerHTML = rows.map((r, i) =>
+    '<li><span class="rk">' + (i + 1) + '.</span><span class="nm"></span><span class="ap">' + r.apples + ' \uD83C\uDF4E</span><span class="tm">' + fmtT(r.timeMs) + '</span></li>').join('');
+  list.querySelectorAll('.nm').forEach((el, i) => { el.textContent = rows[i].name; });
+}
+async function lbBoot() {
+  try {
+    const { db, fs } = await fbInit();
+    try {
+      const doc = await fs.getDoc(fs.doc(db, 'site', 'content'));
+      const g = doc.exists() && doc.data().games;
+      if (g && g.snakeLB === false) { lbOn = false; return; }
+    } catch {}
+    document.getElementById('lb-wrap').classList.remove('hidden');
+    lbRender(await lbFetch());
+  } catch {
+    document.getElementById('lb-wrap').classList.remove('hidden');
+    document.getElementById('lb-status').textContent = 'Leaderboard unavailable right now.';
+  }
+}
+async function lbAfterRun() {
+  if (!lbOn || score < 1) return;
+  try {
+    const rows = await lbFetch();
+    lbRender(rows);
+    lastRun = { apples: score, timeMs: runMs };
+    if (rows.length < 10 || lbSort(lastRun, rows[rows.length - 1]) < 0) {
+      document.getElementById('ov-claim').classList.remove('hidden');
+    }
+  } catch {}
+}
+async function lbSubmit() {
+  const v = validName(document.getElementById('lb-name').value);
+  if (!v.ok) { document.getElementById('ov-msg').textContent = v.msg; return; }
+  try {
+    const { db, fs } = await fbInit();
+    await fs.addDoc(fs.collection(db, 'lbSnake'), { name: v.name, apples: lastRun.apples, timeMs: lastRun.timeMs, ts: Date.now() });
+    document.getElementById('ov-claim').classList.add('hidden');
+    document.getElementById('ov-msg').textContent = 'On the board.';
+    lbRender(await lbFetch());
+  } catch {
+    document.getElementById('ov-msg').textContent = 'Could not submit \u2014 check the Firestore rules.';
+  }
+}
 reset();
+requestAnimationFrame(draw);
+lbBoot();
 </script>
 </body>
 </html>
