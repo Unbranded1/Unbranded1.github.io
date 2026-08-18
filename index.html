@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth boot">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<style>html.boot body{opacity:0}body{opacity:1;transition:opacity .15s ease}</style>
+<noscript><style>html.boot body{opacity:1}</style></noscript>
+<script>setTimeout(function(){document.documentElement.classList.remove('boot')},1500)</script>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://www.youtube.com https://www.gstatic.com https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.github.com https://*.goatcounter.com; form-action https://formspree.io; base-uri 'self'; object-src 'none'" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <link rel="manifest" href="manifest.json" />
@@ -125,6 +128,11 @@ html { scrollbar-width: thin; scrollbar-color: rgb(var(--c-line)) transparent; }
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:rgb(var(--c-line)); border-radius:999px; border:2px solid rgb(var(--c-bg)); }
 ::-webkit-scrollbar-thumb:hover { background:rgb(var(--c-accent)/.6); }
+body.audio-open #back-to-top { bottom:9.5rem; }
+@media (min-width:640px) { body.audio-open #back-to-top { bottom:5.5rem; } }
+body.audio-open footer { padding-bottom:9rem; }
+html.inapp body { padding-top:2rem; }
+html.inapp header { top:2rem; }
 .mnav { max-height:0; overflow:hidden; opacity:0; padding-top:0; padding-bottom:0; border-top:0 solid rgb(var(--c-line)/.7); transition: max-height calc(.3s/var(--speed,1)) ease, opacity calc(.25s/var(--speed,1)) ease, padding calc(.3s/var(--speed,1)) ease; }
 .mnav.open { max-height:20rem; opacity:1; padding-top:.75rem; padding-bottom:.75rem; border-top-width:1px; }
 @media (max-width:640px) { .chip { padding:.55rem .95rem; } #mobile-menu a { padding:.4rem 0; } .tab-btn { padding-top:.65rem; padding-bottom:.65rem; } .vote-btn { padding:.4rem .7rem; } }
@@ -179,6 +187,10 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
 </head>
 
 <body class="bg-base text-ink antialiased min-h-screen flex flex-col">
+<div id="inapp-bar" class="hidden fixed top-0 inset-x-0 z-[55] h-8 bg-ink text-oninv text-xs font-semibold flex items-center justify-center gap-2 px-3">
+  <button onclick="openExternalBrowser()" class="underline decoration-1 underline-offset-2 truncate">Built for a full browser &mdash; issues may occur here. Tap to open in your browser</button>
+  <button onclick="dismissInapp()" class="shrink-0 px-1.5" aria-label="Dismiss">&#10005;</button>
+</div>
 <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[80] focus:rounded-xl focus:bg-ink focus:text-oninv focus:px-4 focus:py-2 focus:text-sm focus:font-bold">Skip to content</a>
 
 <header class="sticky top-0 z-50 border-b border-line/70 bg-base/90 backdrop-blur">
@@ -227,6 +239,18 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
       <p data-edit="heroEyebrow" class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-6">&mdash; Arranger &middot; Transcriber &middot; Musician</p>
       <h1 data-edit="heroHeading" class="font-display text-5xl sm:text-7xl font-bold tracking-tight text-ink leading-[1.02] max-w-4xl">Sheet Music &amp; Arrangements</h1>
       <p data-edit="heroSub" class="mt-6 text-lg text-mute max-w-2xl">Personal portfolio for original arrangements, transcriptions, and custom sheet music.</p>
+      <div class="mt-8 max-w-2xl">
+    <details class="help-block rounded-2xl border border-line bg-surface mb-8 group">
+      <summary class="cursor-pointer list-none px-5 py-3.5 flex items-center justify-between gap-3">
+        <span data-edit="helpTitle" class="font-display text-base font-bold text-ink">&#63; How it works</span>
+        <span class="text-faint text-sm group-open:rotate-180 transition-transform">&#9662;</span>
+      </summary>
+      <div class="px-5 pb-5 text-sm text-mute space-y-2.5">
+        <p data-edit="homeHelp1">This is my sheet music portfolio. Published Scores holds finished arrangements with videos and store links, the Vote page decides what I arrange next, and friends with the passcode get the private vault.</p>
+        <p data-edit="homeHelp2">Settings in the menu has inverted colors, text size and more. This is V0.9 — if you find a bug, tell me through the contact form below or on Instagram.</p>
+      </div>
+    </details>
+      </div>
       <p id="stats-strip" class="mt-8 text-xs font-semibold tracking-[0.2em] uppercase text-faint"></p>
       <div id="now-arranging" class="hidden mt-6 inline-flex items-center gap-3 rounded-xl border border-accent/50 bg-sunken px-4 py-2.5 text-sm">
         <span class="w-2 h-2 rounded-full bg-accent animate-pulse" aria-hidden="true"></span>
@@ -309,6 +333,16 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
         <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Members Only</p>
         <h2 data-edit="vaultTitle" class="font-display text-3xl font-bold text-ink">Exclusive Friends Vault</h2>
         <p data-edit="vaultSub" class="text-mute text-sm mt-2">Private drafts and works in progress, shared with friends only.</p>
+    <details class="help-block rounded-2xl border border-line bg-surface mb-8 group">
+      <summary class="cursor-pointer list-none px-5 py-3.5 flex items-center justify-between gap-3">
+        <span data-edit="helpTitle" class="font-display text-base font-bold text-ink">&#63; How it works</span>
+        <span class="text-faint text-sm group-open:rotate-180 transition-transform">&#9662;</span>
+      </summary>
+      <div class="px-5 pb-5 text-sm text-mute space-y-2.5">
+        <p data-edit="vaultHelp1">These are drafts and private arrangements — please keep them between us.</p>
+        <p data-edit="vaultHelp2">Buttons on each score: Drive opens the folder with every part, PDF grabs a single file, MuseScore opens the online score, and play starts a recording when one exists.</p>
+      </div>
+    </details>
       </div>
       <div class="flex items-center rounded-xl border border-line bg-surface overflow-hidden" role="group" aria-label="Vault layout">
         <button class="seg-btn px-3 py-1.5 text-sm text-mute" data-layout-btn="vault-grid" aria-pressed="true" onclick="setLayout('vault','grid')" title="Grid view" aria-label="Grid layout">&#9638;</button>
@@ -553,6 +587,17 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
         <div data-tabpanel="games" class="hidden">
           <h3 class="font-display text-xl font-bold text-ink mb-1.5">Games</h3>
           <p class="text-sm text-mute mb-6 max-w-2xl">Control the toys. Changes publish for everyone.</p>
+          <div class="mb-8 max-w-md rounded-2xl border border-danger/40 p-4">
+            <h4 class="font-bold text-ink mb-2">Site status</h4>
+            <label class="flex items-center justify-between gap-4 mb-3"><span class="text-sm text-mute">Take the entire site down</span><input id="st-down" type="checkbox" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-danger))]" /></label>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-sm text-mute flex-1">Estimated downtime</span>
+              <input id="st-eta-h" type="number" min="0" max="720" placeholder="h" aria-label="Estimated downtime hours" class="w-16 rounded-xl bg-sunken border border-line px-2.5 py-1.5 text-sm focus:border-admin" />
+              <input id="st-eta-m" type="number" min="0" max="59" placeholder="m" aria-label="Estimated downtime minutes" class="w-16 rounded-xl bg-sunken border border-line px-2.5 py-1.5 text-sm focus:border-admin" />
+            </div>
+            <p class="text-xs text-faint mb-3">Leave both empty for &ldquo;unknown&rdquo;. The Games page stays reachable from the downtime screen unless you turn it off below. The 404 snake always works.</p>
+            <button onclick="adminSaveSiteStatus()" class="rounded-xl bg-danger px-5 py-2.5 text-sm font-bold text-oninv hover:bg-danger-hi">Save site status</button>
+          </div>
           <div class="space-y-4 max-w-md">
             <label class="flex items-center justify-between gap-4"><span class="text-sm text-mute">Show the Games page (quiz)</span><input id="ga-quiz" type="checkbox" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-admin))]" /></label>
             <label class="flex items-center justify-between gap-4"><span class="text-sm text-mute">Snake leaderboard (404 page)</span><input id="ga-snakelb" type="checkbox" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-admin))]" /></label>
@@ -599,6 +644,17 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
         <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Public Catalog</p>
         <h2 data-edit="catalogTitle" class="font-display text-4xl sm:text-5xl font-bold text-ink mb-3">Published Sheet Music</h2>
         <p data-edit="catalogSub" class="text-mute mb-6 max-w-2xl">Every published arrangement, with performance video, tags, and store links.</p>
+    <details class="help-block rounded-2xl border border-line bg-surface mb-8 group">
+      <summary class="cursor-pointer list-none px-5 py-3.5 flex items-center justify-between gap-3">
+        <span data-edit="helpTitle" class="font-display text-base font-bold text-ink">&#63; How it works</span>
+        <span class="text-faint text-sm group-open:rotate-180 transition-transform">&#9662;</span>
+      </summary>
+      <div class="px-5 pb-5 text-sm text-mute space-y-2.5">
+        <p data-edit="scoresHelp1">Every card is a finished arrangement. Tap a card for details, the play button to hear it, and the store buttons to get the sheet music.</p>
+        <p data-edit="scoresHelp2">The search box, the instrument dropdown and the genre chips stack together to narrow things down.</p>
+        <p data-edit="scoresHelp3">Want something that is not here yet? Head to the Vote page and suggest it.</p>
+      </div>
+    </details>
       </div>
       <div class="flex items-center rounded-xl border border-line bg-surface overflow-hidden mb-6" role="group" aria-label="Catalog layout">
         <button class="seg-btn px-3 py-1.5 text-sm text-mute" data-layout-btn="catalog-grid" aria-pressed="true" onclick="setLayout('catalog','grid')" title="Grid view" aria-label="Grid layout">&#9638;</button>
@@ -622,6 +678,17 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
       <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Community</p>
       <h2 data-edit="votingTitle" class="font-display text-4xl sm:text-5xl font-bold text-ink">Vote for the Next Arrangement</h2>
       <p data-edit="votingSub" class="text-mute text-sm mt-3 mb-6">One vote per song, per visitor. The board re-sorts live as votes come in.</p>
+    <details class="help-block rounded-2xl border border-line bg-surface mb-8 group">
+      <summary class="cursor-pointer list-none px-5 py-3.5 flex items-center justify-between gap-3">
+        <span data-edit="helpTitle" class="font-display text-base font-bold text-ink">&#63; How it works</span>
+        <span class="text-faint text-sm group-open:rotate-180 transition-transform">&#9662;</span>
+      </summary>
+      <div class="px-5 pb-5 text-sm text-mute space-y-2.5">
+        <p data-edit="voteHelp1">Vote once per song — up if you want it arranged, down if you do not. The board re-sorts live and the bar under each row shows relative support.</p>
+        <p data-edit="voteHelp2">Press play to preview a song. A player bar appears at the bottom of the screen with a draggable progress slider.</p>
+        <p data-edit="voteHelp3">In progress means I am working on it, and Arranged links to the finished score. Suggest new songs with the form below — adding your name is optional.</p>
+      </div>
+    </details>
       <div id="hint-vote" class="mb-6"></div>
       <ul id="voting-board" class="space-y-3"></ul>
 
@@ -639,6 +706,10 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
               <input id="sg-artist" name="artist" type="text" required placeholder="e.g. YOASOBI" class="w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink placeholder-faint focus:border-accent" />
             </label>
           </div>
+          <label class="block">
+            <span class="block text-xs font-semibold text-mute mb-1.5">Your Name / Username <span class="text-faint font-normal">(optional)</span></span>
+            <input id="sg-user" name="suggested_by" type="text" maxlength="40" placeholder="Who&rsquo;s asking?" class="w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink placeholder-faint focus:border-accent" />
+          </label>
           <label class="block">
             <span class="block text-xs font-semibold text-mute mb-1.5">YouTube Link <span class="text-faint font-normal">(optional)</span></span>
             <input id="sg-youtube" name="youtube_link" type="text" placeholder="https://youtube.com/watch?v=&hellip;" class="w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink placeholder-faint focus:border-accent" />
@@ -667,12 +738,34 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
 
 <div id="view-games" class="hidden">
   <section class="mx-auto max-w-4xl px-4 sm:px-6 py-14 sect scroll-mt-20">
-    <p class="text-xs font-bold tracking-[.22em] text-faint uppercase mb-2">Games</p>
-    <h2 class="font-display text-3xl sm:text-4xl font-bold text-ink mb-2">The Music Quiz</h2>
-    <p class="text-sm text-mute mb-8 max-w-xl">500 questions. Three lives. The clock is short and the pity is real. A correct very-hard answer earns a life back. There is also a <a href="404.html" class="text-accent underline decoration-2 underline-offset-2">snake game</a> hiding on the 404 page.</p>
+    <p data-edit="gamesEyebrow" class="text-xs font-bold tracking-[.22em] text-faint uppercase mb-2">Games</p>
+    <h2 data-edit="gamesTitle" class="font-display text-3xl sm:text-4xl font-bold text-ink mb-2">The Music Quiz</h2>
+    <p class="text-sm text-mute mb-8 max-w-xl"><span data-edit="gamesIntro">500 questions. Three lives. The clock is short and the pity is real. A correct very-hard answer earns a life back.</span> <a href="404.html" class="text-accent underline decoration-2 underline-offset-2">There is also a snake hiding on the 404 page.</a></p>
+    <details id="games-help" class="help-block rounded-2xl border border-line bg-surface mb-6 group">
+      <summary class="cursor-pointer list-none px-6 py-4 flex items-center justify-between gap-3">
+        <span data-edit="helpTitle" class="font-display text-lg font-bold text-ink">&#63; How it works</span>
+        <span class="text-faint text-sm group-open:rotate-180 transition-transform">&#9662;</span>
+      </summary>
+      <div class="px-6 pb-6 text-sm text-mute space-y-4">
+        <div>
+          <p data-edit="gamesHelpH1" class="font-bold text-ink mb-1">The quiz</p>
+          <p data-edit="gamesHelp1">500 questions, drawn so nothing repeats in a run: 150 easy, 250 normal, 50 hard, 50 very hard. You start with 3 lives — a wrong answer or a timeout costs one, a correct very hard answer gives one back (max 5). Easy and normal give you 5 seconds; hard and very hard give 10. On a keyboard, keys 1 to 4 answer instantly.</p>
+        </div>
+        <div>
+          <p data-edit="gamesHelpH2" class="font-bold text-ink mb-1">The pity bar</p>
+          <p data-edit="gamesHelp2">Easy answers add 10, normal add 5. Each time the bar climbs another 50, a hard question arrives and knocks it back 50. Fill it to 250 and a very hard question is guaranteed, costing 100. You never get a hard question immediately after a very hard one, and yes — the bar can go negative.</p>
+          <p class="mt-1.5"><span style="color:#2f8f46" class="font-semibold">Easy</span> &middot; <span style="color:#a8871d" class="font-semibold">Normal</span> &middot; <span style="color:#c53b3b" class="font-semibold">Hard</span> &middot; <span style="color:#7a2430" class="font-semibold">Very hard</span></p>
+        </div>
+        <div>
+          <p data-edit="gamesHelpH3" class="font-bold text-ink mb-1">Leaderboards</p>
+          <p data-edit="gamesHelp3">Top 10, ranked by questions answered, then correct answers, then time. Land on it and you can claim it with a name of 3 to 13 characters — keep it clean. The info mark on any entry reveals that player&rsquo;s difficulty breakdown. The snake on the 404 page has its own board: apples eaten, then fastest time. Swipe, arrows or WASD; apples feed you, sheet music kills you.</p>
+        </div>
+        <p data-edit="gamesHelp4" class="text-faint text-xs">Annoying mode has its own way out. Good luck finding it.</p>
+      </div>
+    </details>
     <div id="quiz-idle" class="rounded-2xl border border-line bg-surface p-8 text-center">
       <button onclick="quizStart()" class="rounded-xl bg-accent px-8 py-3 font-bold text-oninv hover:bg-accent-hi transition-colors">Start quiz</button>
-      <p class="text-xs text-faint mt-3">Easy &amp; normal: 5s &middot; Hard &amp; very hard: 10s &middot; Keys 1&ndash;4 work on a keyboard</p>
+      <p data-edit="quizIdleHint" class="text-xs text-faint mt-3">Easy &amp; normal: 5s &middot; Hard &amp; very hard: 10s &middot; Keys 1&ndash;4 work on a keyboard</p>
     </div>
     <div id="quiz-play" class="hidden">
       <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm mb-4">
@@ -702,7 +795,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
       </div>
     </div>
     <div id="quiz-over" class="hidden rounded-2xl border border-line bg-surface p-8">
-      <p class="font-display text-3xl font-bold text-ink mb-1">Run over</p>
+      <p data-edit="quizOverTitle" class="font-display text-3xl font-bold text-ink mb-1">Run over</p>
       <p id="qz-final" class="text-sm text-mute mb-6"></p>
       <div id="qz-lb-slot"></div>
       <button onclick="quizStart()" class="mt-6 rounded-xl bg-accent px-6 py-2.5 font-bold text-oninv hover:bg-accent-hi">Play again</button>
@@ -720,6 +813,15 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
         <span id="portal-status-badge" class="hidden text-xs font-bold tracking-wider px-3 py-1.5 rounded-full border"></span>
       </div>
       <p data-edit="portalSub" class="text-mute text-sm mb-6 relative">Enter the friends passcode to unlock the private sheet music vault.</p>
+    <details class="help-block rounded-2xl border border-line bg-surface mb-8 group">
+      <summary class="cursor-pointer list-none px-5 py-3.5 flex items-center justify-between gap-3">
+        <span data-edit="helpTitle" class="font-display text-base font-bold text-ink">&#63; How it works</span>
+        <span class="text-faint text-sm group-open:rotate-180 transition-transform">&#9662;</span>
+      </summary>
+      <div class="px-5 pb-5 text-sm text-mute space-y-2.5">
+        <p data-edit="portalHelp1">Enter the passcode I gave you and the vault unlocks on this device — no account needed. If the code does not work, ask me; it may have changed.</p>
+      </div>
+    </details>
       <div class="flex flex-col sm:flex-row gap-3 relative">
         <input id="passcode-input" autocapitalize="none" autocorrect="off" spellcheck="false" type="text" autocomplete="off" spellcheck="false" placeholder="Friends passcode&hellip;" class="flex-1 rounded-xl bg-sunken border border-line px-4 py-2.5 font-mono text-accent placeholder-faint focus:border-accent" />
         <button onclick="unlockAccess()" class="rounded-xl bg-accent px-6 py-2.5 font-bold text-oninv hover:bg-accent-hi transition-colors">Unlock</button>
@@ -781,7 +883,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
     <h3 id="intro-title" class="font-display text-2xl font-bold text-ink mb-3"></h3>
     <div id="intro-body" class="text-sm text-mute space-y-2"></div>
     <div class="mt-6 flex justify-end">
-      <button id="intro-btn" onclick="closeIntro()" class="rounded-xl bg-accent px-5 py-2 text-sm font-bold text-oninv hover:bg-accent-hi"></button>
+      <button id="intro-btn" onclick="closeIntro()" aria-label="Close introduction" class="rounded-xl bg-accent px-5 py-2 text-sm font-bold text-oninv hover:bg-accent-hi"></button>
     </div>
   </div>
 </dialog>
@@ -796,6 +898,32 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
   </div>
 </dialog>
 
+<div id="downtime-overlay" data-annoy-exempt class="hidden fixed inset-0 z-[80] bg-base overflow-y-auto">
+  <div class="min-h-full grid place-items-center px-4 py-16">
+    <div class="max-w-md w-full text-center">
+      <p class="font-display text-xl font-bold text-ink mb-8"><span data-edit="logo"></span></p>
+      <p class="font-display text-5xl font-bold text-ink mb-3">&#9835;</p>
+      <h2 data-edit="dtTitle" class="font-display text-3xl font-bold text-ink mb-2">Down for maintenance</h2>
+      <p data-edit="dtSub" class="text-sm text-mute mb-6">The site is temporarily offline while things get fixed and improved. Check back soon.</p>
+      <div class="rounded-2xl border border-line bg-surface p-5 text-sm space-y-2 mb-6">
+        <p class="text-mute"><span data-edit="dtActiveLabel">Downtime has been active for</span> <strong id="dt-timer" class="text-ink tabular-nums">0:00:00</strong></p>
+        <p class="text-mute"><span data-edit="dtEtaLabel">Estimated downtime:</span> <strong id="dt-eta" class="text-ink">unknown</strong></p>
+      </div>
+      <button id="dt-games-btn" onclick="downtimePlay()" class="hidden rounded-xl bg-accent px-6 py-2.5 font-bold text-oninv hover:bg-accent-hi"><span data-edit="dtPlay">Play the quiz while you wait &rarr;</span></button>
+      <p class="mt-8"><button onclick="openAdminFromDowntime()" class="text-xs text-faint hover:text-mute">admin</button></p>
+    </div>
+  </div>
+</div>
+<dialog id="disclaimer-modal" data-annoy-exempt class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(92vw,26rem)]">
+  <div class="p-6">
+    <div class="flex items-start justify-between gap-3 mb-2">
+      <h3 data-edit="discTitle" class="font-display text-xl font-bold text-ink">Heads up</h3>
+      <span data-edit="verTag" class="text-[11px] font-bold rounded-full border border-line px-2 py-0.5 text-faint shrink-0">V0.9</span>
+    </div>
+    <p data-edit="discBody" class="text-sm text-mute mb-5">This site is under development &mdash; issues may occur. If you find one, contact me through the contact page or Instagram.</p>
+    <button onclick="closeDisclaimer()" class="w-full rounded-xl bg-accent px-5 py-2.5 font-bold text-oninv hover:bg-accent-hi">Got it</button>
+  </div>
+</dialog>
 <dialog id="settings-modal" data-annoy-exempt class="rounded-2xl bg-surface border border-line p-0 text-ink w-[min(92vw,26rem)]">
   <div class="p-6">
     <div class="flex items-start justify-between gap-3 mb-4">
@@ -875,11 +1003,25 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
   <button onclick="endDance()" class="pointer-events-auto fixed bottom-6 left-1/2 -translate-x-1/2 z-[65] rounded-xl bg-ink px-6 py-2.5 text-sm font-bold text-oninv shadow-2xl hover:bg-danger">&#9888; REMOVE VIRUS</button>
 </div>
 
+<div id="audio-bar" class="hidden fixed bottom-0 inset-x-0 z-40 border-t border-line bg-surface/95 backdrop-blur">
+  <div class="max-w-3xl mx-auto flex items-center gap-3 px-4 py-2.5">
+    <button id="ab-toggle" onclick="audioBarToggle()" class="shrink-0 w-9 h-9 grid place-items-center rounded-full border border-accent text-accent bg-accent/10 text-sm" aria-label="Pause">&#10074;&#10074;</button>
+    <div class="min-w-0 flex-1">
+      <p id="ab-title" class="text-xs font-semibold text-ink truncate">Now playing</p>
+      <div class="flex items-center gap-2">
+        <span id="ab-cur" class="text-[11px] text-faint tabular-nums shrink-0">0:00</span>
+        <input id="ab-seek" type="range" min="0" max="0" value="0" step="1" oninput="audioSeekInput()" onchange="audioSeekCommit()" class="flex-1 h-1.5 accent-[rgb(var(--c-accent))] cursor-pointer" aria-label="Seek" />
+        <span id="ab-dur" class="text-[11px] text-faint tabular-nums shrink-0">0:00</span>
+      </div>
+    </div>
+    <button onclick="audioBarClose()" class="shrink-0 w-8 h-8 grid place-items-center rounded-full border border-line text-mute hover:text-ink text-xs" aria-label="Close player">&#10005;</button>
+  </div>
+</div>
 <button id="back-to-top" onclick="scrollTopSmooth()" aria-label="Back to top" class="fixed bottom-20 right-4 sm:bottom-6 sm:right-5 z-40 w-10 h-10 grid place-items-center rounded-full border border-line bg-surface/90 backdrop-blur text-mute hover:text-accent hover:border-accent shadow-lg">&#8593;</button>
 
 <div class="fixed -left-[9999px] bottom-0" aria-hidden="true"><div id="yt-audio-player"></div></div>
 
-<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] hidden rounded-xl px-5 py-3 text-sm shadow-2xl border"></div>
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] hidden rounded-xl px-5 py-3 text-sm shadow-2xl border"></div>
 
 <script>
 'use strict';
@@ -892,6 +1034,7 @@ const LS = {
   social: 'smp_social',
   ghToken: 'smp_ghToken',
   games: 'smp_games',
+  siteStatus: 'smp_siteStatus',
   texts: 'smp_texts',
   layout: 'smp_layout',
   featured: 'smp_featured',
@@ -963,7 +1106,22 @@ const TEXT_LABELS = {
   vaultSub: 'Friends Vault subtitle',
   catalogTitle: 'Published catalog title',
   catalogSub: 'Published catalog subtitle',
-  footerNote: 'Footer note'
+  footerNote: 'Footer note',
+  helpTitle: 'Help panel title (all pages)',
+  homeHelp1: 'Home help: paragraph 1', homeHelp2: 'Home help: paragraph 2',
+  scoresHelp1: 'Scores help: paragraph 1', scoresHelp2: 'Scores help: paragraph 2', scoresHelp3: 'Scores help: paragraph 3',
+  voteHelp1: 'Vote help: paragraph 1', voteHelp2: 'Vote help: paragraph 2', voteHelp3: 'Vote help: paragraph 3',
+  portalHelp1: 'Friends portal help',
+  vaultHelp1: 'Vault help: paragraph 1', vaultHelp2: 'Vault help: paragraph 2',
+  gamesEyebrow: 'Games eyebrow line', gamesTitle: 'Games page title', gamesIntro: 'Games intro paragraph',
+  gamesHelpH1: 'Games help: quiz heading', gamesHelp1: 'Games help: quiz paragraph',
+  gamesHelpH2: 'Games help: pity heading', gamesHelp2: 'Games help: pity paragraph',
+  gamesHelpH3: 'Games help: leaderboard heading', gamesHelp3: 'Games help: leaderboard paragraph',
+  gamesHelp4: 'Games help: cryptic footer line',
+  quizIdleHint: 'Quiz start hint line', quizOverTitle: 'Quiz game-over title',
+  dtTitle: 'Downtime page title', dtSub: 'Downtime page subtitle',
+  dtActiveLabel: 'Downtime timer label', dtEtaLabel: 'Downtime ETA label', dtPlay: 'Downtime games button',
+  discTitle: 'Disclaimer title', discBody: 'Disclaimer body', verTag: 'Version badge'
 };
 const DEFAULT_TEXTS = {};
 
@@ -1011,7 +1169,8 @@ const DEFAULTS = {
   ],
   social: { youtube:'https://www.youtube.com/@unbranded_branden', instagram:'https://instagram.com/unbranded_branden', downloads:'' },
   genres: DEFAULT_GENRES,
-  games: { quiz:true, snakeLB:true, annoyAllowed:true, adFreq:'occasional' },
+  games: { quiz:true, snakeLB:true, annoyAllowed:true, adFreq:'relentless' },
+  siteStatus: { down:false, downSince:0, etaMin:'' },
   layout: { vault:'grid', catalog:'grid' },
   faq: [
     { id:'faq-1', q:'Can I request a song?', a:'Yes — use the suggestion form on the Vote page, or upvote it if it is already on the board.' },
@@ -1140,8 +1299,11 @@ function loadState() {
   if (typeof state.social.downloads !== 'string') state.social.downloads = '';
   state.games = loadContent(LS.games, 'games', DEFAULTS.games);
   if (!state.games || typeof state.games !== 'object' || Array.isArray(state.games)) state.games = clone(DEFAULTS.games);
-  state.games = { quiz: state.games.quiz !== false, snakeLB: state.games.snakeLB !== false, annoyAllowed: state.games.annoyAllowed !== false, adFreq: ['occasional','frequent','relentless'].includes(state.games.adFreq) ? state.games.adFreq : 'occasional' };
+  state.games = { quiz: state.games.quiz !== false, snakeLB: state.games.snakeLB !== false, annoyAllowed: state.games.annoyAllowed !== false, adFreq: ['occasional','frequent','relentless'].includes(state.games.adFreq) ? state.games.adFreq : 'relentless' };
   state.genres = loadContent(LS.genres, 'genres', DEFAULTS.genres);
+  state.siteStatus = loadContent(LS.siteStatus, 'siteStatus', DEFAULTS.siteStatus);
+  if (!state.siteStatus || typeof state.siteStatus !== 'object' || Array.isArray(state.siteStatus)) state.siteStatus = clone(DEFAULTS.siteStatus);
+  state.siteStatus = { down: state.siteStatus.down === true, downSince: typeof state.siteStatus.downSince === 'number' ? state.siteStatus.downSince : 0, etaMin: typeof state.siteStatus.etaMin === 'number' && state.siteStatus.etaMin > 0 ? state.siteStatus.etaMin : '' };
   if (!Array.isArray(state.genres)) state.genres = clone(DEFAULTS.genres);
   state.genres = state.genres.filter(g => typeof g === 'string' && g.trim()).map(g => g.trim());
   state.texts = loadContent(LS.texts, 'texts', {});
@@ -1495,18 +1657,39 @@ function annoySet(on) {
   }
 }
 function adInterval() {
-  const f = (state.games && state.games.adFreq) || 'occasional';
-  return f === 'relentless' ? 12000 : f === 'frequent' ? 25000 : 45000;
+  const f = (state.games && state.games.adFreq) || 'relentless';
+  return f === 'relentless' ? 2000 : f === 'frequent' ? 15000 : 35000;
 }
 function annoyAds() {
   spawnAd();
   adTimer = setInterval(spawnAd, adInterval());
 }
+const annoyShown = new Set();
+const GENERIC_ADS = [
+  { t:'HOT SINGLE OBOES IN YOUR AREA', b:'They exist. Apparently.', c:'MEET THEM' },
+  { t:'CONGRATULATIONS!!!', b:'You are the 1,000,000th visitor. Your prize: one (1) free clarinet.', c:'CLAIM PRIZE' },
+  { t:'DOWNLOAD MORE FORTISSIMO', b:'Doctors hate this one weird dynamic.', c:'DOWNLOAD' },
+  { t:'YOUR FREE TRIAL OF MUSIC HAS EXPIRED', b:'Renew now for only $0.00/month.', c:'RENEW' },
+  { t:'ONE WEIRD TRICK', b:'Composers HATE him. Learn circle of fifths in your sleep.', c:'LEARN MORE' },
+  { t:'VIRUS DETECTED (REAL)', b:'A treble clef is eating your files. This popup is definitely legitimate.', c:'FIX NOW' },
+  { t:'FREE METRONOME', b:'Batteries, screen, casing and ticking sold separately.', c:'GET IT' },
+  { t:'ARE YOU STILL WATCHING?', b:'You have not clicked anything in 4 seconds.', c:'I AM ALIVE' },
+  { t:'PUBLIC SAFETY NOTICE', b:'Clarinets remain legal in most regions. Stay vigilant.', c:'REPORT ONE' },
+  { t:'PRODUCT RECALL', b:'All clarinets. Reason: clarinet.', c:'RETURN YOURS' },
+  { t:'STUDY FINDS', b:'9 out of 10 dentists could not explain the clarinet either.', c:'READ STUDY' },
+  { t:'BREAKING NEWS', b:'Flute does it again. Flawless. Iconic. Correct as usual.', c:'WITNESS IT' },
+  { t:'LIMITED DROP', b:'Air, but elegant. The flute understands things you never will.', c:'ASCEND' },
+  { t:'SCIENTISTS CONFIRM', b:'Flutes have been right this whole time.', c:'OBVIOUSLY' },
+  { t:'MISSING: EVERYONE&rsquo;S DYNAMICS', b:'Last seen near a trumpet section.', c:'FILE REPORT' },
+  { t:'NOISE COMPLAINT #4417', b:'It was the trumpets. It is always the trumpets.', c:'AGREE' },
+  { t:'TRUMPET FLASH SALE', b:'Takes everything from you. Now only 500 sheets.', c:'NO THANKS' },
+  { t:'HOT SINGLE BASSOONS IN YOUR AREA', b:'Tall. Mysterious. Double reeds.', c:'MEET THEM' },
+  { t:'HOT SINGLE VIOLAS IN YOUR AREA', b:'They can read alto clef. Can you?', c:'IMPRESS THEM' },
+  { t:'HOT SINGLE TUBAS NEAR YOU', b:'Quantity available: one (1).', c:'CLAIM TUBA' },
+  { t:'BUY ONE FLUTE', b:'Get 100 clarinets FREE.* (*No refunds. We are trying to get rid of them.)', c:'BUY NOW' }
+];
 function spawnAd() {
   if (!annoying) return;
-  const pool = [...state.catalog.map(x => ({ x, kind:'catalog' })), ...state.vault.map(x => ({ x, kind:'vault' }))];
-  if (!pool.length) return;
-  const pick = pool[Math.floor(Math.random() * pool.length)];
   const ads = document.querySelectorAll('.annoy-ad');
   if (ads.length >= 3) ads[0].remove();
   const d = document.createElement('div');
@@ -1515,10 +1698,20 @@ function spawnAd() {
   d.style.zIndex = 60;
   d.style.left = (8 + Math.random() * 55) + 'vw';
   d.style.top = (12 + Math.random() * 55) + 'vh';
-  d.innerHTML = `<div class="vp-bar"><span>HOT SHEET MUSIC DEAL</span><button onclick="this.closest('.annoy-ad').remove()" aria-label="Close ad">&#10005;</button></div>
-    <div class="vp-body"><strong>${esc(pick.x.title)}</strong><br><span class="text-mute">${esc(pick.x.artist || 'a mystery artist')}</span><br>
-    <button onclick="openScore('${pick.kind}','${pick.x.id}');this.closest('.annoy-ad').remove()" class="mt-2 rounded-lg bg-accent text-oninv text-xs font-bold px-3 py-1.5">GET IT NOW &rarr;</button>
-    <span class="text-faint text-xs ml-2">100% free*</span></div>`;
+  const fresh = state.catalog.filter(x => !annoyShown.has(x.id));
+  if (fresh.length) {
+    const pick = fresh[Math.floor(Math.random() * fresh.length)];
+    annoyShown.add(pick.id);
+    d.innerHTML = `<div class="vp-bar"><span>HOT SHEET MUSIC DEAL</span><button onclick="this.closest('.annoy-ad').remove()" aria-label="Close ad">&#10005;</button></div>
+      <div class="vp-body"><strong>${esc(pick.title)}</strong><br><span class="text-mute">${esc(pick.artist || 'a mystery artist')}</span><br>
+      <button onclick="openScore('catalog','${pick.id}');this.closest('.annoy-ad').remove()" class="mt-2 rounded-lg bg-accent text-oninv text-xs font-bold px-3 py-1.5">GET IT NOW &rarr;</button>
+      <span class="text-faint text-xs ml-2">100% free*</span></div>`;
+  } else {
+    const g = GENERIC_ADS[Math.floor(Math.random() * GENERIC_ADS.length)];
+    d.innerHTML = `<div class="vp-bar"><span>${g.t}</span><button onclick="this.closest('.annoy-ad').remove()" aria-label="Close ad">&#10005;</button></div>
+      <div class="vp-body">${g.b}<br>
+      <button onclick="toast('It was fake. Obviously.');this.closest('.annoy-ad').remove()" class="mt-2 rounded-lg bg-accent text-oninv text-xs font-bold px-3 py-1.5">${g.c}</button></div>`;
+  }
   document.body.appendChild(d);
 }
 document.addEventListener('click', e => {
@@ -1531,13 +1724,6 @@ document.addEventListener('click', e => {
   e.stopPropagation();
   dblLast = t;
   dblTime = now;
-  const tip = document.createElement('span');
-  tip.textContent = 'double click!';
-  tip.className = 'fixed z-[70] text-xs font-bold bg-ink text-oninv rounded-lg px-2 py-1 pointer-events-none';
-  tip.style.left = e.clientX + 'px';
-  tip.style.top = (e.clientY - 28) + 'px';
-  document.body.appendChild(tip);
-  setTimeout(() => tip.remove(), 550);
 }, true);
 
 const QZ_POS = { C:0, D:2, E:4, F:5, G:7, A:9, B:11 };
@@ -1564,8 +1750,12 @@ function qzShuffle(arr, rnd) {
   return arr;
 }
 function qzQ(t, correct, wrongs, d) {
-  const opts = [correct, ...wrongs.filter(w => w !== correct).slice(0, 3)];
-  while (opts.length < 4) opts.push(opts[opts.length - 1] + ' ');
+  const opts = [correct];
+  for (const w of wrongs) {
+    if (opts.length === 4) break;
+    if (!opts.includes(w)) opts.push(w);
+  }
+  if (opts.length < 4) throw new Error('needs 4 unique options: ' + t);
   const order = qzShuffle([0,1,2,3], Math.random);
   const shuffled = order.map(i => opts[i]);
   return { t, opts: shuffled, a: order.indexOf(0), d };
@@ -1620,14 +1810,14 @@ function qzBuild() {
   [['C sharp','D flat'],['D sharp','E flat'],['F sharp','G flat'],['G sharp','A flat'],['A sharp','B flat']].forEach(([a, b]) =>
     E.push(qzQ('Which note is enharmonically the same as ' + a + '?', b, qzNoteWrongs(b[0], -1).concat([b]), 'e')));
   [['allegro','adagio','allegro'],['presto','largo','presto'],['vivace','lento','vivace']].forEach(([a, b, ans]) =>
-    E.push(qzQ('Which tempo is faster: ' + a + ' or ' + b + '?', ans, [a, b], 'e')));
+    E.push(qzQ('Which tempo is faster: ' + a + ' or ' + b + '?', ans, [a, b, 'They are the same speed', 'Neither is a tempo marking'], 'e')));
   [['whole rest','4'],['half rest','2'],['quarter rest','1']].forEach(([nm, b]) => E.push(qzQ('In 4/4 time, how many beats of silence does a ' + nm + ' get?', b, ['1','2','3','4'], 'e')));
-  E.push(qzQ('Which dynamic is louder: mf or mp?', 'mf', ['mf','mp'], 'e'));
-  E.push(qzQ('Which dynamic is louder: f or mf?', 'f', ['f','mf'], 'e'));
-  E.push(qzQ('Which dynamic is softer: pp or p?', 'pp', ['pp','p'], 'e'));
-  E.push(qzQ('Which note lasts longer: a half note or a quarter note?', 'a half note', ['a half note','a quarter note'], 'e'));
-  E.push(qzQ('Which note lasts longer: a whole note or a half note?', 'a whole note', ['a whole note','a half note'], 'e'));
-  E.push(qzQ('Which note is shorter: an eighth note or a quarter note?', 'an eighth note', ['an eighth note','a quarter note'], 'e'));
+  E.push(qzQ('Which dynamic is louder: mf or mp?', 'mf', ['mf','mp','They are equally loud','Neither is a dynamic'], 'e'));
+  E.push(qzQ('Which dynamic is louder: f or mf?', 'f', ['f','mf','They are equally loud','Neither is a dynamic'], 'e'));
+  E.push(qzQ('Which dynamic is softer: pp or p?', 'pp', ['pp','p','They are equally soft','Neither is a dynamic'], 'e'));
+  E.push(qzQ('Which note lasts longer: a half note or a quarter note?', 'a half note', ['a half note','a quarter note','They are the same length','It depends on the clef'], 'e'));
+  E.push(qzQ('Which note lasts longer: a whole note or a half note?', 'a whole note', ['a whole note','a half note','They are the same length','It depends on the clef'], 'e'));
+  E.push(qzQ('Which note is shorter: an eighth note or a quarter note?', 'an eighth note', ['an eighth note','a quarter note','They are the same length','It depends on the clef'], 'e'));
 
   const MAJ = [['C',0,'0'],['G',1,'1 sharp'],['D',1,'2 sharps'],['A',1,'3 sharps'],['E',1,'4 sharps'],['B',1,'5 sharps'],['F sharp',1,'6 sharps'],['C sharp',1,'7 sharps'],['F',-1,'1 flat'],['B flat',-1,'2 flats'],['E flat',-1,'3 flats'],['A flat',-1,'4 flats'],['D flat',-1,'5 flats'],['G flat',-1,'6 flats'],['C flat',-1,'7 flats']];
   const sigOpts = ['0','1 sharp','2 sharps','3 sharps','4 sharps','5 sharps','6 sharps','7 sharps','1 flat','2 flats','3 flats','4 flats','5 flats','6 flats','7 flats'];
@@ -1688,7 +1878,7 @@ function qzBuild() {
     if (fifth) N.push(qzQ('What is the 5th note of the ' + qzNote(l, a) + ' major scale?', qzNote(fifth.l, fifth.a), qzNoteWrongs(fifth.l, fifth.a), 'n'));
   });
   [['3rd and 4th','a half step'],['7th and 8th','a half step'],['1st and 2nd','a whole step'],['2nd and 3rd','a whole step'],['4th and 5th','a whole step'],['5th and 6th','a whole step'],['6th and 7th','a whole step']].forEach(([pos, ans]) =>
-    N.push(qzQ('In a major scale, what is the distance between the ' + pos + ' degrees?', ans, ['a half step','a whole step','a minor 3rd'], 'n')));
+    N.push(qzQ('In a major scale, what is the distance between the ' + pos + ' degrees?', ans, ['a half step','a whole step','a minor 3rd','an augmented 2nd'], 'n')));
   [['I','major'],['ii','minor'],['iii','minor'],['IV','major'],['V','major'],['vi','minor'],['vii\u00b0','diminished']].forEach(([rn, q]) =>
     N.push(qzQ('In a major key, what quality is the ' + rn + ' triad?', q, ['major','minor','diminished','augmented'], 'n')));
   [['G major','F sharp'],['D major','F sharp and C sharp'],['A major','F sharp, C sharp and G sharp'],['F major','B flat'],['B flat major','B flat and E flat'],['E flat major','B flat, E flat and A flat'],['E major','F, C, G and D sharp'],['A flat major','B, E, A and D flat'],['B major','F, C, G, D and A sharp'],['D flat major','B, E, A, D and G flat']].forEach(([k, ans]) =>
@@ -1911,9 +2101,34 @@ function endDance() {
   document.body.appendChild(ok);
   setTimeout(() => ok.remove(), 1600);
 }
+const INAPP = /Instagram|FBAN|FBAV|FB_IAB|Line\/|TikTok|musical_ly|Snapchat|MicroMessenger|Twitter|GSA\/|; wv\)/i.test(navigator.userAgent);
+function inappDismissed() {
+  try { return sessionStorage.getItem('smp_inappDismiss') === '1'; } catch { return false; }
+}
+if (INAPP && !inappDismissed()) {
+  document.documentElement.classList.add('inapp');
+  $('inapp-bar').classList.remove('hidden');
+}
+function dismissInapp() {
+  try { sessionStorage.setItem('smp_inappDismiss', '1'); } catch {}
+  document.documentElement.classList.remove('inapp');
+  $('inapp-bar').classList.add('hidden');
+}
+function openExternalBrowser() {
+  const url = location.href;
+  if (/android/i.test(navigator.userAgent)) {
+    location.href = 'intent://' + location.host + location.pathname + location.search + location.hash + '#Intent;scheme=https;end';
+    return;
+  }
+  window.open(url, '_blank');
+  toast('If nothing opened: use the browser menu (&#8942; or &#8226;&#8226;&#8226;) and choose "Open in browser".');
+}
 window.addEventListener('scroll', () => {
   const m = $('mobile-menu');
-  if (m && m.classList.contains('open')) toggleMobileMenu();
+  if (!m || !m.classList.contains('open')) return;
+  if (Date.now() - menuOpenT < 350) return;
+  if (Math.abs(window.scrollY - menuOpenY) < 24) return;
+  toggleMobileMenu();
 }, { passive: true });
 function scrollTopSmooth() {
   window.scrollTo({ top: 0, behavior: motionReduced() ? 'auto' : 'smooth' });
@@ -2010,6 +2225,7 @@ let suppressRoute = false;
 function renderView(view) {
   if (view === 'games' && state.games && !state.games.quiz) view = 'home';
   currentView = view;
+  if (typeof applySiteStatus === 'function' && state.siteStatus) applySiteStatus();
   stopAudio();
   VIEWS.forEach(v => $('view-' + v).classList.toggle('hidden', v !== view));
   if ($('mobile-menu').classList.contains('open')) toggleMobileMenu();
@@ -2067,7 +2283,10 @@ function toggleMobileMenu() {
   const m = $('mobile-menu'), b = $('mobile-menu-btn');
   const open = m.classList.toggle('open');
   b.setAttribute('aria-expanded', String(open));
+  if (open) { menuOpenY = window.scrollY; menuOpenT = Date.now(); }
 }
+let menuOpenY = 0;
+let menuOpenT = 0;
 
 function captureDefaultTexts() {
   document.querySelectorAll('[data-edit]').forEach(el => {
@@ -2163,14 +2382,70 @@ function applySocial() {
   $('soc-downloads').value = state.social.downloads || '';
 }
 const BLOCKED_WORDS = ['fuck','shit','bitch','cunt','nigger','nigga','faggot','fag','retard','whore','slut','rape','rapist','nazi','kike','spic','chink','tranny','dyke','pussy','cock','dick','asshole','wank','cocksucker','pedo'];
+function containsBlocked(text) {
+  const folded = String(text || '').toLowerCase().replace(/0/g,'o').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/5/g,'s').replace(/7/g,'t').replace(/@/g,'a').replace(/\$/g,'s').replace(/[^a-z]/g,'');
+  return BLOCKED_WORDS.some(w => folded.includes(w));
+}
 function validName(raw) {
   const name = String(raw || '').trim();
   if (name.length < 3) return { ok:false, msg:'At least 3 characters.' };
   if (name.length > 13) return { ok:false, msg:'13 characters max.' };
   if (!/^[\w \-'.]+$/.test(name)) return { ok:false, msg:'Letters, numbers, spaces and - \u2019 . only.' };
-  const folded = name.toLowerCase().replace(/0/g,'o').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/5/g,'s').replace(/7/g,'t').replace(/@/g,'a').replace(/\$/g,'s').replace(/[^a-z]/g,'');
-  for (const w of BLOCKED_WORDS) if (folded.includes(w)) return { ok:false, msg:'Pick a nicer name.' };
+  if (containsBlocked(name)) return { ok:false, msg:'Pick a nicer name.' };
   return { ok:true, name };
+}
+let dtTimer = null;
+function fmtDur(ms) {
+  const t = Math.max(0, Math.floor(ms / 1000));
+  return Math.floor(t / 3600) + ':' + String(Math.floor(t / 60) % 60).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
+}
+function applySiteStatus() {
+  const st = state.siteStatus || DEFAULTS.siteStatus;
+  const ov = $('downtime-overlay');
+  const gamesOpen = currentView === 'games' && state.games && state.games.quiz;
+  const show = st.down && state.access !== 'admin' && !gamesOpen;
+  const wasHidden = ov.classList.contains('hidden');
+  ov.classList.toggle('hidden', !show);
+  if (show && wasHidden && currentAudio) audioBarClose();
+  $('dt-games-btn').classList.toggle('hidden', !(state.games && state.games.quiz));
+  if (show) {
+    $('dt-eta').textContent = st.etaMin ? (Math.floor(st.etaMin / 60) ? Math.floor(st.etaMin / 60) + 'h ' : '') + (st.etaMin % 60) + 'm' : 'unknown';
+    const tick = () => { $('dt-timer').textContent = fmtDur(Date.now() - (st.downSince || Date.now())); };
+    tick();
+    if (!dtTimer) dtTimer = setInterval(tick, 1000);
+  } else if (dtTimer) { clearInterval(dtTimer); dtTimer = null; }
+}
+function downtimePlay() { showView('games'); }
+function openAdminFromDowntime() {
+  $('downtime-overlay').classList.add('hidden');
+  showView('access');
+}
+function adminSaveSiteStatus() {
+  const on = $('st-down').checked;
+  confirmAction(on ? 'Take the site down for everyone?' : 'Bring the site back up?', () => {
+    const h = Number($('st-eta-h').value) || 0;
+    const m = Number($('st-eta-m').value) || 0;
+    const eta = h * 60 + m;
+    state.siteStatus = {
+      down: on,
+      downSince: on ? (state.siteStatus.down ? state.siteStatus.downSince : Date.now()) : 0,
+      etaMin: eta > 0 ? eta : ''
+    };
+    saveKey(LS.siteStatus, state.siteStatus);
+    afterContentChange();
+    applySiteStatus();
+    toast(on ? 'Site is now in downtime mode.' : 'Site is back up.');
+  });
+}
+function closeDisclaimer() {
+  markSeen('disclaimer');
+  const d = $('disclaimer-modal');
+  if (d.open) d.close();
+}
+$('disclaimer-modal').addEventListener('close', () => markSeen('disclaimer'));
+function maybeShowDisclaimer() {
+  if (state.seen.disclaimer || (state.siteStatus && state.siteStatus.down)) return;
+  try { $('disclaimer-modal').showModal(); } catch {}
 }
 function applyGames() {
   const g = state.games || DEFAULTS.games;
@@ -2318,14 +2593,75 @@ function onAudioStateChange(e) {
   else audioState = 'paused';
   refreshAudioUI();
 }
+let audioTitle = '';
+let seekDragging = false;
+let barTimer = null;
 function refreshAudioUI() {
-  renderVoting();
-  renderVault();
-  renderCatalog();
-  renderFeatured();
+  document.querySelectorAll('[data-akey]').forEach(b => {
+    const cur = currentAudio === b.dataset.akey;
+    const playing = cur && audioState === 'playing';
+    b.classList.toggle('border-accent', cur);
+    b.classList.toggle('text-accent', cur);
+    b.classList.toggle('bg-accent/10', cur);
+    b.classList.toggle('border-line', !cur);
+    b.classList.toggle('text-mute', !cur);
+    b.innerHTML = playing ? '&#10074;&#10074;' : '&#9654;';
+    b.setAttribute('aria-label', (playing ? 'Pause ' : 'Play ') + (b.dataset.atitle || ''));
+  });
+  audioBarSync();
 }
-function toggleAudioKey(key, vid) {
+function fmtClock(sec) {
+  sec = Math.max(0, Math.floor(sec || 0));
+  return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+}
+function audioBarSync() {
+  const bar = $('audio-bar');
+  if (!bar) return;
+  if (!currentAudio) {
+    bar.classList.add('hidden');
+    document.body.classList.remove('audio-open');
+    if (barTimer) { clearInterval(barTimer); barTimer = null; }
+    return;
+  }
+  bar.classList.remove('hidden');
+  document.body.classList.add('audio-open');
+  $('ab-title').textContent = audioTitle || 'Now playing';
+  $('ab-toggle').innerHTML = audioState === 'playing' ? '&#10074;&#10074;' : '&#9654;';
+  $('ab-toggle').setAttribute('aria-label', audioState === 'playing' ? 'Pause' : 'Play');
+  if (!barTimer) barTimer = setInterval(audioBarTick, 500);
+  audioBarTick();
+}
+function audioBarTick() {
+  if (!ytPlayer || !ytPlayerReady || seekDragging) return;
+  let cur = 0, dur = 0;
+  try { cur = ytPlayer.getCurrentTime() || 0; dur = ytPlayer.getDuration() || 0; } catch { return; }
+  const sl = $('ab-seek');
+  sl.max = dur > 0 ? Math.floor(dur) : 0;
+  sl.value = Math.floor(cur);
+  $('ab-cur').textContent = fmtClock(cur);
+  $('ab-dur').textContent = fmtClock(dur);
+}
+function audioSeekInput() {
+  seekDragging = true;
+  $('ab-cur').textContent = fmtClock(Number($('ab-seek').value));
+}
+function audioSeekCommit() {
+  if (ytPlayer && ytPlayerReady) { try { ytPlayer.seekTo(Number($('ab-seek').value), true); } catch {} }
+  seekDragging = false;
+}
+function audioBarToggle() {
+  if (!ytPlayer || !ytPlayerReady) return;
+  if (audioState === 'playing') ytPlayer.pauseVideo(); else ytPlayer.playVideo();
+}
+function audioBarClose() {
+  if (ytPlayer && ytPlayerReady) { try { ytPlayer.pauseVideo(); } catch {} }
+  currentAudio = null;
+  audioState = 'paused';
+  refreshAudioUI();
+}
+function toggleAudioKey(key, vid, title) {
   if (!vid) return;
+  if (title) audioTitle = title;
   pauseAudioEls(null);
   if (currentAudio === key && ytPlayer && ytPlayerReady) {
     if (audioState === 'playing') ytPlayer.pauseVideo();
@@ -2339,11 +2675,11 @@ function toggleAudioKey(key, vid) {
 }
 function toggleAudio(id) {
   const item = state.voting.find(v => v.id === id);
-  toggleAudioKey('vote:' + id, item ? ytId(item.music) : null);
+  toggleAudioKey('vote:' + id, item ? ytId(item.music) : null, item ? item.title : '');
 }
 function playScoreAudio(kind, id) {
   const item = listOf(kind).find(x => x.id === id);
-  toggleAudioKey('score:' + kind + ':' + id, item ? ytId(item.video) : null);
+  toggleAudioKey('score:' + kind + ':' + id, item ? ytId(item.video) : null, item ? item.title : '');
 }
 function stopAudio() {
   if (ytPlayer && ytPlayerReady && audioState === 'playing') ytPlayer.pauseVideo();
@@ -2441,18 +2777,29 @@ function renderAdminInbox() {
   $('admin-inbox-list').innerHTML = inboxItems.map(it => {
     const when = it.ts ? new Date(it.ts).toLocaleDateString() : '';
     const yt = ytId(it.youtube);
+    const aKey = 'sug:' + it.id;
+    const isCurrent = currentAudio === aKey;
+    const isPlaying = isCurrent && audioState === 'playing';
+    const playBtn = yt
+      ? `<button data-akey="${aKey}" data-atitle="${attr(it.name || 'Suggestion')}" class="shrink-0 w-8 h-8 grid place-items-center rounded-full border text-xs ${isCurrent ? 'border-accent text-accent bg-accent/10' : 'border-line text-mute hover:text-accent hover:border-accent'} transition-colors" onclick="playInboxAudio('${it.id}')" aria-label="${isPlaying ? 'Pause' : 'Play'} ${attr(it.name || 'suggestion')}">${isPlaying ? '&#10074;&#10074;' : '&#9654;'}</button>`
+      : '';
     return `<li class="bg-sunken border border-line rounded-xl px-3 py-2.5">
       <div class="flex items-center justify-between gap-3">
-        <p class="min-w-0 truncate text-ink font-semibold">${esc(it.name || 'Untitled')} <span class="font-normal text-mute">&mdash; ${esc(it.artist || 'Unknown')}</span></p>
+        ${playBtn}
+        <p class="min-w-0 flex-1 truncate text-ink font-semibold">${esc(it.name || 'Untitled')} <span class="font-normal text-mute">&mdash; ${esc(it.artist || 'Unknown')}</span>${it.user ? `<span class="font-normal text-faint text-xs"> &middot; by ${esc(it.user)}</span>` : ''}</p>
         <span class="text-xs text-faint shrink-0">${esc(when)}</span>
       </div>
       <p class="text-xs text-faint mt-0.5">${(it.genres || []).map(esc).join(', ') || 'No genres'}${yt ? ' &middot; audio linked' : ''}</p>
       <div class="flex gap-2 mt-2">
-        <button onclick="inboxToBoard('${it.id}')" class="text-xs font-bold rounded-lg bg-admin px-3 py-1.5 text-oninv hover:bg-admin-hi">&rarr; Add to board</button>
-        <button onclick="inboxDismiss('${it.id}')" class="text-xs font-semibold rounded-lg border border-line px-3 py-1.5 text-mute hover:text-danger hover:border-danger/50">Dismiss</button>
+        <button onclick="inboxToBoard('${it.id}')" ${inboxPending.has(it.id) ? 'disabled' : ''} class="text-xs font-bold rounded-lg bg-admin px-3 py-1.5 text-oninv hover:bg-admin-hi ${inboxPending.has(it.id) ? 'opacity-50' : ''}">&rarr; Add to board</button>
+        <button onclick="inboxDismiss('${it.id}')" ${inboxPending.has(it.id) ? 'disabled' : ''} class="text-xs font-semibold rounded-lg border border-line px-3 py-1.5 text-mute hover:text-danger hover:border-danger/50 ${inboxPending.has(it.id) ? 'opacity-50' : ''}">${inboxPending.has(it.id) ? 'Removing&hellip;' : 'Dismiss'}</button>
       </div>
     </li>`;
   }).join('');
+}
+function playInboxAudio(id) {
+  const it = inboxItems.find(x => x.id === id);
+  toggleAudioKey('sug:' + id, it ? ytId(it.youtube) : null, it ? (it.name || 'Suggestion') : '');
 }
 function inboxToBoard(id) {
   const it = inboxItems.find(x => x.id === id);
@@ -2469,11 +2816,14 @@ function inboxToBoard(id) {
     toast('Added to the board.');
   });
 }
+const inboxPending = new Set();
 function inboxDismiss(id) {
   confirmAction('Dismiss this suggestion? It will be deleted.', () => {
+    inboxPending.add(id);
+    renderAdminInbox();
     fbTools.deleteDoc(fbTools.doc(fbdb, 'suggestions', id))
       .then(() => toast('Dismissed.'))
-      .catch(() => toast('Could not delete — try again.', false));
+      .catch(() => { inboxPending.delete(id); renderAdminInbox(); toast('Could not delete — it stays until it is gone. Try again.', false); });
   });
 }
 function contentPayload() {
@@ -2488,7 +2838,8 @@ function contentPayload() {
     featured: state.featured,
     faq: state.faq,
     genres: state.genres,
-    games: state.games
+    games: state.games,
+    siteStatus: state.siteStatus
   };
 }
 function publishContent(payload) {
@@ -2559,9 +2910,9 @@ function renderVoting() {
       ? `<button onclick="gotoScore('${item.scoreId}')" class="text-xs font-semibold text-accent hover:text-accent-hi shrink-0">View score &rarr;</button>`
       : '';
     const playBtn = vid
-      ? `<button class="shrink-0 w-9 h-9 grid place-items-center rounded-full border text-sm ${isCurrent ? 'border-accent text-accent bg-accent/10' : 'border-line text-mute hover:text-accent hover:border-accent'} transition-colors" onclick="toggleAudio('${item.id}')" aria-label="${isPlaying ? 'Pause' : 'Play'} ${attr(item.title)}">${isPlaying ? '&#10074;&#10074;' : '&#9654;'}</button>`
+      ? `<button data-akey="${aKey}" data-atitle="${attr(item.title)}" class="shrink-0 w-9 h-9 grid place-items-center rounded-full border text-sm ${isCurrent ? 'border-accent text-accent bg-accent/10' : 'border-line text-mute hover:text-accent hover:border-accent'} transition-colors" onclick="toggleAudio('${item.id}')" aria-label="${isPlaying ? 'Pause' : 'Play'} ${attr(item.title)}">${isPlaying ? '&#10074;&#10074;' : '&#9654;'}</button>`
       : '';
-    return `<li class="fade-in relative overflow-hidden flex items-center gap-4 bg-surface border border-line rounded-xl px-4 sm:px-5 py-4 card-hover">
+    return `<li class="relative overflow-hidden flex items-center gap-4 bg-surface border border-line rounded-xl px-4 sm:px-5 py-4 card-hover">
       <span class="absolute left-0 bottom-0 h-0.5 ${barColor}" style="width:${n === 0 ? 0 : pct}%"></span>
       <span class="text-faint font-mono text-sm w-6 text-right shrink-0">${i+1}</span>
       ${playBtn}
@@ -2799,7 +3150,7 @@ function scoreRow(item, kind) {
   const isCurrent = currentAudio === aKey;
   const isPlaying = isCurrent && audioState === 'playing';
   const playBtn = vid
-    ? `<button class="shrink-0 w-8 h-8 grid place-items-center rounded-full border text-xs ${isCurrent ? 'border-accent text-accent bg-accent/10' : 'border-line text-mute hover:text-accent hover:border-accent'} transition-colors" onclick="event.stopPropagation();playScoreAudio('${kind}','${item.id}')" aria-label="${isPlaying ? 'Pause' : 'Play'} ${attr(item.title)}">${isPlaying ? '&#10074;&#10074;' : '&#9654;'}</button>`
+    ? `<button data-akey="score:${kind}:${item.id}" data-atitle="${attr(item.title)}" class="shrink-0 w-8 h-8 grid place-items-center rounded-full border text-xs ${isCurrent ? 'border-accent text-accent bg-accent/10' : 'border-line text-mute hover:text-accent hover:border-accent'} transition-colors" onclick="event.stopPropagation();playScoreAudio('${kind}','${item.id}')" aria-label="${isPlaying ? 'Pause' : 'Play'} ${attr(item.title)}">${isPlaying ? '&#10074;&#10074;' : '&#9654;'}</button>`
     : '';
   return `<div onclick="openScore('${kind}','${item.id}')" class="fade-in cursor-pointer row-hover flex items-center gap-4 bg-surface border border-line rounded-xl px-4 py-3" role="button" tabindex="0" onkeydown="if(event.key==='Enter'&&event.target===this){openScore('${kind}','${item.id}')}">
     ${playBtn}
@@ -3326,6 +3677,8 @@ function renderDashboard() {
   ghTokenStatus();
   const g = state.games || DEFAULTS.games;
   if ($('ga-quiz')) { $('ga-quiz').checked = g.quiz; $('ga-snakelb').checked = g.snakeLB; $('ga-annoy').checked = g.annoyAllowed; $('ga-adfreq').value = g.adFreq; }
+  const st = state.siteStatus || DEFAULTS.siteStatus;
+  if ($('st-down')) { $('st-down').checked = st.down; $('st-eta-h').value = st.etaMin ? Math.floor(st.etaMin / 60) || '' : ''; $('st-eta-m').value = st.etaMin ? st.etaMin % 60 || '' : ''; }
   if (state.access !== 'admin') return;
   renderAdminCounts();
   const ballots = Object.keys(state.userVotes).length;
@@ -3427,7 +3780,7 @@ function renderDraftStatus() {
 function discardDraft() {
   if (!isDraft()) { toast('There is no local draft to discard.', false); return; }
   confirmAction('Discard your local draft? Unexported changes are lost and this browser goes back to the published content.', () => {
-    [LS.catalog, LS.vault, LS.voting, LS.social, LS.genres, LS.texts, LS.featured, LS.faq, LS.games].forEach(k => {
+    [LS.catalog, LS.vault, LS.voting, LS.social, LS.genres, LS.texts, LS.featured, LS.faq, LS.games, LS.siteStatus].forEach(k => {
       try { localStorage.removeItem(k); } catch {}
     });
     try { localStorage.removeItem(DRAFT_KEY); } catch {}
@@ -3493,6 +3846,7 @@ function importData(input) {
       saveKey(LS.social, (d.social && typeof d.social === 'object') ? d.social : {});
       saveKey(LS.genres, Array.isArray(d.genres) ? d.genres : DEFAULT_GENRES);
       saveKey(LS.games, d.games && typeof d.games === 'object' ? d.games : DEFAULTS.games);
+      saveKey(LS.siteStatus, d.siteStatus && typeof d.siteStatus === 'object' ? d.siteStatus : DEFAULTS.siteStatus);
       saveKey(LS.texts, (d.texts && typeof d.texts === 'object') ? d.texts : {});
       saveKey(LS.featured, typeof d.featured === 'string' ? d.featured : '');
       saveKey(LS.faq, Array.isArray(d.faq) ? d.faq : []);
@@ -3518,9 +3872,49 @@ function setAdminTab(tab) {
   document.querySelectorAll('[data-tabpanel]').forEach(p => p.classList.toggle('hidden', p.dataset.tabpanel !== tab));
 }
 
+function jsSha256(str) {
+  const utf8 = unescape(encodeURIComponent(str));
+  const K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  let h0=0x6a09e667,h1=0xbb67ae85,h2=0x3c6ef372,h3=0xa54ff53a,h4=0x510e527f,h5=0x9b05688c,h6=0x1f83d9ab,h7=0x5be0cd19;
+  const len = utf8.length;
+  const words = [];
+  for (let i = 0; i < len; i++) words[i >> 2] = (words[i >> 2] || 0) | (utf8.charCodeAt(i) << (24 - (i % 4) * 8));
+  words[len >> 2] = (words[len >> 2] || 0) | (0x80 << (24 - (len % 4) * 8));
+  const bits = len * 8;
+  const total = (((len + 8) >> 6) + 1) * 16;
+  words[total - 1] = bits >>> 0;
+  words[total - 2] = Math.floor(bits / 0x100000000);
+  const rotr = (x, k) => (x >>> k) | (x << (32 - k));
+  const w = new Array(64);
+  for (let j = 0; j < total; j += 16) {
+    for (let t = 0; t < 16; t++) w[t] = words[j + t] | 0;
+    for (let t = 16; t < 64; t++) {
+      const s0 = rotr(w[t-15],7) ^ rotr(w[t-15],18) ^ (w[t-15] >>> 3);
+      const s1 = rotr(w[t-2],17) ^ rotr(w[t-2],19) ^ (w[t-2] >>> 10);
+      w[t] = (w[t-16] + s0 + w[t-7] + s1) | 0;
+    }
+    let a=h0,b=h1,c=h2,d=h3,e=h4,f=h5,g=h6,hh=h7;
+    for (let t = 0; t < 64; t++) {
+      const S1 = rotr(e,6) ^ rotr(e,11) ^ rotr(e,25);
+      const ch = (e & f) ^ (~e & g);
+      const t1 = (hh + S1 + ch + K[t] + w[t]) | 0;
+      const S0 = rotr(a,2) ^ rotr(a,13) ^ rotr(a,22);
+      const maj = (a & b) ^ (a & c) ^ (b & c);
+      const t2 = (S0 + maj) | 0;
+      hh=g; g=f; f=e; e=(d + t1)|0; d=c; c=b; b=a; a=(t1 + t2)|0;
+    }
+    h0=(h0+a)|0; h1=(h1+b)|0; h2=(h2+c)|0; h3=(h3+d)|0; h4=(h4+e)|0; h5=(h5+f)|0; h6=(h6+g)|0; h7=(h7+hh)|0;
+  }
+  return [h0,h1,h2,h3,h4,h5,h6,h7].map(x => (x >>> 0).toString(16).padStart(8, '0')).join('');
+}
 async function sha256Hex(text) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+  if (window.crypto && crypto.subtle) {
+    try {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+    } catch {}
+  }
+  return jsSha256(text);
 }
 function pcThrottle() {
   try { return JSON.parse(sessionStorage.getItem('smp_pcTries') || '{"n":0,"until":0}'); } catch { return { n:0, until:0 }; }
@@ -3536,7 +3930,6 @@ async function unlockAccess() {
   const t = pcThrottle();
   if (Date.now() < t.until) { setFb('Too many attempts. Try again in ' + Math.ceil((t.until - Date.now()) / 1000) + 's.', 'text-danger'); return; }
   if (!code) { setFb('Enter a passcode first.', 'text-danger'); return; }
-  if (!(window.crypto && crypto.subtle)) { setFb('Secure hashing is unavailable in this browser context. Open the site over HTTPS.', 'text-danger'); return; }
   const hash = await sha256Hex(code);
   let intro = null;
   if (hash === HASH_ADMIN) {
@@ -3672,6 +4065,7 @@ function submitSuggestionFB(form) {
   const payload = {
     name: $('sg-name').value.trim().slice(0, 120),
     artist: $('sg-artist').value.trim().slice(0, 120),
+    user: $('sg-user').value.trim().slice(0, 40),
     youtube: $('sg-youtube').value.trim().slice(0, 200),
     genres: selectedGenres.slice(0, 3),
     ts: Date.now()
@@ -3681,6 +4075,11 @@ function submitSuggestionFB(form) {
 }
 $('suggestion-form').addEventListener('submit', e => {
   $('sg-genres').value = selectedGenres.join(', ');
+  if (containsBlocked($('sg-name').value) || containsBlocked($('sg-artist').value) || containsBlocked($('sg-user').value)) {
+    e.preventDefault();
+    toast('Keep it clean — that text was blocked.', false);
+    return;
+  }
   const link = $('sg-youtube').value.trim();
   if (link && !ytId(link)) {
     e.preventDefault();
@@ -3745,6 +4144,8 @@ async function fetchPublished() {
   applyTexts();
   applySocial();
   applyGames();
+  applySiteStatus();
+  requestAnimationFrame(() => { document.documentElement.classList.remove('boot'); maybeShowDisclaimer(); });
   renderGenres();
   renderVoting();
   renderStats();
