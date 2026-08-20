@@ -68,7 +68,17 @@ footer a { color:#484b6a; }
       <a data-nav="#/friends" href="./index.html#/friends">Friends</a>
     </div>
   </nav>
+  <button onclick="document.getElementById('help-404').showModal()" aria-label="Help" title="Help" style="margin-left:auto;width:30px;height:30px;border:1.5px solid #d2d3db;border-radius:999px;background:#fff;font-weight:700;cursor:pointer">&#63;</button>
 </header>
+<dialog id="help-404" style="border:1.5px solid #d2d3db;border-radius:16px;padding:0;max-width:min(92vw,26rem)">
+  <div style="padding:1.3rem">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.7rem">
+      <h2 style="font-family:Georgia,serif;font-size:20px;margin:0 0 .5rem">&#63; How it works</h2>
+      <button onclick="document.getElementById('help-404').close()" aria-label="Close" style="border:0;background:none;font-size:22px;cursor:pointer;line-height:1">&times;</button>
+    </div>
+    <p class="hint" style="max-width:none;margin:0">Eat apples to grow and speed up. Sheet music, walls and your own tail end the run. Score at least one apple and finish top 10 to claim a spot on the global board &mdash; ranked by apples, then fastest time. Names are 3&ndash;13 characters. Swipe, arrow keys or WASD to steer; Space restarts.</p>
+  </div>
+</dialog>
 <main>
   <h1>404</h1>
   <p class="sub">This page slipped off the staff. Eat the <strong>apples</strong> &mdash; but whatever you do, <strong>don&rsquo;t collect the sheet music.</strong></p>
@@ -96,6 +106,7 @@ footer a { color:#484b6a; }
     <button class="r" onclick="steer(1,0)" aria-label="Right">&#9654;</button>
   </div>
   <p class="hint">Arrow keys / WASD, swipe on the board, Space restarts.</p>
+
   <section id="lb-wrap" class="lb hidden">
     <h2>Top 10 &mdash; Snake</h2>
     <p id="lb-status" class="hint" style="margin-top:.2rem">Loading&hellip;</p>
@@ -309,11 +320,15 @@ async function fbInit() {
 }
 function lbSort(a, b) { return (b.apples - a.apples) || (a.timeMs - b.timeMs); }
 async function lbFetch() {
-  const { db, fs } = await fbInit();
-  const snap = await fs.getDocs(fs.query(fs.collection(db, 'lbSnake'), fs.orderBy('apples', 'desc'), fs.limit(50)));
-  const rows = [];
-  snap.forEach(d => { const x = d.data(); if (x && typeof x.apples === 'number') rows.push(x); });
-  return rows.sort(lbSort).slice(0, 10);
+  try {
+    const { db, fs } = await fbInit();
+    const snap = await fs.getDocs(fs.query(fs.collection(db, 'lbSnake'), fs.orderBy('apples', 'desc'), fs.limit(50)));
+    const rows = [];
+    snap.forEach(d => { const x = d.data(); if (x && typeof x.apples === 'number') rows.push(x); });
+    return rows.sort(lbSort).slice(0, 10);
+  } catch {
+    return [];
+  }
 }
 function lbRender(rows) {
   const list = document.getElementById('lb-list');
@@ -351,6 +366,7 @@ async function lbAfterRun() {
   } catch {}
 }
 async function lbSubmit() {
+  if (!lastRun || !lastRun.apples) { document.getElementById('ov-msg').textContent = 'Finish a run first.'; return; }
   const v = validName(document.getElementById('lb-name').value);
   if (!v.ok) { document.getElementById('ov-msg').textContent = v.msg; return; }
   try {

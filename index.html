@@ -136,6 +136,8 @@ html.sitedown #view-home > *:not(#downtime-home) { display:none !important; }
 @keyframes denied-slam { 0% { opacity:0; transform:scale(2.6) rotate(-14deg); } 55% { opacity:1; transform:scale(.92) rotate(-8deg); } 72% { transform:scale(1.06) rotate(-8deg); } 100% { opacity:1; transform:scale(1) rotate(-8deg); } }
 .denied-stamp { animation: denied-slam calc(.45s/var(--speed,1)) cubic-bezier(.2,1.4,.4,1) both; }
 @media (prefers-reduced-motion: reduce) { .denied-stamp { animation:none; } }
+.desc-clamp { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.desc-clamp.desc-open { -webkit-line-clamp:unset; }
 .mnav { max-height:0; overflow:hidden; opacity:0; padding-top:0; padding-bottom:0; border-top:0 solid rgb(var(--c-line)/.7); transition: max-height calc(.3s/var(--speed,1)) ease, opacity calc(.25s/var(--speed,1)) ease, padding calc(.3s/var(--speed,1)) ease; }
 .mnav.open { max-height:20rem; opacity:1; padding-top:.75rem; padding-bottom:.75rem; border-top-width:1px; }
 @media (max-width:640px) { .chip { padding:.55rem .95rem; } #mobile-menu a { padding:.4rem 0; } .tab-btn { padding-top:.65rem; padding-bottom:.65rem; } .vote-btn { padding:.4rem .7rem; } }
@@ -348,9 +350,14 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
     </div>
     <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
       <input id="vault-search" type="search" placeholder="Search vault scores&hellip;" oninput="setSearch('vault', this.value)" class="w-full sm:max-w-xs rounded-xl bg-surface border border-line px-3.5 py-2 text-sm text-ink placeholder-faint focus:border-accent" />
-      <select id="vault-filter-select" onchange="setFilter('vault', this.value)" aria-label="Filter vault by instrument" class="rounded-xl bg-surface border border-line px-3 py-2 text-sm text-mute focus:border-accent"></select>
+      <select id="vault-ens-select" onchange="setEnsFilter('vault', this.value)" aria-label="Filter vault by ensemble" class="rounded-xl bg-surface border border-line px-3 py-2 text-sm text-mute focus:border-accent"></select>
+      <div class="relative inst-wrap">
+        <button id="vault-inst-btn" onclick="toggleInstMenu('vault')" aria-haspopup="true" aria-expanded="false" class="rounded-xl bg-surface border border-line px-3 py-2 text-sm text-mute hover:text-ink focus:border-accent">Instruments &#9662;</button>
+        <div id="vault-inst-menu" class="hidden absolute right-0 z-20 mt-2 w-[min(92vw,22rem)] max-h-72 overflow-y-auto rounded-xl bg-surface border border-line shadow-2xl p-3 text-left"></div>
+      </div>
     </div>
-    <div id="vault-diff-chips" class="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter vault by difficulty"></div>
+    <div id="vault-inst-chips" class="flex flex-wrap gap-1.5 mb-3"></div>
+        <div id="vault-diff-chips" class="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter vault by difficulty"></div>
     <div id="vault-grid"></div>
   </section>
 
@@ -656,8 +663,13 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
     <div id="hint-scores" class="mb-4"></div>
     <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
       <input id="catalog-search" type="search" placeholder="Search published scores&hellip;" oninput="setSearch('catalog', this.value)" class="w-full sm:max-w-xs rounded-xl bg-surface border border-line px-3.5 py-2 text-sm text-ink placeholder-faint focus:border-accent" />
-      <select id="catalog-filter-select" onchange="setFilter('catalog', this.value)" aria-label="Filter catalog by instrument" class="rounded-xl bg-surface border border-line px-3 py-2 text-sm text-mute focus:border-accent"></select>
+      <select id="catalog-ens-select" onchange="setEnsFilter('catalog', this.value)" aria-label="Filter catalog by ensemble" class="rounded-xl bg-surface border border-line px-3 py-2 text-sm text-mute focus:border-accent"></select>
+      <div class="relative inst-wrap">
+        <button id="catalog-inst-btn" onclick="toggleInstMenu('catalog')" aria-haspopup="true" aria-expanded="false" class="rounded-xl bg-surface border border-line px-3 py-2 text-sm text-mute hover:text-ink focus:border-accent">Instruments &#9662;</button>
+        <div id="catalog-inst-menu" class="hidden absolute right-0 z-20 mt-2 w-[min(92vw,22rem)] max-h-72 overflow-y-auto rounded-xl bg-surface border border-line shadow-2xl p-3 text-left"></div>
+      </div>
     </div>
+    <div id="catalog-inst-chips" class="flex flex-wrap gap-1.5 mb-3"></div>
     <div id="catalog-diff-chips" class="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter catalog by difficulty"></div>
     <div id="catalog-grid"></div>
   </section>
@@ -1147,8 +1159,10 @@ const VOTE_STATUS = { open:'', considering:'Considering', 'in-progress':'In Prog
 const DEFAULT_SETTINGS = { speed:1, motion:'system', lite:false, text:'m', invert:false };
 let state = { catalog:[], vault:[], voting:[], userVotes:{}, social:{}, genres:[], texts:{}, layout:{ vault:'grid', catalog:'grid' }, featured:'', faq:[], seen:{}, settings:{ ...DEFAULT_SETTINGS }, access:'none' };
 let selectedGenres = [];
-let vaultFilter = '';
-let catalogFilter = '';
+let vaultEns = '';
+let vaultInst = [];
+let catalogEns = '';
+let catalogInst = [];
 let vaultSearch = '';
 let catalogSearch = '';
 let editing = { vault:null, catalog:null };
@@ -1328,7 +1342,8 @@ function ghRepo() {
 function ghTokenStatus() {
   const el = $('gh-token-status');
   if (!el) return;
-  const t = localStorage.getItem(LS.ghToken);
+  let t = null;
+  try { t = localStorage.getItem(LS.ghToken); } catch {}
   const repo = ghRepo();
   if (!repo) { el.textContent = 'Uploads only work on the live github.io site, not local previews.'; return; }
   el.textContent = t ? 'Token saved on this device. Uploads go to ' + repo.owner + '/' + repo.repo + '.' : 'No token saved yet.';
@@ -1346,14 +1361,17 @@ function adminClearGhToken() {
   ghTokenStatus();
   toast('Token removed.');
 }
+let ghBusy = false;
 async function ghUploadField(fileInputId, folder, targetFieldId) {
+  if (ghBusy) { toast('An upload is already running.', false); return; }
   const input = $(fileInputId);
   const file = input.files && input.files[0];
   if (!file) { toast('Choose a file first.', false); return; }
   if (file.size > 25 * 1024 * 1024) { toast('That file is over 25MB \u2014 too large to upload this way.', false); return; }
   const repo = ghRepo();
   if (!repo) { toast('Uploads only work on the live github.io site.', false); return; }
-  const token = localStorage.getItem(LS.ghToken);
+  let token = null;
+  try { token = localStorage.getItem(LS.ghToken); } catch {}
   if (!token) { toast('Save a GitHub token first (Backup & Data tab).', false); return; }
   const clean = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
   const path = folder + '/' + clean;
@@ -1366,6 +1384,7 @@ async function ghUploadField(fileInputId, folder, targetFieldId) {
   const api = 'https://api.github.com/repos/' + repo.owner + '/' + repo.repo + '/contents/' + path.split('/').map(encodeURIComponent).join('/');
   const headers = { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' };
   toast('Uploading\u2026');
+  ghBusy = true;
   try {
     let sha;
     const probe = await fetch(api, { headers });
@@ -1380,6 +1399,8 @@ async function ghUploadField(fileInputId, folder, targetFieldId) {
     toast('Uploaded. It goes live once GitHub redeploys (~1 minute).');
   } catch {
     toast('Upload failed \u2014 network or permission problem.', false);
+  } finally {
+    ghBusy = false;
   }
 }
 function validPreviewPath(p) {
@@ -1416,7 +1437,7 @@ let toastTimer = null;
 function toast(msg, ok = true) {
   const t = $('toast');
   t.textContent = msg;
-  t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] rounded-xl px-5 py-3 text-sm shadow-2xl border ' +
+  t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] rounded-xl px-5 py-3 text-sm shadow-2xl border ' +
     (ok ? 'bg-surface border-accent/40 text-accent' : 'bg-surface border-danger/40 text-danger');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
@@ -1614,7 +1635,12 @@ function closeClicker() {
 }
 function annoyToggle(box) {
   if (box.checked) { annoySet(true); }
-  else { box.checked = true; showDenied(openClicker); }
+  else {
+    box.checked = true;
+    const sm = $('settings-modal');
+    if (sm && sm.open) sm.close();
+    showDenied(openClicker);
+  }
 }
 function showDenied(cb) {
   const wrap = document.createElement('div');
@@ -1628,6 +1654,7 @@ function showDenied(cb) {
   }, 950);
 }
 function annoySet(on) {
+  if (on && annoying && adTimer) return;
   annoying = on;
   const box = $('set-annoy');
   if (box) box.checked = on;
@@ -2034,8 +2061,10 @@ function qzAnswer(i) {
   if (QZ.lives <= 0) { setTimeout(() => qzOver('Three strikes.'), 650); return; }
   setTimeout(qzNext, right ? 350 : 750);
 }
+let lbRun = null;
 function qzOver(msg) {
   QZ.on = false;
+  lbRun = { answered: QZ.answered, correct: QZ.correct, timeMs: QZ.timeMs, e: QZ.e, n: QZ.n, h: QZ.h, v: QZ.v };
   if (QZ.timer) clearInterval(QZ.timer);
   if (QZ.clock) clearInterval(QZ.clock);
   QZ.timer = null; QZ.clock = null;
@@ -2078,7 +2107,7 @@ function endDance() {
   $('dance-overlay').classList.remove('show');
   $('virus-popups').innerHTML = '';
   const ok = document.createElement('div');
-  ok.className = 'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] rounded-xl bg-ink text-oninv font-bold text-lg px-8 py-4 shadow-2xl pointer-events-none';
+  ok.className = 'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[90] rounded-xl bg-ink text-oninv font-bold text-lg px-8 py-4 shadow-2xl pointer-events-none';
   ok.textContent = 'VIRUS ISOLATED \u2714';
   document.body.appendChild(ok);
   setTimeout(() => ok.remove(), 1600);
@@ -2385,6 +2414,14 @@ function applySiteStatus() {
   $('dt-games-btn').classList.toggle('hidden', !(state.games && state.games.quiz));
   if (down) {
     if (!was && currentAudio) audioBarClose();
+    if (!was && QZ.on) {
+      QZ.on = false;
+      if (QZ.timer) clearInterval(QZ.timer);
+      if (QZ.clock) clearInterval(QZ.clock);
+      QZ.timer = null;
+      QZ.clock = null;
+      quizIdle();
+    }
     $('dt-eta').textContent = st.etaMin ? (Math.floor(st.etaMin / 60) ? Math.floor(st.etaMin / 60) + 'h ' : '') + (st.etaMin % 60) + 'm' : 'unknown';
     const tick = () => { $('dt-timer').textContent = fmtDur(Date.now() - (st.downSince || Date.now())); };
     tick();
@@ -2492,7 +2529,7 @@ async function lbAfterQuiz() {
   let rows;
   try { rows = await lbFetchQuiz(); }
   catch { slot.innerHTML = '<p class="text-sm text-faint">Leaderboard unavailable right now.</p>'; return; }
-  const run = { answered: QZ.answered, correct: QZ.correct, timeMs: QZ.timeMs, e: QZ.e, n: QZ.n, h: QZ.h, v: QZ.v };
+  const run = lbRun || { answered: 0, correct: 0, timeMs: 0, e: 0, n: 0, h: 0, v: 0 };
   const qualifies = run.answered > 0 && (rows.length < 10 || lbSortQuiz(run, rows[rows.length - 1]) < 0);
   slot.innerHTML = '<h3 class="font-display text-lg font-bold text-ink mb-3">Top 10 \u2014 Quiz</h3><div id="lb-board">' + lbBoardHtml(rows) + '</div>' +
     (qualifies ? `<div id="lb-claim" class="mt-4 flex flex-wrap items-center gap-2">
@@ -2504,7 +2541,8 @@ async function lbAfterQuiz() {
 async function lbSubmitQuiz() {
   const v = validName($('lb-name').value);
   if (!v.ok) { toast(v.msg, false); return; }
-  const entry = { name: v.name, answered: QZ.answered, correct: QZ.correct, timeMs: QZ.timeMs, e: QZ.e, n: QZ.n, h: QZ.h, v: QZ.v, ts: Date.now() };
+  if (!lbRun || !lbRun.answered) { toast('No finished run to submit.', false); return; }
+  const entry = { name: v.name, ...lbRun, ts: Date.now() };
   try {
     await fbTools.addDoc(fbTools.collection(fbdb, 'lbQuiz'), entry);
     const rows = await lbFetchQuiz();
@@ -3121,7 +3159,7 @@ function scoreCard(item, kind) {
         </div>
         ${meta ? `<p class="text-sm text-faint mt-0.5">${meta}</p>` : ''}
       </div>
-      ${item.desc ? `<p class="text-sm text-mute">${esc(item.desc)}</p>` : ''}
+      ${item.desc ? `<p class="text-sm text-mute desc-clamp">${esc(item.desc)}</p><button class="desc-toggle hidden self-start text-xs font-semibold text-accent" onclick="event.stopPropagation();toggleDesc(this)">more &#9662;</button>` : ''}
       ${chips ? `<div class="flex flex-wrap gap-1.5">${chips}</div>` : ''}
       ${scoreLinkButtons(item) || state.access === 'admin' ? `<div class="mt-auto pt-2 flex items-center gap-2 flex-wrap">${scoreLinkButtons(item)}${adminItemButtons(kind, item.id)}</div>` : ''}
     </div>
@@ -3196,22 +3234,114 @@ function copyScoreLink(id) {
   else fail();
 }
 
-function renderTagFilter(kind) {
-  const isVault = kind === 'vault';
-  const el = $(isVault ? 'vault-filter-select' : 'catalog-filter-select');
+const ENSEMBLE_TAGS = ['Concert Band','Marching Band','Orchestra','Other'];
+const INST_GROUPS = [
+  ['Flutes', ['Piccolo','Flute']],
+  ['Saxophones', ['Soprano Saxophone','Alto Saxophone','Tenor Saxophone','Baritone Saxophone','Saxophone']],
+  ['Brass', ['Trumpet','French Horn','Trombone','Baritone Horn','Tuba','Sousaphone']],
+  ['Other woodwinds', ['Clarinet','Bass Clarinet','Oboe','Bassoon']],
+  ['Percussion', ['Snare Drum','Bass Drum','Tenor Drums','Cymbals','Timpani','Glockenspiel','Xylophone','Tambourine','Triangle','Drum Kit','Piano']],
+  ['Strings', ['Violin','Viola','Cello','Contrabass','Guitar','Bass Guitar']]
+];
+function instState(kind) {
+  return kind === 'vault'
+    ? { get ens() { return vaultEns; }, set ens(v) { vaultEns = v; }, get inst() { return vaultInst; }, set inst(v) { vaultInst = v; } }
+    : { get ens() { return catalogEns; }, set ens(v) { catalogEns = v; }, get inst() { return catalogInst; }, set inst(v) { catalogInst = v; } };
+}
+function presentTags(kind) {
   const seen = new Map();
   listOf(kind).forEach(x => (x.tags || []).forEach(t => {
     const k = String(t).toLowerCase();
     if (k && !seen.has(k)) seen.set(k, String(t));
   }));
-  const opts = [...seen.values()].sort((a,b) => a.localeCompare(b));
-  let current = isVault ? vaultFilter : catalogFilter;
-  if (current && !seen.has(current)) {
-    current = '';
-    if (isVault) vaultFilter = ''; else catalogFilter = '';
+  return seen;
+}
+function renderTagFilter(kind) {
+  const st = instState(kind);
+  const seen = presentTags(kind);
+  const ensPresent = ENSEMBLE_TAGS.filter(e => seen.has(e.toLowerCase()));
+  const sel = $(kind + '-ens-select');
+  sel.innerHTML = '<option value="">All ensembles</option>' + ensPresent.map(e => `<option value="${attr(e.toLowerCase())}">${esc(e)}</option>`).join('');
+  if (st.ens && !seen.has(st.ens)) st.ens = '';
+  sel.value = st.ens;
+  st.inst = st.inst.filter(t => seen.has(t));
+  renderInstMenu(kind, seen);
+  renderInstChips(kind, seen);
+}
+function renderInstMenu(kind, seen) {
+  seen = seen || presentTags(kind);
+  const st = instState(kind);
+  const ensLower = ENSEMBLE_TAGS.map(e => e.toLowerCase());
+  const grouped = new Set();
+  const html = [];
+  for (const [label, members] of INST_GROUPS) {
+    const here = members.filter(m => seen.has(m.toLowerCase()));
+    here.forEach(m => grouped.add(m.toLowerCase()));
+    if (!here.length) continue;
+    html.push(`<p class="text-xs font-bold tracking-wide uppercase text-faint mt-3 first:mt-0 mb-1.5">${label}</p>`);
+    html.push('<div class="flex flex-wrap gap-1.5">' + here.map(m => instChipBtn(kind, m, st.inst.includes(m.toLowerCase()))).join('') + '</div>');
   }
-  el.innerHTML = '<option value="">All instruments</option>' + opts.map(t => `<option value="${attr(t.toLowerCase())}">${esc(t)}</option>`).join('');
-  el.value = current;
+  const leftovers = [...seen.values()].filter(t => !grouped.has(t.toLowerCase()) && !ensLower.includes(t.toLowerCase())).sort((a,b) => a.localeCompare(b));
+  if (leftovers.length) {
+    html.push('<p class="text-xs font-bold tracking-wide uppercase text-faint mt-3 mb-1.5">Other</p>');
+    html.push('<div class="flex flex-wrap gap-1.5">' + leftovers.map(m => instChipBtn(kind, m, st.inst.includes(m.toLowerCase()))).join('') + '</div>');
+  }
+  html.push(`<div class="mt-3 pt-2 border-t border-line/70 flex items-center justify-between"><span class="text-xs text-faint">Pick up to 3 &middot; scores must include all picks</span><button onclick="clearInst('${kind}')" class="text-xs font-semibold text-mute hover:text-danger">Clear</button></div>`);
+  $(kind + '-inst-menu').innerHTML = html.join('');
+  $(kind + '-inst-btn').innerHTML = 'Instruments' + (st.inst.length ? ' (' + st.inst.length + ')' : '') + ' &#9662;';
+}
+function instChipBtn(kind, name, on) {
+  return `<button onclick="toggleInst('${kind}','${attr(name.toLowerCase())}')" class="text-xs font-medium rounded-full border px-2.5 py-1 ${on ? 'border-accent text-accent bg-accent/10' : 'border-line text-mute hover:border-accent hover:text-accent'}">${esc(name)}</button>`;
+}
+function renderInstChips(kind, seen) {
+  seen = seen || presentTags(kind);
+  const st = instState(kind);
+  $(kind + '-inst-chips').innerHTML = st.inst.map(t =>
+    `<span class="inline-flex items-center gap-1.5 text-xs font-medium rounded-full border border-accent text-accent bg-accent/10 px-2.5 py-1">${esc(seen.get(t) || t)} <button onclick="toggleInst('${kind}','${attr(t)}')" aria-label="Remove ${attr(seen.get(t) || t)} filter" class="font-bold">&times;</button></span>`).join('');
+}
+function toggleInstMenu(kind) {
+  const m = $(kind + '-inst-menu');
+  const open = m.classList.toggle('hidden');
+  $(kind + '-inst-btn').setAttribute('aria-expanded', String(!open));
+}
+function closeInstMenus() {
+  ['catalog','vault'].forEach(k => {
+    const m = $(k + '-inst-menu');
+    if (m) m.classList.add('hidden');
+    const b = $(k + '-inst-btn');
+    if (b) b.setAttribute('aria-expanded', 'false');
+  });
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.inst-wrap')) closeInstMenus();
+});
+function toggleInst(kind, tag) {
+  const st = instState(kind);
+  if (st.inst.includes(tag)) st.inst = st.inst.filter(t => t !== tag);
+  else if (st.inst.length >= 3) { toast('Pick up to 3 instruments.', false); return; }
+  else st.inst = [...st.inst, tag];
+  renderScores(kind);
+}
+function clearInst(kind) {
+  instState(kind).inst = [];
+  renderScores(kind);
+}
+function setEnsFilter(kind, val) {
+  instState(kind).ens = val;
+  renderScores(kind);
+}
+function toggleDesc(btn) {
+  const p = btn.previousElementSibling;
+  const open = p.classList.toggle('desc-open');
+  btn.innerHTML = open ? 'less &#9652;' : 'more &#9662;';
+}
+function clampDescs() {
+  document.querySelectorAll('.desc-clamp').forEach(p => {
+    const btn = p.nextElementSibling;
+    if (!btn || !btn.classList.contains('desc-toggle')) return;
+    if (p.classList.contains('desc-open')) { btn.classList.remove('hidden'); return; }
+    btn.classList.toggle('hidden', p.scrollHeight <= p.clientHeight + 2);
+  });
 }
 function renderDiffChips(kind) {
   const isVault = kind === 'vault';
@@ -3225,11 +3355,6 @@ function setDiff(kind, i) {
   const val = i < 0 ? '' : DIFFS[i];
   if (kind === 'vault') vaultDiff = val; else catalogDiff = val;
   renderDiffChips(kind);
-  if (kind === 'vault') renderVault(); else renderCatalog();
-}
-function setFilter(kind, val) {
-  val = String(val || '').toLowerCase();
-  if (kind === 'vault') vaultFilter = val; else catalogFilter = val;
   if (kind === 'vault') renderVault(); else renderCatalog();
 }
 function setSearch(kind, val) {
@@ -3258,21 +3383,23 @@ function renderScores(kind) {
   const isVault = kind === 'vault';
   renderTagFilter(kind);
   const el = $(isVault ? 'vault-grid' : 'catalog-grid');
-  const filter = isVault ? vaultFilter : catalogFilter;
+  const st = instState(kind);
   const q = isVault ? vaultSearch : catalogSearch;
   const source = listOf(kind);
   const diff = isVault ? vaultDiff : catalogDiff;
   const items = source
-    .filter(x => !filter || (x.tags || []).some(t => t.toLowerCase() === filter))
+    .filter(x => !st.ens || (x.tags || []).some(t => t.toLowerCase() === st.ens))
+    .filter(x => st.inst.every(sel => (x.tags || []).some(t => t.toLowerCase() === sel)))
     .filter(x => !diff || x.difficulty === diff)
     .filter(x => matchesQuery(x, q));
   const mode = state.layout[kind];
   el.className = mode === 'list' ? 'flex flex-col gap-2' : 'grid gap-6 sm:grid-cols-2 lg:grid-cols-3';
   if (!items.length) {
-    el.innerHTML = `<p class="text-faint text-sm ${mode === 'list' ? '' : 'col-span-full'}">${source.length ? 'No scores match your search or tag.' : (isVault ? 'The vault is empty for now — new drafts land here first.' : 'No published scores yet — check back soon.')}</p>`;
+    el.innerHTML = `<p class="text-faint text-sm ${mode === 'list' ? '' : 'col-span-full'}">${source.length ? 'No scores match your filters.' : (isVault ? 'The vault is empty for now — new drafts land here first.' : 'No published scores yet — check back soon.')}</p>`;
   } else {
     el.innerHTML = items.map(x => mode === 'list' ? scoreRow(x, kind) : scoreCard(x, kind)).join('');
   }
+  clampDescs();
   if (isVault) {
     const n = state.vault.length;
     $('vault-count-line').textContent = n === 1 ? '1 private score is waiting for you.' : `${n} private scores are waiting for you.`;
@@ -3554,7 +3681,7 @@ function renderFeatured() {
         <div class="flex gap-1.5 mb-3">${badgeRow(item)}</div>
         <h3 class="font-display text-3xl font-bold text-ink leading-tight">${esc(item.title)}</h3>
         ${meta ? `<p class="text-sm text-faint mt-1.5">${meta}</p>` : ''}
-        ${item.desc ? `<p class="text-sm text-mute mt-4">${esc(item.desc)}</p>` : ''}
+        ${item.desc ? `<p class="text-sm text-mute mt-4 desc-clamp">${esc(item.desc)}</p><button class="desc-toggle hidden text-xs font-semibold text-accent" onclick="event.stopPropagation();toggleDesc(this)">more &#9662;</button>` : ''}
         ${chips ? `<div class="flex flex-wrap gap-1.5 mt-4">${chips}</div>` : ''}
         <div class="flex flex-wrap items-center gap-2 mt-6">
           ${scoreLinkButtons(item, 'lg')}
@@ -4085,7 +4212,7 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeGenreMenu(); if (document.body.classList.contains('dancing')) endDance(); } });
 window.addEventListener('scroll', () => { $('back-to-top').classList.toggle('show', window.scrollY > 400); }, { passive: true });
-['edit-modal','confirm-modal','score-modal','intro-modal','page-help-modal','settings-modal'].forEach(id => {
+['edit-modal','confirm-modal','score-modal','intro-modal','page-help-modal','settings-modal','disclaimer-modal'].forEach(id => {
   $(id).addEventListener('click', e => { if (e.target === $(id)) $(id).close(); });
 });
 document.addEventListener('play', e => {
