@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <style>html.boot body{opacity:0}body{opacity:1;transition:opacity .15s ease}</style>
 <noscript><style>html.boot body{opacity:1}</style></noscript>
-<script>setTimeout(function(){document.documentElement.classList.remove('boot')},1500)</script>
+<script>setTimeout(function(){document.documentElement.classList.remove('boot')},8000)</script>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://www.youtube.com https://www.gstatic.com https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.github.com https://*.goatcounter.com; form-action https://formspree.io; base-uri 'self'; object-src 'none'" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <link rel="manifest" href="manifest.json" />
@@ -807,6 +807,7 @@ html[data-motion="extra"] .io { opacity:1; transform:none; }
     <div class="flex items-center gap-5 text-sm font-medium">
       <a id="foot-youtube" href="#" target="_blank" rel="noopener" class="text-mute hover:text-accent transition-colors">YouTube</a>
       <a id="foot-instagram" href="#" target="_blank" rel="noopener" class="text-mute hover:text-accent transition-colors">Instagram</a>
+      <button type="button" onclick="$('disclaimer-modal').showModal()" data-edit="verTag" class="text-[11px] font-bold rounded-full border border-line px-2 py-0.5 text-faint hover:text-accent hover:border-accent transition-colors shrink-0">V0.9</button>
     </div>
   </div>
 </footer>
@@ -4239,7 +4240,7 @@ async function fetchPublished() {
 }
 (async function init() {
   try { localStorage.removeItem(LS.theme); } catch {}
-  if (FB_READY) await initFirebase();
+  if (FB_READY) { try { await initFirebase(); } catch (e) { console.warn('Firebase init failed:', e); } }
   PUBLISHED = fbContent || await fetchPublished();
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver(entries => {
