@@ -4,76 +4,29 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>404 &mdash; unbranded_branden</title>
-<style>
-:root { color-scheme: light; }
-* { box-sizing: border-box; }
-body { margin:0; min-height:100vh; display:flex; flex-direction:column; background:#fafafa; color:#000; font-family:system-ui,-apple-system,sans-serif; }
-header { position:sticky; top:0; background:rgba(250,250,250,.92); backdrop-filter:blur(6px); border-bottom:1px solid #d2d3db; z-index:10; }
-.nav { max-width:72rem; margin:0 auto; padding:0 1.25rem; height:64px; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
-.logo { display:grid; place-items:center; width:36px; height:36px; border-radius:12px; background:#000; color:#fafafa; font-size:18px; font-weight:700; text-decoration:none; }
-.logo:hover { background:#484b6a; }
-.links { display:flex; gap:1.4rem; font-size:14px; font-weight:500; }
-.links a { color:#484b6a; text-decoration:none; position:relative; white-space:nowrap; }
-.links a::after { content:""; position:absolute; left:0; bottom:-4px; height:2px; width:100%; border-radius:2px; background:#484b6a; transform:scaleX(0); transform-origin:left; transition:transform .25s ease; }
-.links a:hover::after { transform:scaleX(1); }
-main { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2.5rem 1rem 3rem; text-align:center; }
-h1 { font-family:Georgia,'Times New Roman',serif; font-size:56px; margin:0; letter-spacing:-.02em; }
-.sub { color:#484b6a; font-size:14px; margin:.4rem 0 1.6rem; }
-.sub strong { color:#000; }
-.stage { position:relative; }
-canvas { display:block; width:min(92vw,374px); height:min(92vw,374px); background:#e4e5f1; border:2px solid #000; border-radius:12px; box-shadow:6px 6px 0 rgba(0,0,0,.85); }
-.overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.6rem; background:rgba(250,250,250,.88); border-radius:12px; padding:1rem; }
-.overlay.hidden { display:none; }
-.overlay p { margin:0; font-size:14px; color:#484b6a; max-width:26ch; }
-.overlay .big { font-family:Georgia,serif; font-size:26px; font-weight:700; color:#000; }
-button.go { border:2px solid #000; background:#484b6a; color:#fafafa; font-weight:800; font-size:14px; padding:.6rem 1.4rem; border-radius:10px; cursor:pointer; box-shadow:4px 4px 0 rgba(0,0,0,.85); }
-button.go:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0 rgba(0,0,0,.85); }
-button.go:active { transform:none; box-shadow:2px 2px 0 rgba(0,0,0,.85); }
-button, a { touch-action:manipulation; }
-.hud { display:flex; gap:1.4rem; justify-content:center; font-size:13px; color:#484b6a; margin-top:.9rem; }
-.hud strong { color:#000; font-variant-numeric:tabular-nums; }
-.pad { display:grid; grid-template-columns:repeat(3,52px); grid-template-rows:repeat(2,44px); gap:6px; justify-content:center; margin-top:1rem; }
-.pad button { border:1.5px solid #d2d3db; background:#fafafa; color:#484b6a; font-size:16px; border-radius:10px; cursor:pointer; }
-.pad button:active { background:#e4e5f1; color:#000; }
-.pad .u { grid-column:2; grid-row:1; }
-.pad .l { grid-column:1; grid-row:2; }
-.pad .d { grid-column:2; grid-row:2; }
-.pad .r { grid-column:3; grid-row:2; }
-.hint { font-size:12px; color:#9394a5; margin-top:1rem; max-width:34ch; }
-.claim { display:flex; gap:.5rem; flex-wrap:wrap; justify-content:center; }
-.claim.hidden { display:none; }
-.claim input { border:1.5px solid #d2d3db; border-radius:10px; padding:.55rem .8rem; font-size:14px; width:12rem; }
-.lb { margin-top:2rem; width:min(92vw,374px); text-align:left; }
-.lb h2 { font-family:Georgia,serif; font-size:20px; margin:0; }
-.lb.hidden { display:none; }
-.lb ol { list-style:none; margin:.7rem 0 0; padding:0; display:flex; flex-direction:column; gap:.35rem; }
-.lb li { display:flex; gap:.6rem; align-items:baseline; border:1.5px solid #d2d3db; border-radius:10px; padding:.45rem .7rem; font-size:13px; background:#fff; }
-.lb li .rk { color:#9394a5; width:1.4rem; }
-.lb li .nm { font-weight:700; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.lb li .ap, .lb li .tm { color:#484b6a; font-variant-numeric:tabular-nums; }
-canvas { touch-action:none; }
-footer { border-top:1px solid #d2d3db; padding:1.2rem; text-align:center; font-size:13px; color:#9394a5; }
-footer a { color:#484b6a; }
-@media (prefers-reduced-motion: reduce) { .links a::after, button.go { transition:none; } }
-</style>
+<meta name="theme-color" content="#fafafa" />
+<script src="appearance.js"></script>
+<link rel="stylesheet" href="site.css" />
+<link rel="stylesheet" href="not-found.css" />
 </head>
-<body>
+<body class="error-page">
 <header>
   <nav class="nav">
     <a class="logo" data-nav="" href="./index.html" aria-label="Go to home">&#9835;</a>
     <div class="links">
       <a data-nav="" href="./index.html">Home</a>
-      <a data-nav="#/scores" href="./index.html#/scores">Published Scores</a>
+      <a data-nav="#/scores" href="./index.html#/scores">Scores</a>
       <a data-nav="#/vote" href="./index.html#/vote">Vote</a>
       <a data-nav="#/friends" href="./index.html#/friends">Friends</a>
     </div>
+  <button onclick="document.getElementById('help-404').showModal()" aria-label="Help" title="Help" class="icon-button">&#63;</button>
   </nav>
-  <button onclick="document.getElementById('help-404').showModal()" aria-label="Help" title="Help" style="margin-left:auto;width:30px;height:30px;border:1.5px solid #d2d3db;border-radius:999px;background:#fff;font-weight:700;cursor:pointer">&#63;</button>
+
 </header>
-<dialog id="help-404" style="border:1.5px solid #d2d3db;border-radius:16px;padding:0;max-width:min(92vw,26rem)">
+<dialog aria-label="Snake instructions" id="help-404" style="border:1.5px solid #d2d3db;border-radius:16px;padding:0;max-width:min(92vw,26rem)">
   <div style="padding:1.3rem">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.7rem">
-      <h2 style="font-family:Georgia,serif;font-size:20px;margin:0 0 .5rem">&#63; How it works</h2>
+      <h2 style="font-family:Georgia,serif;font-size:20px;margin:0 0 .5rem">Snake instructions</h2>
       <button onclick="document.getElementById('help-404').close()" aria-label="Close" style="border:0;background:none;font-size:22px;cursor:pointer;line-height:1">&times;</button>
     </div>
     <p class="hint" style="max-width:none;margin:0">Eat apples to grow and speed up. Sheet music, walls and your own tail end the run. Score at least one apple and finish top 10 to claim a spot on the global board &mdash; ranked by apples, then fastest time. Names are 3&ndash;13 characters. Swipe, arrow keys or WASD to steer; Space restarts.</p>
@@ -81,15 +34,15 @@ footer a { color:#484b6a; }
 </dialog>
 <main>
   <h1>404</h1>
-  <p class="sub">This page slipped off the staff. Eat the <strong>apples</strong> &mdash; but whatever you do, <strong>don&rsquo;t collect the sheet music.</strong></p>
+  <p class="sub">Page not found. Return to the scores, or play a round of Snake.</p>
   <div class="stage">
     <canvas id="game" width="374" height="374" role="img" aria-label="Snake game. Arrow keys, swiping, or the buttons below to move. Apples grow the snake, sheet music ends the game."></canvas>
     <div id="overlay" class="overlay">
-      <p class="big" id="ov-title">Snake, but musical</p>
-      <p id="ov-msg">Apples feed you. Sheet music kills you. Walls and your own tail also kill you. Standard stuff.</p>
+      <p class="big" id="ov-title">Snake</p>
+      <p id="ov-msg">Collect apples to grow. Avoid sheet music, walls, and your own tail.</p>
       <div id="ov-claim" class="claim hidden">
-        <input id="lb-name" maxlength="13" placeholder="Your name (3&ndash;13)" autocapitalize="none" />
-        <button class="go" onclick="lbSubmit()">Claim top 10</button>
+        <label for="lb-name">Leaderboard name</label><input id="lb-name" maxlength="13" placeholder="Your name (3&ndash;13)" autocapitalize="none" />
+        <button class="go" onclick="lbSubmit()">Save score</button>
       </div>
       <button class="go" id="ov-btn" onclick="startGame()">Play</button>
     </div>
@@ -112,9 +65,9 @@ footer a { color:#484b6a; }
     <p id="lb-status" class="hint" style="margin-top:.2rem">Loading&hellip;</p>
     <ol id="lb-list"></ol>
   </section>
-  <noscript><p class="hint">The snake needs JavaScript &mdash; use the menu above to head back.</p></noscript>
+  <noscript><p class="hint">Snake requires JavaScript. Use the navigation to return to the site.</p></noscript>
 </main>
-<footer><a data-nav="" href="./index.html">Take me back to the music</a></footer>
+<footer><a data-nav="" href="./index.html">Browse sheet music</a></footer>
 <script>
 'use strict';
 if (/^https?:$/.test(location.protocol)) {
@@ -133,7 +86,7 @@ function validName(raw) {
   if (name.length > 13) return { ok:false, msg:'13 characters max.' };
   if (!/^[\w \-'.]+$/.test(name)) return { ok:false, msg:'Letters, numbers, spaces and - \u2019 . only.' };
   const folded = name.toLowerCase().replace(/0/g,'o').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/5/g,'s').replace(/7/g,'t').replace(/@/g,'a').replace(/\$/g,'s').replace(/[^a-z]/g,'');
-  for (const w of BLOCKED_WORDS) if (folded.includes(w)) return { ok:false, msg:'Pick a nicer name.' };
+  for (const w of BLOCKED_WORDS) if (folded.includes(w)) return { ok:false, msg:'Choose a different name.' };
   return { ok:true, name };
 }
 const G = 17;
