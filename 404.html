@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>404 &mdash; unbranded_branden</title>
 <meta name="theme-color" content="#fafafa" />
-<script src="appearance.js"></script>
-<link rel="stylesheet" href="site.css" />
-<link rel="stylesheet" href="not-found.css" />
+<link rel="icon" type="image/png" href="icon-192.png" />
+<script src="appearance.js?v=qa-5"></script>
+<link rel="stylesheet" href="site.css?v=qa-5" />
+<link rel="stylesheet" href="not-found.css?v=qa-5" />
 </head>
 <body class="error-page">
 <header>
@@ -239,7 +240,7 @@ function draw(now) {
   requestAnimationFrame(draw);
 }
 document.addEventListener('keydown', e => {
-  if (e.target.closest('input')) return;
+  if (document.querySelector('dialog[open]') || e.target.closest('input,textarea,select,button,a,[contenteditable]')) return;
   const k = e.key;
   if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(k)) e.preventDefault();
   if (k === 'ArrowUp' || k === 'w' || k === 'W') steer(0, -1);

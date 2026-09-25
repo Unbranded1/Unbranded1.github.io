@@ -1,5 +1,5 @@
-const CACHE = 'smp-shell-v3';
-const SHELL = ['./index.html', './site.css', './appearance.js', './404.html', './not-found.css'];
+const CACHE = 'smp-shell-v5';
+const SHELL = ['./index.html', './utilities.css?v=qa-5', './site.css?v=qa-5', './appearance.js?v=qa-5', './404.html', './not-found.css?v=qa-5'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
 });

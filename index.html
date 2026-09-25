@@ -6,10 +6,11 @@
 <style>html.boot body{opacity:0}body{opacity:1;transition:opacity .15s ease}</style>
 <noscript><style>html.boot body{opacity:1}</style></noscript>
 <script>setTimeout(function(){document.documentElement.classList.remove('boot')},8000)</script>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://www.youtube.com https://www.gstatic.com https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.github.com https://*.goatcounter.com; form-action https://formspree.io; base-uri 'self'; object-src 'none'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.gstatic.com https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.github.com https://*.goatcounter.com; form-action https://formspree.io; base-uri 'self'; object-src 'none'" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icon-192.png" />
+<link rel="icon" type="image/png" href="icon-192.png" />
 <title>unbranded_branden &mdash; Sheet music &amp; arrangements</title>
 <meta name="description" content="Browse sheet music, arrangements, and transcriptions by unbranded_branden." />
 <meta property="og:title" content="unbranded_branden &mdash; Sheet music &amp; arrangements" />
@@ -17,40 +18,11 @@
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta name="theme-color" content="#fafafa" />
-<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="utilities.css?v=qa-5" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Inter','ui-sans-serif','system-ui','sans-serif'],
-        display: ['Fraunces','Georgia','serif']
-      },
-      colors: {
-        base: 'rgb(var(--c-bg) / <alpha-value>)',
-        surface: 'rgb(var(--c-surface) / <alpha-value>)',
-        sunken: 'rgb(var(--c-sunken) / <alpha-value>)',
-        line: 'rgb(var(--c-line) / <alpha-value>)',
-        ink: 'rgb(var(--c-ink) / <alpha-value>)',
-        mute: 'rgb(var(--c-mute) / <alpha-value>)',
-        faint: 'rgb(var(--c-faint) / <alpha-value>)',
-        accent: 'rgb(var(--c-accent) / <alpha-value>)',
-        'accent-hi': 'rgb(var(--c-accent-hi) / <alpha-value>)',
-        oninv: 'rgb(var(--c-on-accent) / <alpha-value>)',
-        admin: 'rgb(var(--c-admin) / <alpha-value>)',
-        'admin-hi': 'rgb(var(--c-admin-hi) / <alpha-value>)',
-        danger: 'rgb(var(--c-danger) / <alpha-value>)',
-        'danger-hi': 'rgb(var(--c-danger-hi) / <alpha-value>)'
-      },
-      boxShadow: { glow: '0 6px 28px -8px rgb(var(--c-accent) / .35)' }
-    }
-  }
-};
-</script>
-<script src="appearance.js"></script>
+<script src="appearance.js?v=qa-5"></script>
 <style>
 @keyframes bob { from { transform:translateY(0); } to { transform:translateY(-6px); } }
 @keyframes spinPulse { 0%,100% { transform:rotate(-6deg) scale(1); } 50% { transform:rotate(6deg) scale(1.12); } }
@@ -85,7 +57,7 @@ body.dancing h1, body.dancing h2, body.dancing h3 { animation: rgbSplit calc(.4s
 
 html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *:not(#downtime-home){display:none!important}
 </style>
-<link rel="stylesheet" href="site.css" />
+<link rel="stylesheet" href="site.css?v=qa-5" />
 </head>
 
 <body class="bg-base text-ink antialiased min-h-screen flex flex-col">
@@ -102,16 +74,16 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
 
 <header class="site-header">
   <nav class="site-nav" aria-label="Main navigation">
-    <a href="#" onclick="showView('home');return false;" class="brand" aria-label="unbranded_branden home">
+    <a href="#" onclick="return navigateView(event,'home')" class="brand" aria-label="unbranded_branden home">
       <span data-edit="logo" class="brand-mark">&#9835;</span>
       <span><span class="brand-name">unbranded_branden</span><span class="brand-caption">Sheet music &amp; arrangements</span></span>
     </a>
-    <div class="desktop-nav"><a data-view="home" href="#" onclick="showView('home');return false;">Home</a>
-<a data-dt-hide data-view="scores" href="#/scores" onclick="showView('scores');return false;">Scores</a>
-<a data-dt-hide data-view="vote" href="#/vote" onclick="showView('vote');return false;">Vote</a>
-<a id="nav-games" data-view="games" href="#/games" onclick="showView('games');return false;">Games</a>
-<a data-dt-hide data-view="access" href="#/friends" onclick="showView('access');return false;">Friends<span id="nav-friends-dot" class="hidden w-1.5 h-1.5 rounded-full bg-accent"></span></a>
-<a id="nav-admin" class="hidden" data-admin-nav data-view="admin" href="#/admin" onclick="showView('admin');return false;">Admin</a>
+    <div class="desktop-nav"><a data-view="home" href="#" onclick="return navigateView(event,'home')">Home</a>
+<a data-dt-hide data-view="scores" href="#/scores" onclick="return navigateView(event,'scores')">Scores</a>
+<a data-dt-hide data-view="vote" href="#/vote" onclick="return navigateView(event,'vote')">Vote</a>
+<a id="nav-games" data-view="games" href="#/games" onclick="return navigateView(event,'games')">Games</a>
+<a data-dt-hide data-view="access" href="#/friends" onclick="return navigateView(event,'access')">Friends<span id="nav-friends-dot" class="hidden w-1.5 h-1.5 rounded-full bg-accent"></span></a>
+<a id="nav-admin" class="hidden" data-admin-nav data-view="admin" href="#/admin" onclick="return navigateView(event,'admin')">Admin</a>
 <a data-dt-hide id="nav-downloads" href="#" target="_blank" rel="noopener" class="hidden">Downloads</a></div>
     <div class="header-tools"><a id="icon-youtube" href="#" target="_blank" rel="noopener" aria-label="YouTube channel" title="YouTube" class="social-icon w-8 h-8 grid place-items-center rounded-full border border-line text-mute hover:text-accent hover:border-accent transition-colors">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2c-.3-1.2-1.2-2.1-2.4-2.4C18.5 4.2 12 4.2 12 4.2s-6.5 0-8.6.6C2.2 5.1 1.3 6 1 7.2.4 9.4.4 12 .4 12s0 2.6.6 4.8c.3 1.2 1.2 2.1 2.4 2.4 2.1.6 8.6.6 8.6.6s6.5 0 8.6-.6c1.2-.3 2.1-1.2 2.4-2.4.6-2.2.6-4.8.6-4.8s0-2.6-.6-4.8zM9.8 15.5v-7l6 3.5-6 3.5z"/></svg>
@@ -123,21 +95,21 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
       <button onclick="toggleMobileMenu()" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu" id="mobile-menu-btn" class="ui-btn icon-button"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
     </div>
   </nav>
-  <nav id="mobile-menu" class="mobile-nav" aria-label="Mobile navigation" hidden inert><a data-view="home" href="#" onclick="showView('home');return false;">Home</a>
-<a data-dt-hide data-view="scores" href="#/scores" onclick="showView('scores');return false;">Scores</a>
-<a data-dt-hide data-view="vote" href="#/vote" onclick="showView('vote');return false;">Vote</a>
-<a id="nav-games-m" data-view="games" href="#/games" onclick="showView('games');return false;">Games</a>
-<a data-dt-hide data-view="access" href="#/friends" onclick="showView('access');return false;">Friends<span id="nav-friends-dot-m" class="hidden w-1.5 h-1.5 rounded-full bg-accent"></span></a>
-<a id="nav-admin-m" class="hidden" data-admin-nav data-view="admin" href="#/admin" onclick="showView('admin');return false;">Admin</a>
+  <nav id="mobile-menu" class="mobile-nav" aria-label="Mobile navigation" hidden inert><a data-view="home" href="#" onclick="return navigateView(event,'home')">Home</a>
+<a data-dt-hide data-view="scores" href="#/scores" onclick="return navigateView(event,'scores')">Scores</a>
+<a data-dt-hide data-view="vote" href="#/vote" onclick="return navigateView(event,'vote')">Vote</a>
+<a id="nav-games-m" data-view="games" href="#/games" onclick="return navigateView(event,'games')">Games</a>
+<a data-dt-hide data-view="access" href="#/friends" onclick="return navigateView(event,'access')">Friends<span id="nav-friends-dot-m" class="hidden w-1.5 h-1.5 rounded-full bg-accent"></span></a>
+<a id="nav-admin-m" class="hidden" data-admin-nav data-view="admin" href="#/admin" onclick="return navigateView(event,'admin')">Admin</a>
 <a data-dt-hide id="nav-downloads-m" href="#" target="_blank" rel="noopener" class="hidden">Downloads</a></nav>
 </header>
 
-<main id="main-content" class="flex-1">
+<main id="main-content" tabindex="-1" class="flex-1">
 
 <div id="view-home">
   <section id="downtime-home" data-annoy-exempt class="hidden mx-auto max-w-md px-4 py-24 text-center">
     <p class="font-display text-5xl font-bold text-ink mb-3">&#9835;</p>
-    <h2 data-edit="dtTitle" class="font-display text-3xl font-bold text-ink mb-2">Down for maintenance</h2>
+    <h1 data-edit="dtTitle" class="font-display text-3xl font-bold text-ink mb-2">Down for maintenance</h1>
     <p data-edit="dtSub" class="text-sm text-mute mb-6">The site is temporarily offline for maintenance. Check back later.</p>
     <div class="rounded-2xl border border-line bg-surface p-5 text-sm space-y-2 mb-6">
       <p class="text-mute"><span data-edit="dtActiveLabel">Time offline:</span> <strong id="dt-timer" class="text-ink tabular-nums">0:00:00</strong></p>
@@ -152,7 +124,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
       <p data-edit="heroEyebrow">Arrangements by unbranded_branden</p>
       <h1 data-edit="heroHeading">Sheet music &amp; arrangements</h1>
       <p data-edit="heroSub">Original arrangements, transcriptions, and custom sheet music. Browse the scores and listen to audio previews made in MuseScore Studio.</p>
-      <div class="hero-actions"><a href="#/scores" onclick="showView('scores');return false;" class="ui-btn bg-accent">Browse scores</a><a href="#contact" class="ui-btn">Contact</a></div>
+      <div class="hero-actions"><a href="#/scores" onclick="return navigateView(event,'scores')" class="ui-btn bg-accent">Browse scores</a><a href="#contact" class="ui-btn">Contact</a></div>
       <p id="stats-strip"></p>
       <div id="now-arranging" class="hidden"><span id="now-arranging-text"></span></div>
     </div>
@@ -160,12 +132,12 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
   </section>
   <section class="home-hint page-width"><div id="hint-home"></div></section>
   <section class="home-routes page-width">
-    <a href="#/scores" onclick="showView('scores');return false;" class="route-link">
+    <a href="#/scores" onclick="return navigateView(event,'scores')" class="route-link">
       <h2 data-edit="exploreScoresTitle">Published sheet music</h2>
       <p data-edit="exploreScoresSub">Find arrangements, preview the music, and open score or store links.</p>
       <span class="route-action">Open the catalog <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span>
     </a>
-    <a href="#/vote" onclick="showView('vote');return false;" class="route-link">
+    <a href="#/vote" onclick="return navigateView(event,'vote')" class="route-link">
       <h2 data-edit="exploreVoteTitle">Vote for the next arrangement</h2>
       <p data-edit="exploreVoteSub">Vote for a song to be arranged or suggest a new one.</p>
       <span class="route-action">View voting board <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span>
@@ -185,7 +157,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
     <div id="faq-list" class="max-w-3xl space-y-3"></div>
   </section>
 
-  <section id="contact" class="mx-auto max-w-6xl px-4 sm:px-6 py-16 sect">
+  <section id="contact" tabindex="-1" class="mx-auto max-w-6xl px-4 sm:px-6 py-16 sect">
     <div class="max-w-3xl">
       
       <h2 data-edit="contactTitle" class="font-display text-3xl font-bold text-ink">Get in touch</h2>
@@ -194,11 +166,11 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
         <div class="grid sm:grid-cols-2 gap-5">
           <label class="block">
             <span class="block text-xs font-semibold text-mute mb-1.5">Name</span>
-            <input id="ct-name" name="name" type="text" required class="ui-field w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink focus:border-accent" />
+            <input id="ct-name" name="name" autocomplete="name" type="text" required class="ui-field w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink focus:border-accent" />
           </label>
           <label class="block">
             <span class="block text-xs font-semibold text-mute mb-1.5">Email</span>
-            <input id="ct-email" name="email" type="email" required class="ui-field w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink focus:border-accent" />
+            <input id="ct-email" name="email" autocomplete="email" spellcheck="false" type="email" required class="ui-field w-full rounded-xl bg-sunken border border-line px-3.5 py-2.5 text-ink focus:border-accent" />
           </label>
         </div>
         <label class="block">
@@ -220,7 +192,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
         
-        <h2 data-edit="catalogTitle" class="font-display text-4xl sm:text-5xl font-bold text-ink mb-3">Published sheet music</h2>
+        <h1 data-edit="catalogTitle" class="font-display text-4xl sm:text-5xl font-bold text-ink mb-3">Published sheet music</h1>
         <p data-edit="catalogSub" class="text-mute mb-6 max-w-2xl">Browse scores and listen to MuseScore Studio audio previews. Open a score for details and download or store links.</p>
       </div>
       <div class="flex items-center rounded-xl border border-line bg-surface overflow-hidden mb-6" role="group" aria-label="Catalog layout">
@@ -252,13 +224,13 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
     <button onclick="showView('home')" class="ui-btn inline-flex items-center gap-2 text-sm font-medium text-mute hover:text-accent transition-colors mb-10">&larr; Back to Home</button>
     <div class="max-w-3xl">
       <p class="text-accent text-xs font-bold tracking-[0.35em] uppercase mb-2">Community</p>
-      <h2 data-edit="votingTitle" class="font-display text-4xl sm:text-5xl font-bold text-ink">Vote for the next arrangement</h2>
+      <h1 data-edit="votingTitle" class="font-display text-4xl sm:text-5xl font-bold text-ink">Vote for the next arrangement</h1>
       <p data-edit="votingSub" class="text-mute text-sm mt-3 mb-6">Each visitor can vote once per song. The board updates as votes arrive.</p>
       <div id="hint-vote" class="mb-6"></div>
       <ul id="voting-board" class="space-y-3"></ul>
 
       <div class="mt-16 pt-12 border-t border-line/60">
-        <h3 data-edit="suggestTitle" class="font-display text-3xl font-bold text-ink">Suggest a song</h3>
+        <h2 data-edit="suggestTitle" class="font-display text-3xl font-bold text-ink">Suggest a song</h2>
         <p data-edit="suggestSub" class="text-mute text-sm mt-2 mb-8">Use this form to request a song that is not on the board.</p>
         <form id="suggestion-form" action="https://formspree.io/f/xoeanodr" method="POST" class="bg-surface border border-line rounded-2xl p-6 sm:p-8 space-y-6">
           <div class="grid sm:grid-cols-2 gap-5">
@@ -304,7 +276,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
 <div id="view-games" class="hidden">
   <section class="mx-auto max-w-4xl px-4 sm:px-6 py-14 sect scroll-mt-20">
     <p data-edit="gamesEyebrow" class="text-xs font-bold tracking-[.22em] text-faint uppercase mb-2">Games</p>
-    <h2 data-edit="gamesTitle" class="font-display text-3xl sm:text-4xl font-bold text-ink mb-2">Music quiz</h2>
+    <h1 data-edit="gamesTitle" class="font-display text-3xl sm:text-4xl font-bold text-ink mb-2">Music quiz</h1>
     <p class="text-sm text-mute mb-8 max-w-xl"><span data-edit="gamesIntro">Answer timed questions from a set of 500. Start with three lives and earn a life back for each correct very hard answer.</span> <a href="404.html" class="text-accent underline decoration-2 underline-offset-2">Play Snake on the 404 page.</a></p>
     <div id="quiz-idle" class="rounded-2xl border border-line bg-surface p-8 text-center">
       <button onclick="quizStart()" class="ui-btn rounded-xl bg-accent px-8 py-3 font-bold text-oninv hover:bg-accent-hi transition-colors">Start quiz</button>
@@ -351,7 +323,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
     <button onclick="showView('home')" class="ui-btn inline-flex items-center gap-2 text-sm font-medium text-mute hover:text-accent transition-colors mb-10">&larr; Back to Home</button>
     <div class="access-panel">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-1 relative">
-        <h2 data-edit="portalTitle" class="font-display text-3xl font-bold text-ink">Friends access</h2>
+        <h1 data-edit="portalTitle" class="font-display text-3xl font-bold text-ink">Friends access</h1>
         <span id="portal-status-badge" class="hidden text-xs font-bold tracking-wider px-3 py-1.5 rounded-full border"></span>
       </div>
       <p data-edit="portalSub" class="text-mute text-sm mb-6 relative">Enter the friends passcode to open the Friends Vault.</p>
@@ -375,7 +347,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
         
-        <h2 data-edit="vaultTitle" class="font-display text-3xl font-bold text-ink">Friends Vault</h2>
+        <h1 data-edit="vaultTitle" class="font-display text-3xl font-bold text-ink">Friends Vault</h1>
         <p data-edit="vaultSub" class="text-mute text-sm mt-2">Private drafts and works in progress, shared with friends only.</p>
       </div>
       <div class="flex items-center rounded-xl border border-line bg-surface overflow-hidden" role="group" aria-label="Vault layout">
@@ -404,12 +376,12 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
 
 <div id="view-admin" class="hidden">
   <section id="admin-login" class="admin-signin page-width">
-    <a href="#" onclick="showView('home');return false;" class="ui-btn inline-flex items-center text-mute mb-6">&larr; Back to Home</a>
+    <a href="#" onclick="return navigateView(event,'home')" class="ui-btn inline-flex items-center text-mute mb-6">&larr; Back to Home</a>
     <h1>Admin sign-in</h1>
     <p class="text-mute mt-3 mb-6">Sign in with your admin account to manage the site. Admin access remains available during maintenance.</p>
     <form onsubmit="event.preventDefault();adminLogin()" class="space-y-5">
-      <label class="block"><span class="field-label">Admin email</span><input id="al-email" autocapitalize="none" autocorrect="off" spellcheck="false" type="email" required autocomplete="username" class="ui-field w-full" /></label>
-      <label class="block"><span class="field-label">Password</span><input id="al-pass" type="password" required autocomplete="current-password" class="ui-field w-full" /></label>
+      <label class="block"><span class="field-label">Admin email</span><input id="al-email" name="username" autocapitalize="none" autocorrect="off" spellcheck="false" type="email" required autocomplete="username" class="ui-field w-full" /></label>
+      <label class="block"><span class="field-label">Password</span><input id="al-pass" name="password" type="password" required autocomplete="current-password" class="ui-field w-full" /></label>
       <p id="admin-login-feedback" class="text-sm text-danger" role="alert"></p>
       <button id="admin-login-submit" type="submit" class="ui-btn bg-ink px-6 py-3">Sign in</button>
     </form>
@@ -418,7 +390,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
     <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
       <div>
         <p class="text-admin text-xs font-bold tracking-[0.35em] uppercase mb-2">Admin</p>
-        <h2 class="font-display text-3xl font-bold text-ink">Admin panel</h2>
+        <h1 class="font-display text-3xl font-bold text-ink">Admin panel</h1>
       </div>
       <button onclick="logoutAdmin()" class="ui-btn rounded-xl border border-admin/50 px-4 py-2 text-sm font-semibold text-admin hover:bg-admin/10 transition-colors">Log out of admin</button>
     </div>
@@ -427,12 +399,12 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
     <div class="admin-shell">
       <div id="admin-tabs" class="admin-sidebar" role="tablist" aria-label="Admin sections" aria-orientation="vertical">
         <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="true" id="admin-tab-dash" aria-controls="admin-panel-dash" tabindex="0" data-tab="dash" onclick="setAdminTab('dash')">Dashboard</button>
-        <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-catalog" aria-controls="admin-panel-catalog" tabindex="-1" data-tab="catalog" onclick="setAdminTab('catalog')">Published <span data-count="catalog" class="opacity-70"></span></button>
-        <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-vault" aria-controls="admin-panel-vault" tabindex="-1" data-tab="vault" onclick="setAdminTab('vault')">Friends Vault <span data-count="vault" class="opacity-70"></span></button>
-        <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-voting" aria-controls="admin-panel-voting" tabindex="-1" data-tab="voting" onclick="setAdminTab('voting')">Voting board <span data-count="voting" class="opacity-70"></span></button>
-        <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-inbox" aria-controls="admin-panel-inbox" tabindex="-1" data-tab="inbox" onclick="setAdminTab('inbox')">Inbox <span data-count="inbox" class="opacity-70"></span></button>
-        <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-genres" aria-controls="admin-panel-genres" tabindex="-1" data-tab="genres" onclick="setAdminTab('genres')">Genres <span data-count="genres" class="opacity-70"></span></button>
-        <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-faq" aria-controls="admin-panel-faq" tabindex="-1" data-tab="faq" onclick="setAdminTab('faq')">FAQ <span data-count="faq" class="opacity-70"></span></button>
+        <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-catalog" aria-controls="admin-panel-catalog" tabindex="-1" data-tab="catalog" onclick="setAdminTab('catalog')">Published <span data-count="catalog"></span></button>
+        <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-vault" aria-controls="admin-panel-vault" tabindex="-1" data-tab="vault" onclick="setAdminTab('vault')">Friends Vault <span data-count="vault"></span></button>
+        <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-voting" aria-controls="admin-panel-voting" tabindex="-1" data-tab="voting" onclick="setAdminTab('voting')">Voting board <span data-count="voting"></span></button>
+        <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-inbox" aria-controls="admin-panel-inbox" tabindex="-1" data-tab="inbox" onclick="setAdminTab('inbox')">Inbox <span data-count="inbox"></span></button>
+        <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-genres" aria-controls="admin-panel-genres" tabindex="-1" data-tab="genres" onclick="setAdminTab('genres')">Genres <span data-count="genres"></span></button>
+        <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-faq" aria-controls="admin-panel-faq" tabindex="-1" data-tab="faq" onclick="setAdminTab('faq')">FAQ <span data-count="faq"></span></button>
         <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-social" aria-controls="admin-panel-social" tabindex="-1" data-tab="social" onclick="setAdminTab('social')">YouTube / Instagram</button>
         <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-games" aria-controls="admin-panel-games" tabindex="-1" data-tab="games" onclick="setAdminTab('games')">Games</button>
         <button class="ui-btn tab-btn shrink-0 text-sm rounded-xl px-4 py-2 text-left text-mute hover:text-admin" role="tab" aria-selected="false" id="admin-tab-status" aria-controls="admin-panel-status" tabindex="-1" data-tab="status" onclick="setAdminTab('status')">Site status</button>
@@ -457,7 +429,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
           <p class="text-sm text-mute mb-5">Manage published arrangements. Select a score on the site to preview its details.</p>
           <div class="grid lg:grid-cols-2 gap-8">
             <div>
-              <h3 id="catalog-form-title" class="font-semibold text-admin mb-4">Add published arrangement</h3>
+              <h2 id="catalog-form-title" class="font-semibold text-admin mb-4">Add published arrangement</h2>
               <div class="space-y-3">
                 <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Title *</span>
                   <input id="c-title" type="text" class="ui-field w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
@@ -502,7 +474,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
               </div>
             </div>
             <div>
-              <h3 class="font-semibold text-mute mb-1">Published arrangements</h3>
+              <h2 class="font-semibold text-mute mb-1">Published arrangements</h2>
               <p class="text-xs text-faint mb-4">&#9733; features a score on the home page &middot; &#9650;&#9660; reorder</p>
               <ul id="admin-catalog-list" class="space-y-2 text-sm"></ul>
             </div>
@@ -513,7 +485,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
           <p class="text-sm text-mute mb-5">Manage scores available through Friends access.</p>
           <div class="grid lg:grid-cols-2 gap-8">
             <div>
-              <h3 id="vault-form-title" class="font-semibold text-admin mb-4">Add vault score</h3>
+              <h2 id="vault-form-title" class="font-semibold text-admin mb-4">Add vault score</h2>
               <div class="space-y-3">
                 <label class="block"><span class="block text-xs font-semibold text-mute mb-1">Title *</span>
                   <input id="v-title" type="text" class="ui-field w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" /></label>
@@ -558,7 +530,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
               </div>
             </div>
             <div>
-              <h3 class="font-semibold text-mute mb-1">Vault scores</h3>
+              <h2 class="font-semibold text-mute mb-1">Vault scores</h2>
               <p class="text-xs text-faint mb-4">&#9650;&#9660; reorder &middot; Edit loads the score into the form</p>
               <ul id="admin-vault-list" class="space-y-2 text-sm"></ul>
             </div>
@@ -644,7 +616,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
         </div>
 
         <div id="admin-panel-games" role="tabpanel" aria-labelledby="admin-tab-games" data-tabpanel="games" class="hidden">
-          <h3 class="font-display text-xl font-bold text-ink mb-1.5">Games</h3>
+          <h2 class="font-display text-xl font-bold text-ink mb-1.5">Games</h2>
           <p class="text-sm text-mute mb-6 max-w-2xl">Choose which games and effects are available. Save changes to apply them. Publishing follows the site settings in Backup &amp; Data.</p>
           <div class="space-y-4 max-w-md">
             <label class="flex items-center justify-between gap-4"><span class="text-sm text-mute">Show the Games page (quiz)</span><input id="ga-quiz" type="checkbox" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-admin))]" /></label>
@@ -659,7 +631,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
           </div>
         </div>
         <div id="admin-panel-status" role="tabpanel" aria-labelledby="admin-tab-status" data-tabpanel="status" class="hidden">
-          <h3 class="font-display text-xl font-bold text-ink mb-1.5">Site status</h3>
+          <h2 class="font-display text-xl font-bold text-ink mb-1.5">Site status</h2>
           <p class="text-sm text-mute mb-6 max-w-2xl">Enable maintenance mode to show visitors a notice on Home. The Games page remains available if enabled. Admins keep full access, and Snake on the 404 page remains available.</p>
           <div class="max-w-md rounded-2xl border border-danger/40 p-4">
             <label class="flex items-center justify-between gap-4 mb-3"><span class="text-sm text-mute">Enable maintenance mode</span><input id="st-down" type="checkbox" class="w-4 h-4 rounded border-line accent-[rgb(var(--c-danger))]" /></label>
@@ -676,7 +648,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
         </div>
         <div id="admin-panel-data" role="tabpanel" aria-labelledby="admin-tab-data" data-tabpanel="data" class="hidden">
           <div class="mb-8">
-            <h4 class="font-bold text-ink mb-1.5">Direct uploads (GitHub token)</h4>
+            <h2 class="upload-heading font-bold text-ink mb-1.5">Direct uploads (GitHub token)</h2>
             <p class="text-sm text-mute mb-3 max-w-2xl">Save files to your repository with the Upload buttons in score forms. Create a fine-grained token at github.com &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens, scoped to only this repository with Contents read &amp; write. The token is stored only on this device.</p>
             <div class="flex flex-col sm:flex-row gap-2 max-w-md">
               <label for="gh-token" class="field-label">GitHub token</label><input id="gh-token" type="password" placeholder="github_pat_&hellip;" class="ui-field w-full rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-admin" />
@@ -705,7 +677,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
 
 <footer class="sect bg-sunken/60 mt-auto pb-24 sm:pb-8">
   <div class="mx-auto max-w-6xl px-4 sm:px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-    <p class="text-sm text-faint"><span data-edit="footerNote">&copy; unbranded_branden &middot; Handcrafted sheet music.</span> <a href="404.html" class="text-faint/50 hover:text-accent transition-colors ml-2 text-xs" title="404">404</a></p>
+    <p class="text-sm text-faint"><span data-edit="footerNote">&copy; unbranded_branden &middot; Handcrafted sheet music.</span> <a href="404.html" class="text-faint underline hover:text-accent transition-colors ml-2 text-xs" title="404">404</a></p>
     <div class="flex items-center gap-5 text-sm font-medium">
       <a id="foot-youtube" href="#" target="_blank" rel="noopener" class="text-mute hover:text-accent transition-colors">YouTube</a>
       <a id="foot-instagram" href="#" target="_blank" rel="noopener" class="text-mute hover:text-accent transition-colors">Instagram</a>
@@ -902,7 +874,7 @@ html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *
 
 <div class="fixed -left-[9999px] bottom-0" aria-hidden="true"><div id="yt-audio-player"></div></div>
 
-<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] hidden rounded-xl px-5 py-3 text-sm shadow-2xl border"></div>
+<div id="toast" role="status" aria-live="polite" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] hidden rounded-xl px-5 py-3 text-sm shadow-2xl border"></div>
 
 <script>
 'use strict';
@@ -1140,6 +1112,19 @@ function persistFriend(on) {
 function persistAdmin(on) {
   try { on ? sessionStorage.setItem(LS.access, JSON.stringify('admin')) : sessionStorage.removeItem(LS.access); } catch {}
 }
+function isRecord(value) { return value !== null && typeof value === 'object' && !Array.isArray(value); }
+function validContentRecord(item) {
+  return isRecord(item) && typeof item.id === 'string' && /^[\w-]+$/.test(item.id) && typeof item.title === 'string';
+}
+function validScoreRecord(item) {
+  return validContentRecord(item)
+    && ['tags','instruments','genres'].every(key => item[key] === undefined || (Array.isArray(item[key]) && item[key].every(x => typeof x === 'string')))
+    && ['artist','arrangement','difficulty','dateAdded','previewImg','driveLink','musescoreLink','audioFile','pdfFile','desc','video'].every(key => item[key] === undefined || typeof item[key] === 'string')
+    && (item.links === undefined || (Array.isArray(item.links) && item.links.every(x => isRecord(x) && typeof x.url === 'string' && (x.label === undefined || typeof x.label === 'string'))));
+}
+function contentRecords(value, fallback, valid) {
+  return Array.isArray(value) ? value.filter(valid) : clone(fallback);
+}
 function migrateScores(list) {
   let changed = false;
   list.forEach(x => {
@@ -1163,11 +1148,11 @@ function migrateScores(list) {
   return changed;
 }
 function loadState() {
-  state.catalog = loadContent(LS.catalog, 'catalog', DEFAULTS.catalog);
-  state.vault = loadContent(LS.vault, 'vault', DEFAULTS.vault);
+  state.catalog = contentRecords(loadContent(LS.catalog, 'catalog', DEFAULTS.catalog), DEFAULTS.catalog, validScoreRecord);
+  state.vault = contentRecords(loadContent(LS.vault, 'vault', DEFAULTS.vault), DEFAULTS.vault, validScoreRecord);
   if (migrateScores(state.catalog)) saveKey(LS.catalog, state.catalog);
   if (migrateScores(state.vault)) saveKey(LS.vault, state.vault);
-  state.voting = loadContent(LS.voting, 'voting', DEFAULTS.voting);
+  state.voting = contentRecords(loadContent(LS.voting, 'voting', DEFAULTS.voting), DEFAULTS.voting, validContentRecord);
   let vChanged = false;
   state.voting.forEach(v => {
     if (typeof v.music !== 'string') { v.music = ''; vChanged = true; }
@@ -1177,6 +1162,7 @@ function loadState() {
   });
   if (vChanged) saveKey(LS.voting, state.voting);
   state.userVotes = loadKey(LS.userVotes, {});
+  if (!isRecord(state.userVotes)) state.userVotes = {};
   state.social = loadContent(LS.social, 'social', DEFAULTS.social);
   if (!state.social || typeof state.social !== 'object') state.social = clone(DEFAULTS.social);
   if (typeof state.social.downloads !== 'string') state.social.downloads = '';
@@ -1878,13 +1864,23 @@ function qzBuild() {
   };
   QZ_POOLS = { e: trim(E, 150, 'e'), n: trim(N, 250, 'n'), h: trim(H, 50, 'h'), v: trim(V, 50, 'v') };
 }
-const QZ = { on:false, lives:3, pity:0, nextHardAt:50, answered:0, correct:0, e:0, n:0, h:0, v:0, t0:0, q:null, deadline:0, timer:null, clock:null, lastVH:false, bags:null, timeMs:0 };
+const QZ = { on:false, lives:3, pity:0, nextHardAt:50, answered:0, correct:0, e:0, n:0, h:0, v:0, t0:0, q:null, deadline:0, timer:null, clock:null, next:null, lastVH:false, bags:null, timeMs:0 };
 function quizIdle() {
   $('quiz-idle').classList.remove('hidden');
   $('quiz-play').classList.add('hidden');
   $('quiz-over').classList.add('hidden');
 }
+function stopQuiz() {
+  QZ.on = false;
+  QZ.q = null;
+  clearInterval(QZ.timer);
+  clearInterval(QZ.clock);
+  clearTimeout(QZ.next);
+  QZ.timer = QZ.clock = QZ.next = null;
+  quizIdle();
+}
 function quizStart() {
+  stopQuiz();
   if (!QZ_POOLS) { try { qzBuild(); } catch (err) { toast('The quiz could not load. Reload the page and try again.', false); return; } }
   Object.assign(QZ, { on:true, lives:3, pity:0, nextHardAt:50, answered:0, correct:0, e:0, n:0, h:0, v:0, t0:Date.now(), lastVH:false, timeMs:0 });
   QZ.bags = { e:[...QZ_POOLS.e], n:[...QZ_POOLS.n], h:[...QZ_POOLS.h], v:[...QZ_POOLS.v] };
@@ -1907,6 +1903,8 @@ function qzDraw(d) {
   return null;
 }
 function qzNext() {
+  if (!QZ.on) return;
+  QZ.next = null;
   const d = qzPickDiff();
   const q = qzDraw(d);
   if (!q) { qzOver('You emptied all 500 questions. Absurd.'); return; }
@@ -1925,6 +1923,7 @@ function qzNext() {
   qzTick();
 }
 function qzTick() {
+  if (!QZ.on || !QZ.q) return;
   const left = Math.max(0, QZ.deadline - Date.now());
   const secs = QZ.q.d === 'h' || QZ.q.d === 'v' ? 10000 : 5000;
   $('qz-timer-num').textContent = (left / 1000).toFixed(1);
@@ -1965,11 +1964,13 @@ function qzAnswer(i) {
     else if (j === i) { b.dataset.result = 'incorrect'; b.style.borderColor = 'rgb(var(--c-danger))'; }
   });
   qzHud();
-  if (QZ.lives <= 0) { setTimeout(() => qzOver('No lives remaining.'), 650); return; }
-  setTimeout(qzNext, right ? 350 : 750);
+  if (QZ.lives <= 0) { QZ.next = setTimeout(() => qzOver('No lives remaining.'), 650); return; }
+  QZ.next = setTimeout(qzNext, right ? 350 : 750);
 }
 let lbRun = null;
 function qzOver(msg) {
+  clearTimeout(QZ.next);
+  QZ.next = null;
   QZ.on = false;
   lbRun = { answered: QZ.answered, correct: QZ.correct, timeMs: QZ.timeMs, e: QZ.e, n: QZ.n, h: QZ.h, v: QZ.v };
   if (QZ.timer) clearInterval(QZ.timer);
@@ -1982,7 +1983,7 @@ function qzOver(msg) {
   lbAfterQuiz();
 }
 document.addEventListener('keydown', e => {
-  if (!QZ.on || !QZ.q) return;
+  if (!QZ.on || !QZ.q || currentView !== 'games' || document.querySelector('dialog[open]')) return;
   if (['1','2','3','4'].includes(e.key) && !e.target.closest('input, textarea, select')) {
     e.preventDefault();
     qzAnswer(Number(e.key) - 1);
@@ -2138,6 +2139,7 @@ function renderView(view) {
   if (view === 'access') $('friends-entry').classList.toggle('hidden', state.access !== 'none');
   if (view === 'games' && state.games && !state.games.quiz) view = 'home';
   if (sitedownActive() && !['home','games','admin'].includes(view)) view = 'home';
+  if (view !== 'games' && (QZ.on || QZ.next)) stopQuiz();
   currentView = view;
   document.querySelectorAll('[data-view]').forEach(a => { if (a.dataset.view === view) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
   pauseAudioEls(null);
@@ -2155,6 +2157,11 @@ function setHash(h) {
   suppressRoute = true;
   location.hash = h;
 }
+function navigateView(event, view) {
+  if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return true;
+  showView(view);
+  return false;
+}
 function showView(view) {
   renderView(view);
   setHash(ROUTES[currentView]);
@@ -2163,6 +2170,7 @@ function showView(view) {
   }
 }
 function openScoreById(id) {
+  if (sitedownActive()) { showView('home'); return; }
   const inCatalog = state.catalog.some(x => x.id === id);
   const inVault = state.vault.some(x => x.id === id);
   if (inCatalog) { renderView('scores'); openScore('catalog', id, false); }
@@ -2174,6 +2182,13 @@ function openScoreById(id) {
 function applyRoute() {
   const h = location.hash.replace(/^#\/?/, '');
   const modal = $('score-modal');
+  if (h === 'main-content') { $('main-content').focus({ preventScroll: true }); return; }
+  if (h === 'contact') {
+    if (modal.open) modal.close();
+    renderView('home');
+    if (!sitedownActive()) { $('contact').scrollIntoView({ behavior: 'auto' }); $('contact').focus({ preventScroll: true }); }
+    return;
+  }
   if (h.startsWith('s/')) { openScoreById(h.slice(2)); return; }
   if (modal.open) modal.close();
   if (h === 'scores') renderView('scores');
@@ -2329,12 +2344,7 @@ function applySiteStatus() {
   if (down) {
     if (!was && currentAudio) audioBarClose();
     if (!was && QZ.on) {
-      QZ.on = false;
-      if (QZ.timer) clearInterval(QZ.timer);
-      if (QZ.clock) clearInterval(QZ.clock);
-      QZ.timer = null;
-      QZ.clock = null;
-      quizIdle();
+      stopQuiz();
     }
     $('dt-eta').textContent = st.etaMin ? (Math.floor(st.etaMin / 60) ? Math.floor(st.etaMin / 60) + 'h ' : '') + (st.etaMin % 60) + 'm' : 'unknown';
     const tick = () => { $('dt-timer').textContent = fmtDur(Date.now() - (st.downSince || Date.now())); };
@@ -2450,7 +2460,7 @@ async function lbAfterQuiz() {
   catch { slot.innerHTML = '<p class="text-sm text-faint">The leaderboard could not load. Check your connection and try again later.</p>'; return; }
   const run = lbRun || { answered: 0, correct: 0, timeMs: 0, e: 0, n: 0, h: 0, v: 0 };
   const qualifies = run.answered > 0 && (rows.length < 10 || lbSortQuiz(run, rows[rows.length - 1]) < 0);
-  slot.innerHTML = '<h3 class="font-display text-lg font-bold text-ink mb-3">Quiz top 10</h3><div id="lb-board">' + lbBoardHtml(rows) + '</div>' +
+  slot.innerHTML = '<h2 class="font-display text-lg font-bold text-ink mb-3">Quiz top 10</h2><div id="lb-board">' + lbBoardHtml(rows) + '</div>' +
     (qualifies ? `<div id="lb-claim" class="mt-4 flex flex-wrap items-center gap-2">
       <span class="text-sm font-semibold text-ink">Add your name to the top 10:</span>
       <input id="lb-name" maxlength="13" placeholder="Your name (3\u201313)" class="ui-field rounded-xl bg-sunken border border-line px-3 py-2 text-sm focus:border-accent" />
@@ -2503,7 +2513,13 @@ function withYT(cb) {
     ytApiRequested = true;
     const sc = document.createElement('script');
     sc.src = 'https://www.youtube.com/iframe_api';
-    sc.onerror = () => toast('The audio player could not load. Check your connection and reload the page.', false);
+    sc.onerror = () => {
+      ytApiRequested = false;
+      ytQueue.length = 0;
+      sc.remove();
+      audioBarClose();
+      toast('The audio player could not load. Check your connection and try again.', false);
+    };
     document.head.appendChild(sc);
   }
 }
@@ -2511,6 +2527,7 @@ let ytPlayer = null;
 let ytPlayerReady = false;
 const ytPlayerQueue = [];
 let currentAudio = null;
+let audioRequest = 0;
 let audioState = 'paused';
 function withPlayer(cb) {
   if (ytPlayer && ytPlayerReady) { cb(); return; }
@@ -2595,6 +2612,7 @@ function audioBarToggle() {
   if (audioState === 'playing') ytPlayer.pauseVideo(); else ytPlayer.playVideo();
 }
 function audioBarClose() {
+  audioRequest++;
   if (ytPlayer && ytPlayerReady) { try { ytPlayer.pauseVideo(); } catch {} }
   currentAudio = null;
   audioState = 'paused';
@@ -2609,10 +2627,14 @@ function toggleAudioKey(key, vid, title) {
     else ytPlayer.playVideo();
     return;
   }
+  const request = ++audioRequest;
   currentAudio = key;
   audioState = 'playing';
   refreshAudioUI();
-  withYT(() => withPlayer(() => ytPlayer.loadVideoById(vid)));
+  withYT(() => {
+    if (request !== audioRequest) return;
+    withPlayer(() => { if (request === audioRequest) ytPlayer.loadVideoById(vid); });
+  });
 }
 function toggleAudio(id) {
   const item = state.voting.find(v => v.id === id);
@@ -2623,11 +2645,16 @@ function playScoreAudio(kind, id) {
   toggleAudioKey('score:' + kind + ':' + id, item ? ytId(item.video) : null, item ? item.title : '');
 }
 function stopAudio() {
+  audioRequest++;
   if (ytPlayer && ytPlayerReady && audioState === 'playing') ytPlayer.pauseVideo();
+  audioState = 'paused';
+  refreshAudioUI();
 }
 
 function validPublished(d) {
   if (!d || d.format !== 'sheet-music-portfolio-backup' || !Array.isArray(d.catalog) || !Array.isArray(d.vault) || !Array.isArray(d.voting)) return null;
+  if (!d.catalog.every(validScoreRecord) || !d.vault.every(validScoreRecord) || !d.voting.every(validContentRecord)) return null;
+  if ([d.catalog,d.vault,d.voting].some(list => new Set(list.map(x => x.id)).size !== list.length)) return null;
   return d;
 }
 async function initFirebase() {
@@ -2783,11 +2810,16 @@ function contentPayload() {
     siteStatus: state.siteStatus
   };
 }
-function publishContent(payload) {
-  if (!fbUser || !fbdb || !fbTools) return;
-  fbTools.setDoc(fbTools.doc(fbdb, 'site', 'content'), payload || contentPayload())
-    .then(() => renderDraftStatus())
-    .catch(() => toast('Publishing failed — change saved on this device only.', false));
+async function publishContent(payload) {
+  if (!fbUser || !fbdb || !fbTools) return false;
+  try {
+    await fbTools.setDoc(fbTools.doc(fbdb, 'site', 'content'), payload || contentPayload());
+    renderDraftStatus();
+    return true;
+  } catch {
+    toast(payload ? 'Backup publishing failed. Try again.' : 'Publishing failed — change saved on this device only.', false);
+    return false;
+  }
 }
 function afterContentChange() {
   if (fbUser) publishContent();
@@ -2864,7 +2896,7 @@ function renderVoting() {
       : '';
     return `<li class="vote-row">
       <span class="vote-rank">${i+1}</span>
-      <div class="vote-info"><h3>${esc(item.title)}</h3><p>${esc(item.artist)}</p><div class="vote-status">${statusBadge}${scoreLink}</div>${voted ? `<p class="text-accent">Your vote: ${my === 1 ? 'up' : 'down'}</p>` : ''}</div>
+      <div class="vote-info"><h2>${esc(item.title)}</h2><p>${esc(item.artist)}</p><div class="vote-status">${statusBadge}${scoreLink}</div>${voted ? `<p class="text-accent">Your vote: ${my === 1 ? 'up' : 'down'}</p>` : ''}</div>
       <div class="vote-controls">${playBtn}<span class="vote-count" aria-label="${n} votes">${n}<small>${Math.abs(n) === 1 ? 'vote' : 'votes'}</small></span>
         ${arranged ? '' : `<button class="ui-btn vote-btn icon-button" aria-pressed="${my===1}" ${voted?'disabled':''} onclick="castVote('${item.id}',1)" aria-label="Upvote ${attr(item.title)}">${uiIcon('up')}</button><button class="ui-btn vote-btn icon-button" aria-pressed="${my===-1}" ${voted?'disabled':''} onclick="castVote('${item.id}',-1)" aria-label="Downvote ${attr(item.title)}">${uiIcon('down')}</button>`}
       </div>
@@ -3069,9 +3101,9 @@ function uiIcon(name) {
   const paths = { play:'<path d="m8 5 11 7-11 7Z"/>', pause:'<path d="M8 5v14M16 5v14"/>', close:'<path d="m6 6 12 12M6 18 18 6"/>', up:'<path d="m6 14 6-6 6 6"/>', down:'<path d="m6 10 6 6 6-6"/>' };
   return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true">${paths[name] || paths.play}</svg>`;
 }
-function scoreCover(item) {
+function scoreCover(item, eager = false) {
   return `<div class="score-cover ${item.previewImg ? 'has-sheet' : ''}">${item.previewImg
-    ? `<img src="${attr(item.previewImg)}" alt="Score preview: ${attr(item.title)}" loading="lazy" />`
+    ? `<img src="${attr(item.previewImg)}" alt="Score preview: ${attr(item.title)}" loading="${eager ? 'eager' : 'lazy'}" ${eager ? 'fetchpriority="high"' : ''} />`
     : `<div class="cover-paper"><span class="cover-type">Sheet music</span><strong>${esc(item.title)}</strong><span class="cover-artist">${esc(item.artist || '')}</span><span class="cover-ensemble">${esc(item.arrangement || '')}</span></div>`}</div>`;
 }
 function scorePreview(item, kind) {
@@ -3097,14 +3129,14 @@ function clearScoreFilters(kind) {
 }
 function renderHeroScore() {
   const item = state.catalog.find(x => x.id === state.featured) || state.catalog[0];
-  $('hero-score').innerHTML = item ? `<a class="hero-score-link" href="#/s/${attr(item.id)}" onclick="gotoScore('${item.id}');return false;">${scoreCover(item)}<div><span class="field-label">From the catalog</span><h2>${esc(item.title)}</h2><p>${metaLine(item)}</p><span class="text-accent">View score &rarr;</span></div></a>` : '';
+  $('hero-score').innerHTML = item ? `<a class="hero-score-link" href="#/s/${attr(item.id)}" onclick="if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return true;gotoScore('${item.id}');return false;">${scoreCover(item, true)}<div><span class="field-label">From the catalog</span><h2>${esc(item.title)}</h2><p>${metaLine(item)}</p><span class="text-accent">View score &rarr;</span></div></a>` : '';
 }
 
 function scoreCard(item, kind) {
   const tags = (item.tags || []).slice(0,4).map(t => `<span>${esc(t)}</span>`).join('');
   return `<article class="score-card card-hover">
     <button class="ui-btn score-cover-button" onclick="openScore('${kind}','${item.id}')" aria-label="View score: ${attr(item.title)}">${scoreCover(item)}</button>
-    <div class="score-body"><div><h3><button class="ui-btn score-title-button" onclick="openScore('${kind}','${item.id}')">${esc(item.title)}</button></h3><p class="score-meta">${metaLine(item)}</p></div>
+    <div class="score-body"><div><h2><button class="ui-btn score-title-button" onclick="openScore('${kind}','${item.id}')">${esc(item.title)}</button></h2><p class="score-meta">${metaLine(item)}</p></div>
     <div class="score-badges">${badgeRow(item)}</div>
     ${item.desc ? `<p class="score-desc desc-clamp">${esc(item.desc)}</p><button class="ui-btn desc-toggle hidden text-accent" onclick="toggleDesc(this)">Show more</button>` : ''}
     <div class="score-tags">${tags}${(item.tags || []).length > 4 ? `<span>+${item.tags.length-4} more</span>` : ''}</div>
@@ -3112,9 +3144,10 @@ function scoreCard(item, kind) {
   </article>`;
 }
 function scoreRow(item, kind) {
-  return `<article class="score-row"><button class="ui-btn score-cover-button" onclick="openScore('${kind}','${item.id}')" aria-label="View score: ${attr(item.title)}">${scoreCover(item)}</button><div><h3><button class="ui-btn score-title-button" onclick="openScore('${kind}','${item.id}')">${esc(item.title)}</button></h3><p class="score-meta">${metaLine(item)}</p><div class="score-badges">${badgeRow(item)}</div></div><div class="score-actions">${scorePreview(item,kind)}${scoreLinkButtons(item)}${adminItemButtons(kind,item.id)}</div></article>`;
+  return `<article class="score-row"><button class="ui-btn score-cover-button" onclick="openScore('${kind}','${item.id}')" aria-label="View score: ${attr(item.title)}">${scoreCover(item)}</button><div><h2><button class="ui-btn score-title-button" onclick="openScore('${kind}','${item.id}')">${esc(item.title)}</button></h2><p class="score-meta">${metaLine(item)}</p><div class="score-badges">${badgeRow(item)}</div></div><div class="score-actions">${scorePreview(item,kind)}${scoreLinkButtons(item)}${adminItemButtons(kind,item.id)}</div></article>`;
 }
 function openScore(kind, id, updateHash = true) {
+  if (sitedownActive()) { showView('home'); return; }
   if (kind === 'vault' && state.access === 'none') { showView('access'); return; }
   const item = listOf(kind).find(x => x.id === id);
   if (!item) return;
@@ -3135,6 +3168,7 @@ function recordView(id) {
   if (!fbActive || !fbdb || !fbTools) return;
   let seen = {};
   try { seen = JSON.parse(sessionStorage.getItem('smp_viewed') || '{}'); } catch {}
+  if (!isRecord(seen)) seen = {};
   if (seen[id]) return;
   seen[id] = 1;
   try { sessionStorage.setItem('smp_viewed', JSON.stringify(seen)); } catch {}
@@ -3834,13 +3868,15 @@ function importData(input) {
     let d;
     try { d = JSON.parse(reader.result); }
     catch { dataFeedback('The file is not valid JSON. Select a valid backup file.', false); return; }
-    if (!d || d.format !== 'sheet-music-portfolio-backup' || !Array.isArray(d.catalog) || !Array.isArray(d.vault) || !Array.isArray(d.voting)) {
+    if (!validPublished(d)) {
       dataFeedback('The file is not a portfolio backup. Select an exported backup file.', false);
       return;
     }
-    confirmAction('Import this backup? It replaces all current scores, voting items, links, and text edits.', () => {
+    confirmAction('Import this backup? It replaces all current scores, voting items, links, and text edits.', async () => {
       if (fbUser) {
-        publishContent(validPublished(d) || contentPayload());
+        dataFeedback('Publishing backup…');
+        if (!await publishContent(d)) { dataFeedback('The backup could not be published. Check your connection and import it again.', false); return; }
+        try { localStorage.removeItem(DRAFT_KEY); } catch {}
         dataFeedback('Backup imported and published live.');
         setTimeout(() => location.reload(), 800);
         return;
@@ -3970,8 +4006,13 @@ async function unlockAccess() {
   if (intro) { showIntro(intro); return; }
   showView(state.access === 'admin' ? 'admin' : 'access');
 }
-function logoutAll() {
-  if (fbUser && fbAuth && fbAuthTools) fbAuthTools.signOut(fbAuth).catch(() => {});
+async function signOutAdmin() {
+  if (!fbUser || !fbAuth || !fbAuthTools) return true;
+  try { await fbAuthTools.signOut(fbAuth); fbUser = null; return true; }
+  catch { toast('Sign-out failed. Check your connection and try again.', false); return false; }
+}
+async function logoutAll() {
+  if (!await signOutAdmin()) return;
   persistAdmin(false);
   persistFriend(false);
   state.access = 'none';
@@ -3987,12 +4028,8 @@ function logoutAll() {
   showView('access');
   toast('Logged out.');
 }
-function logoutAdmin() {
-  if (fbUser && fbAuth && fbAuthTools) {
-    fbAuthTools.signOut(fbAuth).catch(() => {});
-    toast('Logged out.');
-    return;
-  }
+async function logoutAdmin() {
+  if (!await signOutAdmin()) return;
   persistAdmin(false);
   state.access = friendPersisted() ? 'friends' : 'none';
   cancelEdit('vault');

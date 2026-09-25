@@ -175,14 +175,14 @@ details.expanded .faq-arrow { transform:rotate(180deg); }
 #friends-vault>div:first-child .font-display>span:last-child:not([data-edit]) { display:none; }
 #friends-entry { max-width:650px!important; }
 #friends-entry>.access-panel { border:0; background:none; padding:1rem 0; }
-.access-panel h2 { font-size:2.5rem; }
+.access-panel h1 { font-size:2.5rem; }
 .access-panel #portalSub { margin-bottom:2rem; }
 .access-panel>.access-ornament { display:none; }
 #view-vote>section>div { max-width:950px; }
 .vote-row { display:grid; grid-template-columns:2rem minmax(0,1fr) auto; align-items:center; gap:1rem; padding:1.25rem 0; position:relative; border-bottom:1px solid rgb(var(--c-divider)); }
 .vote-rank { color:rgb(var(--c-faint)); font-size:.8125rem; font-variant-numeric:tabular-nums; }
 .vote-info { min-width:0; }
-.vote-info h3 { font-size:1rem; line-height:1.45; letter-spacing:-.01em; }
+.vote-info h2 { font-size:1rem; line-height:1.45; letter-spacing:-.01em; }
 .vote-info p { font-size:.8125rem; color:rgb(var(--c-mute)); }
 .vote-status { display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; margin-top:.4rem; }
 .vote-status span { font-size:.6875rem; color:rgb(var(--c-accent)); padding:.1rem .4rem; border-radius:4px; background:rgb(var(--c-sunken)); }
@@ -195,7 +195,7 @@ details.expanded .faq-arrow { transform:rotate(180deg); }
 .vote-preview { display:flex; align-items:center; gap:.5rem; }
 #suggestion-form { background:transparent; border:0; padding:0; max-width:640px; }
 #view-vote .suggestion-section { display:grid; grid-template-columns:1fr 1.5fr; gap:.75rem 2.5rem; margin-top:3rem; padding-top:2.5rem; }
-.suggestion-section>h3,.suggestion-section>p { grid-column:1; margin:0; }
+.suggestion-section>h2,.suggestion-section>p { grid-column:1; margin:0; }
 .suggestion-section>form { grid-column:2; grid-row:1 / span 3; }
 #view-admin #admin-center { max-width:1440px; padding-top:2rem; border:0; }
 .admin-shell { display:grid; grid-template-columns:210px minmax(0,1fr); border-top:1px solid rgb(var(--c-divider)); }
@@ -213,7 +213,7 @@ details.expanded .faq-arrow { transform:rotate(180deg); }
 .admin-content [data-tabpanel="catalog"]>.grid,.admin-content [data-tabpanel="vault"]>.grid { grid-template-columns:minmax(0,1fr); }
 .admin-content [data-tabpanel="catalog"]>.grid>div+div,.admin-content [data-tabpanel="vault"]>.grid>div+div { border-top:1px solid rgb(var(--c-divider)); padding-top:1.5rem; }
 .admin-content .space-y-3>label,.admin-content .space-y-4>label { margin-top:1rem; }
-.admin-content h3 { color:rgb(var(--c-ink)); font-size:1.2rem; font-weight:600; }
+.admin-content h2:not(.upload-heading) { color:rgb(var(--c-ink)); font-size:1.2rem; font-weight:600; }
 .admin-content ul[id^="admin-"]>li { background:none; border:0; border-bottom:1px solid rgb(var(--c-divider)); border-radius:0; padding:1rem 0; margin:0; }
 .admin-content ul[id^="admin-"]>li>div:last-child { flex-wrap:wrap; }
 .admin-content .text-xs { font-size:.75rem; }
@@ -263,8 +263,8 @@ dialog .ui-btn[aria-label^="Close"] { width:44px; min-width:44px; }
 body.audio-open #toast { bottom:6rem; }
 #audio-bar { border-top:1px solid rgb(var(--c-divider)); background:rgb(var(--c-surface)); padding-bottom:env(safe-area-inset-bottom); }
 #audio-bar>div { max-width:900px; min-height:72px; }
-#back-to-top { opacity:0; pointer-events:none; border-radius:6px; width:44px; height:44px; display:grid; place-items:center; box-shadow:none; transition:opacity .18s; }
-#back-to-top.show { opacity:1; pointer-events:auto; }
+#back-to-top { visibility:hidden; opacity:0; pointer-events:none; border-radius:6px; width:44px; height:44px; display:grid; place-items:center; box-shadow:none; transition:opacity .18s; }
+#back-to-top.show { visibility:visible; opacity:1; pointer-events:auto; }
 body.audio-open #back-to-top { bottom:6rem; }
 body.audio-open footer { padding-bottom:7rem; }
 footer.sect { background:none; padding:0; margin-top:2rem; }
@@ -336,7 +336,7 @@ html[data-lite="1"] :is(.shadow-2xl,.shadow-lg,.shadow-glow) { box-shadow:none!i
   .inst-wrap>div { left:0; right:auto; width:100%; max-width:100%; }
   .vote-row { grid-template-columns:1.4rem minmax(0,1fr); gap:.6rem; }
   .vote-controls { grid-column:2; justify-content:flex-start; }
-  .vote-info h3 { font-size:.95rem; }
+  .vote-info h2 { font-size:.95rem; }
   .vote-preview { margin-left:auto; }
   #view-admin #admin-center { padding-top:1.5rem; }
   .admin-content [data-tabpanel] .grid-cols-2 { grid-template-columns:1fr; }
