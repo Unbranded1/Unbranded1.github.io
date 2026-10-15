@@ -18,13 +18,13 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#fafafa">
-<link rel="stylesheet" href="utilities.css?v=import-1">
+<link rel="stylesheet" href="utilities.css?v=melody-1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-<script src="appearance.js?v=import-1"></script>
+<script src="appearance.js?v=melody-1"></script>
 <style>html.sitedown [data-dt-hide]{display:none!important}html.sitedown #view-home > *:not(#downtime-home){display:none!important}</style>
-<link rel="stylesheet" href="site.css?v=import-1">
+<link rel="stylesheet" href="site.css?v=melody-1">
 </head>
 
 <body class="bg-base text-ink antialiased min-h-screen flex flex-col">
@@ -151,6 +151,7 @@
       <label class="filter-search"><span class="field-label">Search scores</span><input id="catalog-search" type="search" placeholder="Title, composer, instrument, or genre" oninput="setSearch('catalog', this.value)" class="ui-field w-full" name="catalog-search" autocomplete="off"></label>
       <button id="catalog-filters-toggle" class="ui-btn filter-toggle border border-line" aria-expanded="false" aria-controls="catalog-filters" onclick="toggleFilters('catalog')"><svg class="ui-icon" viewbox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path><circle cx="8" cy="6" r="2"></circle><circle cx="16" cy="12" r="2"></circle><circle cx="10" cy="18" r="2"></circle></svg> Filters</button>
     </div>
+    <div id="catalog-ensemble-tabs" class="ensemble-tabs" role="group" aria-label="Score categories"></div>
     <div id="catalog-filters" class="filter-panel" hidden>
       <div class="filter-fields">
         <label><span class="field-label">Ensemble</span><select id="catalog-ens-select" onchange="setEnsFilter('catalog', this.value)" class="ui-field w-full" name="catalog-ens-select"></select></label>
@@ -209,6 +210,7 @@
       <label class="filter-search"><span class="field-label">Search scores</span><input id="vault-search" type="search" placeholder="Title, composer, instrument, or genre" oninput="setSearch('vault', this.value)" class="ui-field w-full" name="vault-search" autocomplete="off"></label>
       <button id="vault-filters-toggle" class="ui-btn filter-toggle border border-line" aria-expanded="false" aria-controls="vault-filters" onclick="toggleFilters('vault')"><svg class="ui-icon" viewbox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path><circle cx="8" cy="6" r="2"></circle><circle cx="16" cy="12" r="2"></circle><circle cx="10" cy="18" r="2"></circle></svg> Filters</button>
     </div>
+    <div id="vault-ensemble-tabs" class="ensemble-tabs" role="group" aria-label="Score categories"></div>
     <div id="vault-filters" class="filter-panel" hidden>
       <div class="filter-fields">
         <label><span class="field-label">Ensemble</span><select id="vault-ens-select" onchange="setEnsFilter('vault', this.value)" class="ui-field w-full" name="vault-ens-select"></select></label>
@@ -615,5 +617,5 @@
 <div id="toast" role="status" aria-live="polite" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] hidden rounded-xl px-5 py-3 text-sm shadow-2xl border" aria-atomic="true"></div>
 
 
-<script src="score-model.js?v=import-1" defer></script><script src="initial-arrangements.js?v=import-1" defer></script><script src="app.js?v=import-1" defer></script><script src="score-sorter.js?v=import-1" defer></script><link rel="stylesheet" href="score-import.css?v=import-1"></body>
+<script src="score-model.js?v=melody-1" defer></script><script src="initial-arrangements.js?v=melody-1" defer></script><script src="app.js?v=melody-1" defer></script><script src="score-sorter.js?v=melody-1" defer></script><link rel="stylesheet" href="score-import.css?v=melody-1"></body>
 </html>

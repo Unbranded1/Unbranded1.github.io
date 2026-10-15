@@ -62,7 +62,7 @@ const HASH_ADMIN = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448
 
 const FAVOURITE_GENRE = 'J-Pop';
 
-const TAGS = ['Concert Band','Orchestra','Marching Band','Piano','Other'];
+const TAGS = [...ScoreModel.ensembles,'Piano'];
 
 const DIFFS = ['Beginner','Intermediate','Inter-Advanced','Advanced','Professional','Impossible'];
 
@@ -1094,7 +1094,7 @@ function copyScoreLink(id) {
   else fail();
 }
 
-const ENSEMBLE_TAGS = ['Concert Band','Marching Band','Orchestra','Other'];
+const ENSEMBLE_TAGS = ScoreModel.ensembles;
 
 const INST_GROUPS = [
   ['Flutes', ['Piccolo','Flute']],
@@ -1114,11 +1114,17 @@ function instState(kind) {
 function renderTagFilter(kind) {
   const st = instState(kind);
   const seen = presentTags(kind);
-  const ensPresent = ENSEMBLE_TAGS.filter(e => seen.has(e.toLowerCase()));
+  const ensPresent = ENSEMBLE_TAGS.filter(e => e==='Melody' || seen.has(e.toLowerCase()));
   const sel = $(kind + '-ens-select');
   sel.innerHTML = '<option value="">All ensembles</option>' + ensPresent.map(e => `<option value="${attr(e.toLowerCase())}">${esc(e)}</option>`).join('');
-  if (st.ens && !seen.has(st.ens)) st.ens = '';
+  if (st.ens && !ensPresent.some(e=>e.toLowerCase()===st.ens)) st.ens = '';
   sel.value = st.ens;
+  const tabs=$(kind+'-ensemble-tabs');
+  if (!tabs.children.length) tabs.innerHTML=['',...ENSEMBLE_TAGS].map(ensemble=>`<button type="button" class="ui-btn ensemble-tab" data-ensemble="${attr(ensemble.toLowerCase())}" aria-pressed="false" aria-controls="${kind}-grid" onclick="setEnsFilter('${kind}',this.dataset.ensemble)">${esc(ensemble||'All scores')}</button>`).join('');
+  tabs.querySelectorAll('button').forEach(button=>{
+    button.hidden=!!button.dataset.ensemble && !ensPresent.some(e=>e.toLowerCase()===button.dataset.ensemble);
+    button.setAttribute('aria-pressed',String(button.dataset.ensemble===st.ens));
+  });
   st.inst = st.inst.filter(t => seen.has(t));
   renderInstMenu(kind, seen);
   renderInstChips(kind, seen);
