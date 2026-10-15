@@ -6,7 +6,7 @@ Static GitHub Pages site for `Unbranded1/Unbranded1.github.io`. Public content i
 
 1. Sign in to Admin and open **Import arrangements**.
 2. Choose a ZIP or normal folder. A ZIP can contain several songs and nested instrument folders. Put a `.txt` file containing only its Google Drive **folder URL** at each arrangement root.
-3. Review the proposed conductor PDF, generated first-page JPG, titles, instruments, ensemble, and song grouping. Select another PDF if necessary. Uncertain English titles stay blank; fields are editable. Scanned image-only PDFs require manual text entry.
+3. Review the proposed conductor PDF, generated first-page JPG, titles, instruments, ensemble, and song grouping. Select another PDF if necessary. English titles are preferred, with supplied romaji as the fallback. Missing names stay blank; fields are editable. Melody folders, filenames, and PDF labels such as “melody parts” are recognized before ensemble instrumentation. Parts-only folders without Melody evidence use Other and the N/A arrangement label. Scanned image-only PDFs require manual text entry.
 4. Choose **Friends Vault** or **Published scores**, select arrangements, and mark the default arrangement for each song. Existing-song matches can be changed.
 5. Publish selected arrangements. Only generated cover JPGs are committed to `previews/imported/`; metadata is saved through the existing Firebase publisher. The original ZIP, PDFs, audio, and videos are never uploaded by the importer.
 
@@ -18,7 +18,7 @@ MP4 previews are deferred. MP4 entries are skipped, including in large archives.
 
 ## Score data
 
-`score-model.js` normalizes old flat score records into songs with `variants` and `defaultVariantId`. Each variant owns its ensemble, instruments, cover, and links. Legacy arrangement IDs remain usable in deep links.
+`score-model.js` normalizes old flat score records into songs with `variants` and `defaultVariantId`. Each variant owns its ensemble, instruments, cover, and links. Category buttons above each library include Melody; selecting a category displays the matching arrangement and its own download link. Melody is also available in the admin tag picker and import review dropdown. Legacy arrangement IDs remain usable in deep links.
 
 `initial-arrangements.js` contains the reviewed 35-arrangement collection and matched Drive links from the supplied archive. For content older than version 4, the migration fills in that collection and preserves existing media and maintenance settings. The next successful admin save publishes the migrated schema. Version 4 content and drafts remain authoritative, so later intentional deletions are not re-added. Public score descriptions and the specified old instructional subtitles are cleared in the same migration.
 

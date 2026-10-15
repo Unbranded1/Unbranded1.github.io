@@ -335,3 +335,9 @@ html[data-motion="reduced"] *,html[data-motion="reduced"] *::before,html[data-mo
   #friends-entry .access-panel>div:has(#passcode-input) { grid-template-columns:1fr; }
   .site-nav>.edit-text-btn { display:none; }
 }
+
+/* Arrangement categories remain visible beside search, including Melody. */
+.ensemble-tabs { display:flex; flex-wrap:wrap; gap:.5rem; margin:1rem 0; }
+.ensemble-tab.ui-btn { border:1px solid rgb(var(--c-line)); padding:.5rem 1rem; color:rgb(var(--c-mute)); background:rgb(var(--c-surface)); }
+.ensemble-tab.ui-btn:hover { border-color:rgb(var(--c-accent)); color:rgb(var(--c-accent)); }
+.ensemble-tab.ui-btn[aria-pressed="true"] { border-color:rgb(var(--c-accent)); background:rgb(var(--c-accent) / .1); color:rgb(var(--c-accent)); }

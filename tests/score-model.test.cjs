@@ -20,6 +20,7 @@ test('recursively groups instruments and sibling arrangements without grouping u
   assert.equal(groups.filter(g=>g.songKey==='idol').length,2);
   assert.equal(groups.find(g=>g.folder.endsWith('Bang Bang Marching Band')).songKey,'bang bang marching band');
   assert.equal(M.groupEntries([entry('Score.pdf')])[0].pdfs.length,1);
+  assert.equal(M.groupEntries([entry('Renai Circulation/Melody/strings/Renai-Violin.pdf')])[0].songKey,'renai circulation');
 });
 
 test('instrument filenames with underscores count; strings take priority over marching percussion',()=>{
@@ -36,13 +37,28 @@ test('ranks an unlabelled conductor above instrument parts, even inside subfolde
   assert(M.conductorRank(entry('Song/Full Score.pdf'),'Song')>M.conductorRank(entry('Song/Trumpet_in_Bb.pdf'),'Song'));
 });
 
-test('keeps Japanese and English titles separate and leaves romanization uncertain',()=>{
+test('prefers English titles and accepts supplied romaji when no translation is present',()=>{
   const line=(text,size=22,centerRatio=.5)=>({text,size,yRatio:.96,centerRatio});
-  assert.deepEqual(M.titles([line('光るなら'),line('Hikaru Nara',14)],'Hikaru Nara','Hikaru Nara'),{japanese:'光るなら',english:''});
+  assert.deepEqual(M.titles([line('光るなら'),line('Hikaru Nara',14)],'Hikaru Nara','Hikaru Nara'),{japanese:'光るなら',english:'Hikaru Nara'});
   assert.deepEqual(M.titles([line('アイドル'),line('Idol - Aidoru',14)],'Idol','Idol'),{japanese:'アイドル',english:'Idol'});
-  assert.equal(M.titles([line('残響散歌'),line('Demon Slayer OP 3 Entertainment District Arc',14)],'Zankyou Sanka','Zankyou Sanka').english,'');
+  assert.equal(M.titles([line('残響散歌'),line('Demon Slayer OP 3 Entertainment District Arc',14)],'Zankyou Sanka','Zankyou Sanka').english,'Zankyou Sanka');
+  assert.equal(M.titles([line('恋愛サーキュレーション')],'Renai_Circulation-Tuba','Renai Circulation').english,'Renai Circulation');
+  assert.equal(M.titles([line('勇者'),line('Yuusha',18),line('The Brave',14)],'Yuusha','Yuusha').english,'The Brave');
+  assert.equal(M.titles([line('Renai Circulation Melody')],'Renai-Tuba','Renai Circulation').english,'Renai Circulation');
+  assert.equal(M.titles([line('Unchained Melody')],'Unchained Melody','Unchained Melody').english,'Unchained Melody');
   assert.equal(M.titles([line('TVB News Theme'),line('顧嘉煇',14,.94)],'TVB News Theme','TVB News Theme').japanese,'');
   assert.equal(M.titles([line('Untitled score')],'Haaland','Haaland').english,'Haaland');
+});
+
+test('Melody evidence takes priority over strings and percussion without matching unrelated words',()=>{
+  const tags=M.detectInstruments('Violin Cello Tenor Drums Tuba');
+  assert.equal(M.classify(tags,'','Music/Renai Circulation/Melody/Renai-Tuba.pdf'),'Melody');
+  assert.equal(M.classify(tags,'','Music/Racing into the night melody.pdf'),'Melody');
+  assert.equal(M.classify(tags,'Melody-only parts'),'Melody');
+  assert.equal(M.classify(tags,'Melody Piece'),'Melody');
+  assert.equal(M.classify(tags,'the violin plays the melody'),'Orchestra');
+  assert.equal(M.classify(tags,'','Music/Melodyne/Full Score.pdf'),'Orchestra');
+  assert.equal(M.classify(['Flute'],'','Music/Marching Band/Full Score.pdf'),'Marching Band');
 });
 
 test('initial collection has all 35 arrangements in 28 songs, with valid covers and distinct Drive links',()=>{

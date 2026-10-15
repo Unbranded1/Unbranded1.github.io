@@ -47,6 +47,14 @@ def main():
             for file in folder.rglob('*'):
                 if file.is_file():zipped.write(file,file.relative_to(work).as_posix())
         broken=work/'broken.zip';broken.write_bytes(b'not a ZIP')
+        melody=work/'melody.zip'
+        with zipfile.ZipFile(melody,'w') as zipped:
+            zipped.writestr('Renai Circulation/Melody/strings/Renai-Violin.pdf',pdf('Renai Circulation','Violin'))
+            zipped.writestr('Renai Circulation/Melody/Renai-Tuba.pdf',pdf('Renai Circulation','Tuba'))
+        parts=work/'parts.zip'
+        with zipfile.ZipFile(parts,'w') as zipped:
+            zipped.writestr('Sample/Sample-Flute.pdf',pdf('Sample','Flute'))
+            zipped.writestr('Sample/Sample-Clarinet.pdf',pdf('Sample','Clarinet'))
         recoverable=work/'recoverable.zip'
         with zipfile.ZipFile(recoverable,'w') as zipped:
             zipped.writestr('Broken/Full Score.pdf',b'not a PDF');zipped.writestr('Broken/Trumpet.pdf',pdf('Recovered','Trumpet'))
@@ -76,6 +84,25 @@ def main():
                 assert page.locator('#view-vote,#view-games,#page-help-modal,.brand-mark').count()==0
                 assert page.evaluate("!validPublished({format:'sheet-music-portfolio-backup',catalog:[{id:'x',title:'X',variants:[null]}],vault:[]})")
                 print('PASS: maintenance, sign-in route, published content migration, removed sections',flush=True)
+
+                page.evaluate("state.access='admin';applyAccess();applySiteStatus();showView('access')")
+                melody_tab=page.locator('#vault-ensemble-tabs').get_by_role('button',name='Melody',exact=True)
+                melody_tab.click()
+                assert melody_tab.get_attribute('aria-pressed')=='true'
+                assert melody_tab.evaluate('el=>el===document.activeElement')
+                assert page.locator('#vault-ens-select').input_value()=='melody'
+                assert page.locator('#vault-grid article').count()==3
+                page.locator('#vault-search').fill('renai')
+                assert page.locator('#vault-grid article').count()==1
+                assert page.locator('#vault-grid h2').inner_text()=='恋愛サーキュレーション - Renai Circulation',page.locator('#vault-grid h2').inner_text().encode('unicode_escape').decode()
+                assert page.locator('#vault-grid [data-score-variant]').input_value()=='v-renai-melody-arrangement'
+                assert page.locator('#vault-grid a[href*="drive.google.com"]').get_attribute('href')==next(s['driveLink'] for s in seed if s['id']=='v-renai-melody')
+                assert page.locator('#vault-grid img').get_attribute('src')=='previews/imported/v-renai-melody.jpg'
+                page.evaluate("clearScoreFilters('vault');showView('scores')")
+                page.locator('#catalog-ensemble-tabs').get_by_role('button',name='Melody',exact=True).click()
+                assert page.locator('#catalog-results').inner_text().startswith('0 of ')
+                page.evaluate("clearScoreFilters('catalog')")
+                print('PASS: Melody category, keyboard focus, filter synchronization, Renai title/variant/cover/link and empty category',flush=True)
 
                 page.evaluate("state.access='admin';applyAccess();applySiteStatus();showView('access');openScoreById('v-idol-orchestra')")
                 assert page.locator('#score-modal').is_visible()
@@ -111,6 +138,22 @@ def main():
                 page.wait_for_function('() => !ScoreImporter.summary.busy && ScoreImporter.summary.ready===1')
                 assert 'instrument part' in page.locator('.import-notes').inner_text()
                 page.locator('#import-clear').click()
+                page.locator('#score-zip').set_input_files(str(melody))
+                page.wait_for_function('() => !ScoreImporter.summary.busy && ScoreImporter.summary.ready===1')
+                assert page.locator('[data-field=ensemble]').input_value()=='Melody'
+                assert page.locator('[data-field=label]').input_value()=='Melody'
+                assert page.locator('[data-field=englishTitle]').input_value()=='Renai Circulation'
+                page.locator('[data-field=ensemble]').select_option('Other')
+                page.locator('[data-action=conductor]').select_option('Renai Circulation/Melody/strings/Renai-Violin.pdf')
+                page.wait_for_function('() => !ScoreImporter.summary.busy && ScoreImporter.summary.ready===1')
+                assert page.locator('[data-field=ensemble]').input_value()=='Other'
+                page.locator('#import-clear').click()
+                page.locator('#score-zip').set_input_files(str(parts))
+                page.wait_for_function('() => !ScoreImporter.summary.busy && ScoreImporter.summary.ready===1')
+                assert page.locator('[data-field=ensemble]').input_value()=='Other'
+                assert page.locator('[data-field=label]').input_value()=='N/A'
+                page.locator('#import-clear').click()
+                print('PASS: recursive Melody recognition with strings, romaji fallback, manual override and parts-only Other/N/A',flush=True)
                 page.locator('#score-folder').set_input_files(str(folder))
                 page.wait_for_function('() => !ScoreImporter.summary.busy && ScoreImporter.summary.ready===2')
                 assert page.evaluate('ScoreImporter.summary.skippedVideos')==2

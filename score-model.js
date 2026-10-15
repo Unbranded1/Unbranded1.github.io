@@ -22,15 +22,17 @@
   ];
   const instrumentFolder = /^(?:brass|strings?|woodwinds?(?: \(not flutes\))?|flutes?(?: and double reeds)?|percussion|saxes|orchestral|guitars?|piano|flute and clarinet|sax \+ low|sax \+ flute|clarinet \+ drums)$/i;
   const hasJapanese = value => /[\u3040-\u30ff\u3400-\u9fff]/.test(value);
+  const ensembles = ['Concert Band','Marching Band','Orchestra','Melody','Other'];
   function detectInstruments(text) {
     text=String(text).replace(/_/g,' ');
     const found = instruments.filter(([,pattern]) => pattern.test(text)).map(([name]) => name);
     if (found.some(name => name.endsWith('Saxophone') && name !== 'Saxophone')) return found.filter(name => name !== 'Saxophone');
     return found;
   }
-  function classify(tags, evidence = '') {
+  function classify(tags, evidence = '', source = '') {
+    if (/(?:^|[^a-z])melod(?:y|ies)(?:$|[^a-z])/i.test(source) || /\bmelody[ _-]*(?:only|parts?|pack|piece)\b|\b(?:only|unison)[ _-]*melody\b/i.test(evidence)) return 'Melody';
     if (tags.some(tag => ['Violin','Viola','Cello','Contrabass'].includes(tag))) return 'Orchestra';
-    if (/marching[ _-]*band|tenor[ _-]*drums?|quads|quints|sousaphone|bass[ _-]*drums\b/i.test(evidence) || tags.includes('Tenor Drums') || tags.includes('Sousaphone')) return 'Marching Band';
+    if (/marching[ _-]*band|tenor[ _-]*drums?|quads|quints|sousaphone|bass[ _-]*drums\b/i.test(evidence+' '+source) || tags.includes('Tenor Drums') || tags.includes('Sousaphone')) return 'Marching Band';
     return tags.length ? 'Concert Band' : '';
   }
   function conductorRank(entry, folder) {
@@ -49,10 +51,11 @@
     const large = usable.filter(line => line.size >= Math.max(12,max*0.5)).sort((a,b)=> Number(key(b.text)===key(fileName))-Number(key(a.text)===key(fileName)) || b.size-a.size || b.yRatio-a.yRatio);
     const japanese = large.find(line => hasJapanese(line.text) && (line.centerRatio===undefined || line.centerRatio<0.75))?.text || (hasJapanese(fileName) && !detectInstruments(fileName).length ? fileName : '');
     const romanized = /^(?:hikaru nara|renai circulation|fukashig[ai] no carte|ao no sumika|zankyou sanka|nanairo symphony|yuusha|kizuna no kiseki|ano yume wo nazotte|yoru ni kakeru|aidoru|hana ni natte|kaibutsu|tabun)(?:\s+(?:melody|orchestra|marching band))?$/i;
-    const latin = large.filter(line => !hasJapanese(line.text) && /[a-z]{2}/i.test(line.text) && !romanized.test(line.text) && !/^(?:yoasobi|ayase|ikura|arr\.|branden yip)$/i.test(line.text));
-    let english = latin[0]?.text || '';
+    const latin = large.filter(line => !hasJapanese(line.text) && /[a-z]{2}/i.test(line.text) && !/^(?:yoasobi|ayase|ikura|arr\.|branden yip)$/i.test(line.text));
+    let english = latin.find(line=>!romanized.test(line.text))?.text || latin[0]?.text || '';
     if(english.includes(' - '))english=english.split(' - ').filter(part=>!romanized.test(part)&&!excluded.test(part)).join(' - ');
-    if (!japanese && !english && !detectInstruments(fileName).length && !/^(?:full score|score|conductor|untitled score)$/i.test(fileName) && !romanized.test(fileName)) english = fileName;
+    if (!english) english = [fileName,folderName].find(name=>!hasJapanese(name) && !detectInstruments(name).length && !/^(?:full score|score|conductor|untitled score|melody|orchestra|marching band|concert band)$/i.test(name) && /[a-z]{2}/i.test(name)) || '';
+    if (key(english).startsWith(key(folderName)+' ') && /^(?:melody(?: pack)?|orchestra|marching band|concert band)$/.test(key(english).slice(key(folderName).length+1))) english=english.replace(/\s+(?:melody(?:\s+pack)?|orchestra|marching band|concert band)$/i,'');
     return {japanese:clean(japanese),english:clean(english)};
   }
   function groupEntries(entries) {
@@ -84,7 +87,7 @@
       const siblings = valid.filter(other => other.folder.slice(0,other.folder.lastIndexOf('/'))===parent);
       const name=key(group.folder.split('/').pop()),parentName=key(parent.split('/').pop());
       const variantName=/^(?:orchestra|marching band|concert band|melody|simplified|ritn)(?:\s|$)/i.test(name) || (name.startsWith(parentName+' ')&&/orchestra|marching|concert|melody|simplified/i.test(name.slice(parentName.length)));
-      group.songFolder = ancestor?.folder || (siblings.length>1 && variantName ? parent : group.folder);
+      group.songFolder = ancestor?.folder || ((siblings.length>1 || name==='melody') && variantName ? parent : group.folder);
       group.songKey = key(group.songFolder.split('/').pop());
       group.pdfs = group.entries.filter(entry=>/\.pdf$/i.test(entry.path)).sort((a,b)=>conductorRank(b,group.folder)-conductorRank(a,group.folder));
     }
@@ -151,7 +154,7 @@
     return normalizeLibrary(result);
   }
   function merged(score,variant) { return {...score,...variant,id:score.id,title:score.title,variantId:variant.id,variants:score.variants}; }
-  const api={clean,key,id,detectInstruments,classify,conductorRank,titles,groupEntries,variantFrom,normalizeLibrary,seedLibrary,variants,merged,hasJapanese};
+  const api={clean,key,id,detectInstruments,classify,conductorRank,titles,groupEntries,variantFrom,normalizeLibrary,seedLibrary,variants,merged,hasJapanese,ensembles};
   root.ScoreModel=api;
   if (typeof module!=='undefined'&&module.exports) module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
