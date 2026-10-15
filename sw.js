@@ -1,5 +1,5 @@
-const CACHE = 'smp-shell-v7';
-const SHELL = ['./index.html', './utilities.css?v=melody-1', './site.css?v=melody-1', './appearance.js?v=melody-1', './score-model.js?v=melody-1', './initial-arrangements.js?v=melody-1', './app.js?v=melody-1', './score-sorter.js?v=melody-1', './score-import.css?v=melody-1'];
+const CACHE = 'smp-shell-v8';
+const SHELL = ['./index.html', './utilities.css?v=melody-1', './site.css?v=melody-1', './appearance.js?v=melody-1', './score-model.js?v=melody-1', './initial-arrangements.js?v=melody-1', './app.js?v=switch-1', './score-sorter.js?v=melody-1', './score-import.css?v=switch-1'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
 });

@@ -22,6 +22,56 @@ def pdf(title,instrument):
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self,*args):pass
 
+def check_arrangement_switching(page,seed):
+    score_id='v-ritn-simplified'
+    selector=f'#vault-grid [data-score-variant="{score_id}"]'
+    orchestra=next(s for s in seed if s['id']=='v-ritn-orchestra')
+    for width,layout in [(1440,'grid'),(375,'grid'),(1440,'list'),(375,'list')]:
+        page.set_viewport_size({'width':width,'height':900})
+        page.evaluate("layout=>{showView('access');clearScoreFilters('vault');setLayout('vault',layout)}",layout)
+        picker=page.locator(selector)
+        picker.scroll_into_view_if_needed()
+        picker.focus()
+        page.evaluate("window.__untouchedScore=document.querySelector('#vault-grid article');window.__untouchedCover=window.__untouchedScore.querySelector('img')")
+        before=picker.bounding_box()['y']
+        picker.select_option('v-ritn-orchestra-arrangement')
+        page.evaluate('()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
+        assert picker.input_value()=='v-ritn-orchestra-arrangement'
+        assert page.evaluate("__untouchedScore.isConnected && __untouchedCover.isConnected"),'Switching replaced unrelated scores'
+        assert picker.evaluate('el=>el===document.activeElement')
+        assert abs(picker.bounding_box()['y']-before)<=2,(width,layout,before,picker.bounding_box()['y'])
+        card=picker.locator('xpath=ancestor::article')
+        assert card.locator('img').get_attribute('src')==orchestra['previewImg']
+        assert card.locator('a[href*="drive.google.com"]').get_attribute('href')==orchestra['driveLink']
+    page.evaluate("setEnsFilter('vault','concert band')")
+    picker=page.locator(selector)
+    picker.select_option('v-ritn-orchestra-arrangement')
+    assert picker.input_value()=='v-ritn-orchestra-arrangement','The category filter undid the manual version choice'
+    page.evaluate("clearScoreFilters('vault');openScore('vault','v-ritn-simplified',false)")
+    modal_picker=page.locator('#score-modal [data-score-variant]')
+    modal_picker.scroll_into_view_if_needed();modal_picker.focus()
+    before=modal_picker.bounding_box()['y']
+    modal_picker.select_option('v-ritn-marching-arrangement')
+    assert abs(modal_picker.bounding_box()['y']-before)<=2
+    assert modal_picker.evaluate('el=>el===document.activeElement')
+    page.evaluate("$('score-modal').close()")
+    assert page.locator(selector).input_value()=='v-ritn-marching-arrangement'
+    # Give the isolated public fixture two variants to exercise the home-page picker.
+    page.evaluate("""()=>{
+      const song=state.catalog[0];window.__originalPublic=structuredClone(song);
+      const variant=structuredClone(song.variants[0]);variant.id='featured-test-variant';variant.label='Alternate';
+      song.variants.push(variant);state.featured=song.id;renderFeatured();showView('home');
+    }""")
+    featured=page.locator('#featured-card [data-score-variant]')
+    featured.scroll_into_view_if_needed();featured.focus()
+    before=featured.bounding_box()['y']
+    featured.select_option('featured-test-variant')
+    assert featured.evaluate('el=>el===document.activeElement'),'Featured selection lost focus to the hidden catalog'
+    assert abs(featured.bounding_box()['y']-before)<=2
+    page.evaluate("state.catalog[0]=window.__originalPublic;renderFeatured();clearScoreFilters('vault');setLayout('vault','grid')")
+    page.set_viewport_size({'width':1440,'height':1000})
+    print('PASS: grid/list version switching preserves scroll, focus, unrelated cards, selected cover/link, filters, modal and featured pickers',flush=True)
+
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--browser-executable')
@@ -103,6 +153,8 @@ def main():
                 assert page.locator('#catalog-results').inner_text().startswith('0 of ')
                 page.evaluate("clearScoreFilters('catalog')")
                 print('PASS: Melody category, keyboard focus, filter synchronization, Renai title/variant/cover/link and empty category',flush=True)
+
+                check_arrangement_switching(page,seed)
 
                 page.evaluate("state.access='admin';applyAccess();applySiteStatus();showView('access');openScoreById('v-idol-orchestra')")
                 assert page.locator('#score-modal').is_visible()
