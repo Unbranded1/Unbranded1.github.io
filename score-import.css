@@ -44,8 +44,6 @@
 .import-row-content { min-width:0; }
 .import-rows { margin-bottom:2rem; }
 .import-row select { text-overflow:ellipsis; }
-.score-card,.score-row { content-visibility:auto; contain-intrinsic-size:auto 480px; }
-.score-row { contain-intrinsic-size:auto 130px; }
 .admin-content { min-width:0; }
 #admin-panel-import [hidden] { display:none!important; }
 @media(min-width:1100px) { .admin-shell:has(#admin-panel-import:not(.hidden)) { grid-template-columns:170px minmax(0,1fr); } }

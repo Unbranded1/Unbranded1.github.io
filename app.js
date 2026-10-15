@@ -2032,17 +2032,35 @@ function displayScore(item,kind) {
 function variantSelect(item,kind,selected) {
   const variants=ScoreModel.variants(item);
   if (variants.length<2) return '';
-  return `<label class="score-variant-picker"><span class="field-label">Arrangement</span><select class="ui-field" data-score-variant="${attr(item.id)}" data-kind="${kind}" aria-label="Arrangement for ${attr(item.title || 'Untitled score')}" onchange="selectScoreVariant('${kind}','${item.id}',this.value)">${variants.map(v=>`<option value="${attr(v.id)}" ${v.id===selected?'selected':''}>${esc(variantLabel(v))}</option>`).join('')}</select></label>`;
+  return `<label class="score-variant-picker"><span class="field-label">Arrangement</span><select class="ui-field" data-score-variant="${attr(item.id)}" data-kind="${kind}" aria-label="Arrangement for ${attr(item.title || 'Untitled score')}" onchange="selectScoreVariant('${kind}','${item.id}',this.value,this)">${variants.map(v=>`<option value="${attr(v.id)}" ${v.id===selected?'selected':''}>${esc(variantLabel(v))}</option>`).join('')}</select></label>`;
 }
-function selectScoreVariant(kind,id,variantId) {
+function selectScoreVariant(kind,id,variantId,picker) {
   const item=listOf(kind).find(x=>x.id===id);
   if (!item || !ScoreModel.variants(item).some(v=>v.id===variantId)) return;
+  const selector=`[data-score-variant="${CSS.escape(id)}"]`;
+  const inModal=$('score-modal').open,grid=$(kind==='vault'?'vault-grid':'catalog-grid');
+  const host=inModal?$('score-modal-body'):picker?.closest('#featured-card')||grid;
+  const previous=picker||host.querySelector(selector),top=previous?.getBoundingClientRect().top;
   chosenVariants.set(kind+':'+id,variantId); pauseAudioEls(null);stopAudio();
-  const inModal=$('score-modal').open;
+  // Keep every other score and its measured layout intact. A manual selection
+  // takes priority over the category's automatic initial arrangement choice.
+  const card=grid.querySelector(selector)?.closest('article');
+  if (card) {
+    const template=document.createElement('template');
+    template.innerHTML=state.layout[kind]==='list'?scoreRow(item,kind):scoreCard(item,kind);
+    template.content.querySelectorAll('img').forEach(image=>{image.loading='eager';});
+    card.replaceWith(template.content);
+  }
+  const featured=state.catalog.find(score=>score.id===state.featured)||state.catalog[0];
+  if (kind==='catalog' && featured?.id===id) renderFeatured();
   if (inModal) openScore(kind,id,false);
-  else {renderScores(kind); if (kind==='catalog') renderFeatured();}
-  const host=inModal?$('score-modal-body'):$(kind==='vault'?'vault-grid':'catalog-grid');
-  host.querySelector(`[data-score-variant="${CSS.escape(id)}"]`)?.focus({preventScroll:true});
+  const updated=host.querySelector(selector);
+  if (!updated) return;
+  updated.focus({preventScroll:true});
+  if (top!==undefined) {
+    const delta=updated.getBoundingClientRect().top-top;
+    if (Math.abs(delta)>.5) (inModal?host:window).scrollBy({top:delta,behavior:'instant'});
+  }
 }
 function scoreCover(item,eager=false) {
   const title=item.title || 'Untitled score';
